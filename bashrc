@@ -5,7 +5,6 @@
 #
 
 test -s ~/.alias && . ~/.alias || true
-test -s ~/.profile && . ~/.profile || true
 
 # determine hostname for later use in all dotfiles
 if [[ "${HOSTNAME}" == tsa* ]]; then
@@ -43,6 +42,7 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
     export LM_SETUP_DIR=$HOME
     PATH=${PATH}:${OPR_SETUP_DIR}/bin
     export MODULEPATH=$MODULEPATH:$OPR_SETUP_DIR/modules/modulefiles 
+    test -s ~/.profile && . ~/.profile || true
 
     # >>> conda initialize >>>
     # !! Contents within this block are managed by 'conda init' !!
@@ -63,6 +63,11 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
 elif [[ "${BASHRC_HOST}" == "daint" ]]; then
     . /etc/bash_completion.d/git.sh
     export PATH=$PATH:/users/juckerj/script_utils
+    test -s ~/.profile && . ~/.profile || true
+
+# dom
+elif [[ "${BASHRC_HOST}" == "dom" ]]; then
+    test -s ~/.profile && . ~/.profile || true
 fi
 
 # Spack
