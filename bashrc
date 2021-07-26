@@ -5,7 +5,7 @@
 #
 
 test -s ~/.alias && . ~/.alias || true
-source ~/.profile
+test -s ~/.profile && . ~/.profile || true
 
 # determine hostname for later use in all dotfiles
 if [[ "${HOSTNAME}" == tsa* ]]; then
@@ -77,7 +77,7 @@ case ${BASHRC_HOST} in
           export SPACK_ROOT=/project/g110/spack/user/dom/spack 
           ;;
       *)
-          echo .bashrc: Spack not available on $BASHRC_HOST!
+          echo bashrc: Spack not available on $BASHRC_HOST!
 esac
 
 # Machine specific aliases
