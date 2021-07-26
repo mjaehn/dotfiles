@@ -2,7 +2,7 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
- set rtp+=~/.vim/bundle/Vundle.vim
+ set rtp+=~/.vim/vim-extensions/Vundle.vim
 
 if $BASHRC_HOST == "tsa"
     call vundle#begin()

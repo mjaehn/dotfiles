@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo Setup vim-extensions***
+
+vim_plugin_dir=~/.vim/vim-extensions
+
+mkdir -p $vim_plugin_dir
+
+cd vim-extensions
+
+for name in *; do
+  if [ -d "$name" ] && [ ! -L "$name" ]; then
+    printf '   Link %s to $vim_plugin_dir \n' "$name"
+    ln -s -f $name ~/.vim $vim_plugin_dir
+  fi
+done
+cd ..
+
+echo "Link bashrc"
+ln -s -f bashrc ~/.bashrc
+
+echo "Link vimrc"
+ln -s -f vimrc ~/.vimrc
