@@ -6,6 +6,9 @@ vim_plugin_dir=~/.vim/vim-extensions
 
 mkdir -p $vim_plugin_dir
 
+git submodule init &> /dev/null
+git submodule update &> /dev/null
+
 cd vim-extensions
 
 for name in *; do
@@ -21,3 +24,9 @@ ln -s -f $(pwd)/bashrc ~/.bashrc
 
 echo "Link vimrc"
 ln -s -f $(pwd)/vimrc ~/.vimrc
+
+echo "Run:"
+echo ""
+echo "source ~/.bashrc"
+echo ""
+echo "to complete installation"
