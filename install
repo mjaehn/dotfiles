@@ -10,14 +10,14 @@ cd vim-extensions
 
 for name in *; do
   if [ -d "$name" ] && [ ! -L "$name" ]; then
-    printf '   Link %s to $vim_plugin_dir \n' "$name"
-    ln -s -f $name ~/.vim $vim_plugin_dir
+    echo "   Link $name to $vim_plugin_dir"
+    ln -s -f $(pwd)/$name $vim_plugin_dir
   fi
 done
 cd ..
 
 echo "Link bashrc"
-ln -s -f bashrc ~/.bashrc
+ln -s -f $(pwd)/bashrc ~/.bashrc
 
 echo "Link vimrc"
-ln -s -f vimrc ~/.vimrc
+ln -s -f $(pwd)/vimrc ~/.vimrc
