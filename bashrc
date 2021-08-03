@@ -49,7 +49,6 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
     export LM_SETUP_DIR=$HOME
     PATH=${PATH}:${OPR_SETUP_DIR}/bin
     export MODULEPATH=$MODULEPATH:$OPR_SETUP_DIR/modules/modulefiles 
-    test -s ~/.profile && . ~/.profile || true
 
     # >>> conda initialize >>>
     # !! Contents within this block are managed by 'conda init' !!
