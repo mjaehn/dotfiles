@@ -14,7 +14,14 @@ elif [[ "${HOSTNAME}" == daint* ]]; then
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
-    BASHRC_HOST='euler'
+
+    if tty -s; then
+        BASHRC_HOST='euler'
+
+    # do nothing for me as Jenkins user
+    else
+        return
+    fi
 elif [[ "${HOSTNAME}" == m* ]]; then 
     BASHRC_HOST='mistral'
 fi
