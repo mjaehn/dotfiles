@@ -19,3 +19,6 @@
 [submodule "vim-extensions/Vundle.vim"]
 	path = vim-extensions/Vundle.vim
 	url = git@github.com:VundleVim/Vundle.vim.git
+[submodule "vim-extensions/ctrlp.vim"]
+	path = vim-extensions/ctrlp.vim
+	url = https://github.com/ctrlpvim/ctrlp.vim.git

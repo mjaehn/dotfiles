@@ -3,6 +3,7 @@ filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
  set rtp+=~/.vim/vim-extensions/Vundle.vim
+ set rtp+=~/.vim/vim-extensions/ctrlp.vim
 
 if $BASHRC_HOST == "tsa"
     call vundle#begin()
@@ -13,6 +14,7 @@ if $BASHRC_HOST == "tsa"
     Plugin 'itchyny/lightline.vim'
     Plugin 'luochen1990/rainbow'
     Plugin 'airblade/vim-gitgutter'
+    Plugin 'ctrlp.vim'
     call vundle#end()            " required
     filetype plugin indent on    " required
 
@@ -25,6 +27,7 @@ elseif $BASHRC_HOST == "euler"
     Plugin 'itchyny/lightline.vim'
     Plugin 'luochen1990/rainbow'
     Plugin 'airblade/vim-gitgutter'
+    Plugin 'ctrlp.vim'
     call vundle#end()            " required
     filetype plugin indent on    " required
 else
@@ -37,6 +40,7 @@ else
     Plugin 'luochen1990/rainbow'
     Plugin 'airblade/vim-gitgutter'
     Plugin 'taglist.vim'
+    Plugin 'ctrlp.vim'
     call vundle#end()            " required
     filetype plugin indent on    " required
 endif
