@@ -157,6 +157,7 @@ alias vio='vim INPUT_IO'
 
 # ICON
 alias lsL='ls -ltr LOG*' 
+alias tL='tail -f LOG*'
 
 
 # General aliases
