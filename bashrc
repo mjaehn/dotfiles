@@ -136,7 +136,7 @@ elif [[ "${BASHRC_HOST}" == "euler" ]]; then
 
 # mistral
 elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
-    alias aall="scancel -u juckerj"
+    alias aall="scancel -u b381001"
     alias sq='squeue -u b381001'
     alias squ='squeue'
     alias hh='cd /pf/b/b381001'
