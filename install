@@ -17,6 +17,10 @@ for name in *; do
     ln -s -f $(pwd)/$name $vim_plugin_dir
   fi
 done
+
+echo "   Link colors to ~/.vim/colors"
+ln -s -f $(pwd)/colors ~/.vim/.
+
 cd ..
 
 echo "Link bashrc"
@@ -25,8 +29,12 @@ ln -s -f $(pwd)/bashrc ~/.bashrc
 echo "Link vimrc"
 ln -s -f $(pwd)/vimrc ~/.vimrc
 
+echo ""
 echo "Run:"
 echo ""
 echo "source ~/.bashrc"
 echo ""
+echo ":PluginInstall in Vim"
+echo ""
 echo "to complete installation"
+echo ""
