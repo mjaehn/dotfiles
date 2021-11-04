@@ -22,3 +22,6 @@
 [submodule "vim-extensions/ctrlp.vim"]
 	path = vim-extensions/ctrlp.vim
 	url = https://github.com/ctrlpvim/ctrlp.vim.git
+[submodule "vim-extensions/vim-autotag"]
+	path = vim-extensions/vim-autotag
+	url = https://github.com/craigemery/vim-autotag.git

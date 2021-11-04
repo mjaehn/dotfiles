@@ -41,6 +41,7 @@ else
     Plugin 'airblade/vim-gitgutter'
     Plugin 'taglist.vim'
     Plugin 'ctrlp.vim'
+    Plugin 'craigemery/vim-autotag'
     call vundle#end()            " required
     filetype plugin indent on    " required
 endif
