@@ -24,6 +24,8 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     fi
 elif [[ "${HOSTNAME}" == m* ]]; then 
     BASHRC_HOST='mistral'
+elif [[ "${HOSTNAME}" == IACPC* ]]; then 
+    BASHRC_HOST='iac-laptop'
 fi
 export BASHRC_HOST
 
@@ -32,13 +34,31 @@ export LS_COLORS='di=1:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31'
 
 # Git settings
 export GIT_EDITOR="vim"
-parse_git_branch() {
-git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+#parse_git_branch() {
+#git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+#}
+
+git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+git_commit() {
+     git rev-parse --short HEAD 2> /dev/null | sed -e 's/^/ -> /'
+}
+git_repo() {
+     basename -s .git `git config --get remote.origin.url` 2> /dev/null | sed -e 's/^/\n/'
 }
 
 # Command prompt
-short_host="${HOSTNAME:0:2}-${HOSTNAME:${#HOSTNAME}-1:${#HOSTNAME}}"
-export PS1="\u@$short_host:\W\[\033[33m\]\$(parse_git_branch)\[\033[00m\]> "
+#short_host="${HOSTNAME:0:2}-${HOSTNAME:${#HOSTNAME}-1:${#HOSTNAME}}"
+#export PS1="\u@$short_host:\W\[\033[33m\]\$(parse_git_branch)\[\033[00m\]> "
+MYHOST='\[\033[02;36m\]\h'; MYHOST=' '$MYHOST
+TIME='\[\033[01;31m\]\t \[\033[01;32m\]'
+LOCATION=' \[\033[00;96m\]`pwd | sed "s#\(/[^/]\{1,\}/[^/]\{1,\}/[^/]\{1,\}/\).*\(/[^/]\{1,\}/[^/]\{1,\}\)/\{0,1\}#\1_\2#g"`'
+REPO='\[\033[00;33m\]$(git_repo)\[\033[00m\]'
+BRANCH='\[\033[00;33m\]$(git_branch)\[\033[00m\]'
+COMMIT='\[\033[00;97m\]$(git_commit)\[\033[00m\]'
+END=' \n\$ '
+PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 
 # Custom modules/paths/envs for each machine
 
@@ -52,14 +72,14 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
 
     # >>> conda initialize >>>
     # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/users/juckerj/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "/users/juckerj/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/users/juckerj/miniconda3/etc/profile.d/conda.sh"
+        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
         else
-            export PATH="/users/juckerj/miniconda3/bin:$PATH"
+            export PATH="/users/mjaehn/miniconda3/bin:$PATH"
         fi
     fi
     unset __conda_setup
@@ -68,7 +88,7 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
 # daint
 elif [[ "${BASHRC_HOST}" == "daint" ]]; then
     . /etc/bash_completion.d/git.sh
-    export PATH=$PATH:/users/juckerj/script_utils
+    export PATH=$PATH:/users/mjaehn/script_utils
     test -s ~/.profile && . ~/.profile || true
 
 # dom
@@ -97,40 +117,36 @@ esac
 if [[ "${BASHRC_HOST}" == "tsa" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias sc='cd /scratch/juckerj/'
-    alias aall="scancel -u juckerj"
-    alias sq='squeue -u juckerj'
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
     alias squ='squeue'
-    alias hh='cd /users/juckerj/'
 
 # daint
 elif [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias sc='cd /scratch/snx3000/juckerj/'
-    alias aall="scancel -u juckerj"
-    alias sq='squeue -u juckerj'
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
     alias squ='squeue'
-    alias hh='cd /users/juckerj/'
     alias jenkins='cd /scratch/snx3000/jenkins/workspace'
+    alias proj="cd /project/s903/mjaehn"
+    alias st="cd /store/c2sm/s903"
+    alias nn="module load daint-gpu NCO ncview"
+    alias o="xdg-open"
 
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias sc='cd /scratch/snx3000tds/juckerj/'
-    alias aall="scancel -u juckerj"
-    alias sq='squeue -u juckerj'
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
     alias squ='squeue'
-    alias hh='cd /users/juckerj/'
 
 # euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias sc='cd /cluster/scratch/juckerj/'
     alias aall="bkill 0"
-    alias hh='cd /cluster/home/juckerj/'
     alias sq='bjobs'
     alias squ='bbjobs'
 
@@ -139,8 +155,6 @@ elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
     alias aall="scancel -u b381001"
     alias sq='squeue -u b381001'
     alias squ='squeue'
-    alias hh='cd /pf/b/b381001'
-    alias sc='cd /scratch/b/b381001'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
 fi
 
@@ -159,22 +173,33 @@ alias vio='vim INPUT_IO'
 alias lsL='ls -ltr LOG*' 
 alias tL='tail -f LOG*'
 
-
 # General aliases
-alias ls='ls --color'
-alias lsl='ls -ltrh --color'
+alias ls="ls --color"
+alias ll="ls -al"
 alias la='ls -A'
+alias scra='cd ${SCRATCH}'
+alias c="clear"
 alias g='grep -i'
+alias h='history | grep'
 alias t='tail -f'
+alias dc="cd"
 alias ..='cd ..'
+alias l..='cd ..'
+alias cd..="cd .."
 alias ml='module load'
-alias su='source'
+alias src='source'
 alias srcrc='source ~/.bashrc'
 alias rcvim='vim ~/.bashrc'
 alias gt='git status'
 alias ga='git add'
 alias gsi='git submodule init'
 alias gsu='git submodule update'
-alias ncd='ncdump -h'
-alias ncw='ncview'
+alias gsui='git submodule update --init'
+alias nd='ncdump -h'
+alias nv='ncview'
 alias fp='find "$PWD" -name'
+alias lcd="cd"
+alias lvi="vi"
+alias nd="ncdump -h"
+alias nv="ncview"
+
