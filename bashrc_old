@@ -1,0 +1,120 @@
+# Sample .bashrc for SuSE Linux
+# Copyright (c) SuSE GmbH Nuernberg
+
+# There are 3 different types of shells in bash: the login shell, normal shell
+# and interactive shell. Login shells read ~/.profile and interactive shells
+# read ~/.bashrc; in our setup, /etc/profile sources ~/.bashrc - thus all
+# settings made here will also take effect in a login shell.
+#
+# NOTE: It is recommended to make language settings in ~/.profile rather than
+# here, since multilingual X sessions would not work properly if LANG is over-
+# ridden in every subshell.
+
+# Some applications read the EDITOR variable to determine your favourite text
+# editor. So uncomment the line below and enter the editor of your choice :-)
+#export EDITOR=/usr/bin/vim
+#export EDITOR=/usr/bin/mcedit
+
+# For some news readers it makes sense to specify the NEWSSERVER variable here
+#export NEWSSERVER=your.news.server
+
+# If you want to use a Palm device with Linux, uncomment the two lines below.
+# For some (older) Palm Pilots, you might need to set a lower baud rate
+# e.g. 57600 or 38400; lowest is 9600 (very slow!)
+#
+#export PILOTPORT=/dev/pilot
+#export PILOTRATE=115200
+
+test -s ~/.alias && . ~/.alias || true
+
+git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+git_commit() {
+     git rev-parse --short HEAD 2> /dev/null | sed -e 's/^/ -> /'
+}
+git_repo() {
+     basename -s .git `git config --get remote.origin.url` 2> /dev/null | sed -e 's/^/\n/'
+}
+
+MYHOST='\[\033[02;36m\]\h'; MYHOST=' '$MYHOST
+TIME='\[\033[01;31m\]\t \[\033[01;32m\]'
+LOCATION=' \[\033[00;96m\]`pwd | sed "s#\(/[^/]\{1,\}/[^/]\{1,\}/[^/]\{1,\}/\).*\(/[^/]\{1,\}/[^/]\{1,\}\)/\{0,1\}#\1_\2#g"`'
+REPO='\[\033[00;33m\]$(git_repo)\[\033[00m\]'
+BRANCH='\[\033[00;33m\]$(git_branch)\[\033[00m\]'
+COMMIT='\[\033[00;97m\]$(git_commit)\[\033[00m\]'
+END=' \n\$ '
+PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
+#PS1=$TIME$USER$HOST$LOCATION$BRANCH$END
+
+COMPILE_COSMO='/users/mjaehn/github/user-guides/compile-cosmo'
+
+alias vi="vim -p"
+
+alias h='history | grep'
+alias ls="ls --color"
+alias ll="ls -al"
+alias dc="cd"
+alias cd..="cd .."
+alias dc..="cd .."
+alias lcd="cd"
+alias lvi="vi"
+alias l..=".."
+alias c="clear"
+alias nn="module load daint-mc NCO ncview"
+alias nd="ncdump -h"
+alias nv="ncview"
+alias sq="squeue -u mjaehn"
+alias o="xdg-open"
+alias proj="cd /project/s903/mjaehn"
+alias scra="cd $SCRATCH"
+alias st="cd /store/c2sm/s903"
+alias chain="cd /users/mjaehn/gitlab/cosmo_processing_chain"
+alias chein="cd /users/mjaehn/gitlab/cosmo_processing_chain_che"
+alias cosmo="cd /users/mjaehn/github/cosmo-org/cosmo/src"
+alias pompa="cd /users/mjaehn/github/cosmo-pompa-ghg/cosmo/src"
+alias art="cd /users/mjaehn/gitlab/cosmo-art"
+alias int2lm="cd /users/mjaehn/github/int2lm"
+alias cams="cd /store/empa/em05/dbrunner/carbosense/icbc"
+alias amrs="cd /users/mjaehn/gitlab/amrs"
+alias cases="cd /users/mjaehn/gitlab/cosmo-processing-chain-cases"
+
+alias panoply="bash /users/mjaehn/apps/panoply-4.9.3/panoply.sh"
+
+alias gl='git log --pretty=format:"%h - %an, %ar : %s"'
+
+alias venv="source ~/amrs_python_virtenv_jae"
+alias spackenv="module load cray-python && . /project/g110/spack/user/daint/spack/share/spack/setup-env.sh"
+
+# Use python virtual environment instead of anaconda
+PATH=$PATH:/users/jenkins/install/libgrib_api/v1.13.1.2/cray/bin/:/users/mjaehn/.local/bin/:/users/mjaehn/scripts/
+#PATH=$PATH:/store/empa/em05/eb_anaconda/easybuild/software/Anaconda3/4.4.0/envs/amrs/bin/:/users/jenkins/install/libgrib_api/v1.13.1.2/cray/bin/:/users/mjaehn/.local/bin/:/users/mjaehn/scripts/
+export PATH=/project/s903/mjaehn/icon_temporary_runscript_tk:$PATH
+
+#export EASYBUILD_PREFIX=/store/empa/em05/eb_anaconda/easybuild 
+#alias python=python3.6
+
+# Spack
+#COSMO_SPEC="cosmo@dev-build%pgi real_type=double cosmo_target=gpu +cppdycore"
+#COSMO_CPU_SPEC="cosmo@dev-build%pgi real_type=double cosmo_target=cpu ~cppdycore"
+#case $(hostname -s) in
+#      tsa*|arolla*) module load python/3.7.4; export SPACK_ROOT=/project/g110/spack/user/tsa/spack ;;
+#      daint*) module load cray-python; export SPACK_ROOT=/project/g110/spack/user/daint/spack ;;
+#esac
+#source $SPACK_ROOT/share/spack/setup-env.sh
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/scratch/snx3000/mjaehn/processing-chain/easybuild/software/Miniconda3/4.7.10/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/scratch/snx3000/mjaehn/processing-chain/easybuild/software/Miniconda3/4.7.10/etc/profile.d/conda.sh" ]; then
+        . "/scratch/snx3000/mjaehn/processing-chain/easybuild/software/Miniconda3/4.7.10/etc/profile.d/conda.sh"
+    else
+        export PATH="/scratch/snx3000/mjaehn/processing-chain/easybuild/software/Miniconda3/4.7.10/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
