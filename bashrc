@@ -201,6 +201,7 @@ alias nv='ncview'
 alias fp='find "$PWD" -name'
 alias lcd="cd"
 alias lvi="vi"
+alias vi="vi -p"
 alias nd="ncdump -h"
 alias nv="ncview"
 
