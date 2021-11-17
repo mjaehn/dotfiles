@@ -7,9 +7,7 @@
 test -s ~/.alias && . ~/.alias || true
 
 # determine hostname for later use in all dotfiles
-if [[ "${HOSTNAME}" == tsa* ]]; then
-    BASHRC_HOST='tsa'
-elif [[ "${HOSTNAME}" == daint* ]]; then 
+if [[ "${HOSTNAME}" == daint* ]]; then 
     BASHRC_HOST='daint'
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
@@ -62,31 +60,8 @@ PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 
 # Custom modules/paths/envs for each machine
 
-# tsa
-if [[ "${BASHRC_HOST}" == "tsa" ]]; then
-    source /oprusers/osm/.opr_setup_dir
-    export OPR_SETUP_DIR=/oprusers/osm/opr.arolla
-    export LM_SETUP_DIR=$HOME
-    PATH=${PATH}:${OPR_SETUP_DIR}/bin
-    export MODULEPATH=$MODULEPATH:$OPR_SETUP_DIR/modules/modulefiles 
-
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/users/mjaehn/miniconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
-
 # daint
-elif [[ "${BASHRC_HOST}" == "daint" ]]; then
+if [[ "${BASHRC_HOST}" == "daint" ]]; then
     . /etc/bash_completion.d/git.sh
     export PATH=$PATH:/users/mjaehn/script_utils
     test -s ~/.profile && . ~/.profile || true
@@ -94,13 +69,18 @@ elif [[ "${BASHRC_HOST}" == "daint" ]]; then
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
     test -s ~/.profile && . ~/.profile || true
+
+# iac-laptop
+elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
+    __conda_setup="$('/mnt/c/Users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    fi
+    unset __conda_setup
 fi
 
 # Spack
 case ${BASHRC_HOST} in
-      tsa) 
-          export SPACK_ROOT=/project/g110/spack/user/tsa/spack 
-          ;;
       daint) 
           export SPACK_ROOT=/project/g110/spack/user/daint/spack
           ;;
@@ -113,16 +93,8 @@ esac
 
 # Machine specific aliases
 
-# tsa
-if [[ "${BASHRC_HOST}" == "tsa" ]]; then
-    alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
-    alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias aall="scancel -u mjaehn"
-    alias sq='squeue -u mjaehn'
-    alias squ='squeue'
-
 # daint
-elif [[ "${BASHRC_HOST}" == "daint" ]]; then
+if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
     alias aall="scancel -u mjaehn"
