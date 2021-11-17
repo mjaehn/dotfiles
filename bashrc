@@ -30,7 +30,7 @@ fi
 export BASHRC_HOST
 
 # ls colors
-export LS_COLORS='di=1:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31'
+export LS_COLORS='di=1;94:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31'
 
 # Git settings
 export GIT_EDITOR="vim"
@@ -159,6 +159,11 @@ elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
 fi
 
 # Model specific aliases
+
+# Connect to machines
+alias daint="ssh -X mjaehn@daint"
+alias euler="ssh -X mjaehn@euler"
+alias dom="ssh -X mjaehn@dom"
 
 # COSMO
 alias ct="cat testsuite.out"
