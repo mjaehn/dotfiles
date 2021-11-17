@@ -103,7 +103,8 @@ let g:rainbow_active = 1
 syntax enable
 set t_Co=256
 set background=dark
-colorscheme PaperColor
+"colorscheme PaperColor"
+colorscheme molokai
 set t_ut=
 au BufReadPost * if exists('b:current_syntax') && b:current_syntax == "fortran"
 au BufReadPost *   syntax match ACC /!$acc.*/ contains=ACCKey,ACCKeys,ACCKeysUpdate,ACCKeysLoop,ACCKeysData,ACCKeysCond
