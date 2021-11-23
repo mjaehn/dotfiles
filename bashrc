@@ -24,6 +24,8 @@ elif [[ "${HOSTNAME}" == m* ]]; then
     BASHRC_HOST='mistral'
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
+elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
+    BASHRC_HOST='home-pc'
 fi
 export BASHRC_HOST
 
