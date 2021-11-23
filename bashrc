@@ -61,7 +61,6 @@ PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 # Custom modules/paths/envs for each machine
 
 # daint
-<<<<<<< HEAD
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/mjaehn/script_utils
