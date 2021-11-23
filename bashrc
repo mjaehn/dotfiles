@@ -154,6 +154,7 @@ alias tL='tail -f LOG*'
 alias ls="ls --color"
 alias ll="ls -al"
 alias la='ls -A'
+alias l="ls -al"
 alias scra='cd ${SCRATCH}'
 alias c="clear"
 alias g='grep -i'
@@ -161,18 +162,12 @@ alias h='history | grep'
 alias t='tail -f'
 alias dc="cd"
 alias ..='cd ..'
-<<<<<<< HEAD
 alias l..='cd ..'
 alias cd..="cd .."
 alias ml='module load'
 alias src='source'
-=======
-alias ....='cd ../..'
+alias ...='cd ../..'
 alias lsC='ctags -R'
-alias ml='module load'
-alias mll='module load'
-alias su='source'
->>>>>>> 3e4a95a0acc0c677a4d0b071dd64507953166cbc
 alias srcrc='source ~/.bashrc'
 alias rcvim='vim ~/.bashrc'
 alias gt='git status'
