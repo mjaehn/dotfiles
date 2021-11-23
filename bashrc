@@ -67,7 +67,7 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
 
 # daint
 elif [[ "${BASHRC_HOST}" == "daint" ]]; then
-    . /etc/bash_completion.d/git.sh
+    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/juckerj/script_utils
     test -s ~/.profile && . ~/.profile || true
 

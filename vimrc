@@ -100,6 +100,9 @@ set laststatus=2
 "used for rainbow plugin
 let g:rainbow_active = 1
 
+"mapping for tabexpansion of tag-definition"
+nmap <silent> ft<space> :execute 'tab tag '.expand('<cword>')<CR>
+
 syntax enable
 set t_Co=256
 set background=dark
