@@ -61,8 +61,9 @@ PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 # Custom modules/paths/envs for each machine
 
 # daint
+<<<<<<< HEAD
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
-    . /etc/bash_completion.d/git.sh
+    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/mjaehn/script_utils
     test -s ~/.profile && . ~/.profile || true
 
@@ -161,10 +162,18 @@ alias h='history | grep'
 alias t='tail -f'
 alias dc="cd"
 alias ..='cd ..'
+<<<<<<< HEAD
 alias l..='cd ..'
 alias cd..="cd .."
 alias ml='module load'
 alias src='source'
+=======
+alias ....='cd ../..'
+alias lsC='ctags -R'
+alias ml='module load'
+alias mll='module load'
+alias su='source'
+>>>>>>> 3e4a95a0acc0c677a4d0b071dd64507953166cbc
 alias srcrc='source ~/.bashrc'
 alias rcvim='vim ~/.bashrc'
 alias gt='git status'
