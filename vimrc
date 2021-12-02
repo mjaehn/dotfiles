@@ -4,6 +4,7 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
  set rtp+=~/.vim/vim-extensions/Vundle.vim
  set rtp+=~/.vim/vim-extensions/ctrlp.vim
+ set rtp+=~/.vim/vim-extensions/vim-autotag
 
 if $BASHRC_HOST == "tsa"
     call vundle#begin()
@@ -99,6 +100,8 @@ autocmd Filetype fortran setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 set laststatus=2
 "used for rainbow plugin
 let g:rainbow_active = 1
+"used for autotags plugin"
+let g:autotagTagsFile="tags"
 
 "mapping for tabexpansion of tag-definition"
 nmap <silent> ft<space> :execute 'tab tag '.expand('<cword>')<CR>
