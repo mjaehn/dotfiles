@@ -104,9 +104,10 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias squ='squeue'
     alias jenkins='cd /scratch/snx3000/jenkins/workspace'
     alias proj="cd /project/s903/mjaehn"
-    alias st="cd /store/c2sm/s903"
+    alias st="cd /store/c2sm/c2sme"
     alias nn="module load daint-gpu NCO ncview"
     alias o="xdg-open"
+    alias venv="source /users/mjaehn/venv-jae/bin/activate"
 
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
