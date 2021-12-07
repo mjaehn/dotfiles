@@ -107,6 +107,7 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
 elif [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
+    alias spakdbg="spack  --config-scope=${HOME}/.spack/debug"
     alias sc='cd /scratch/snx3000/juckerj/'
     alias aall="scancel -u juckerj"
     alias sq='squeue -u juckerj'
