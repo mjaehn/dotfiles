@@ -89,8 +89,6 @@ case ${BASHRC_HOST} in
       dom) 
           export SPACK_ROOT=/project/g110/spack/user/dom/spack 
           ;;
-      *)
-          echo bashrc: Spack not available on $BASHRC_HOST!
 esac
 
 # Machine specific aliases
