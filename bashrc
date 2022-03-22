@@ -67,6 +67,20 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/mjaehn/script_utils
     test -s ~/.profile && . ~/.profile || true
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/users/mjaehn/miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
 
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
@@ -108,6 +122,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias nn="module load daint-gpu NCO ncview"
     alias o="xdg-open"
     alias venv="source /users/mjaehn/venv-jae/bin/activate"
+    alias psy=". activate_psyplot"
 
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
@@ -188,20 +203,4 @@ alias lvi="vi"
 alias vi="vim -p"
 alias nd="ncdump -h"
 alias nv="ncview"
-
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/scratch/snx3000/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/scratch/snx3000/mjaehn/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
