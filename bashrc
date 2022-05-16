@@ -22,9 +22,9 @@ elif [[ "${HOSTNAME}" == levante* ]]; then
     source /sw/etc/profile.levante
     if tty -s; then
         BASHRC_HOST='levante'
+        module load git
     # load java and git as Jenkins user
     else
-        module load git
         return
     fi
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 

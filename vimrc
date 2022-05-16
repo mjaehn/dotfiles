@@ -30,6 +30,19 @@ elseif $BASHRC_HOST == "euler" || $BASHRC_HOST == "levante"
     Plugin 'ctrlp.vim'
     call vundle#end()            " required
     filetype plugin indent on    " required
+
+elseif $BASHRC_HOST == "levante"
+    call vundle#begin()
+    " " let Vundle manage Vundle, required
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'preservim/nerdtree'
+    Plugin 'Yggdroot/indentLine'
+    Plugin 'itchyny/lightline.vim'
+    Plugin 'luochen1990/rainbow'
+    Plugin 'airblade/vim-gitgutter'
+    Plugin 'ctrlp.vim'
+    call vundle#end()            " required
+    filetype plugin indent on    " required
 else
     call vundle#begin()
     " " let Vundle manage Vundle, required
