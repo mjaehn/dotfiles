@@ -24,6 +24,9 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     fi
 elif [[ "${HOSTNAME}" == m* ]]; then 
     BASHRC_HOST='mistral'
+
+elif [[ "${HOSTNAME}" == *levante* ]]; then 
+    BASHRC_HOST='levante'
 fi
 export BASHRC_HOST
 
@@ -74,6 +77,9 @@ elif [[ "${BASHRC_HOST}" == "daint" ]]; then
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
     test -s ~/.profile && . ~/.profile || true
+
+elif [[ "${BASHRC_HOST}" == "levante" ]]; then
+    module load git
 fi
 
 # Spack
@@ -143,6 +149,14 @@ elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
     alias hh='cd /pf/b/b381001'
     alias sc='cd /scratch/b/b381001'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
+
+# levante
+elif [[ "${BASHRC_HOST}" == "levante" ]]; then
+    alias aall="scancel -u b381001"
+    alias sq='squeue -u b381001'
+    alias squ='squeue'
+    alias hh='cd /home/b/b381001'
+    alias sc='cd /scratch/b/b381001/'
 fi
 
 # Model specific aliases
