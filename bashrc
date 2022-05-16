@@ -26,7 +26,13 @@ elif [[ "${HOSTNAME}" == m* ]]; then
     BASHRC_HOST='mistral'
 
 elif [[ "${HOSTNAME}" == *levante* ]]; then 
-    BASHRC_HOST='levante'
+    if tty -s; then
+        BASHRC_HOST='levante'
+
+    # do nothing for me as Jenkins user
+    else
+        return
+    fi
 fi
 export BASHRC_HOST
 
