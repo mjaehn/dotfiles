@@ -78,11 +78,6 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
 elif [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/juckerj/script_utils
-    test -s ~/.profile && . ~/.profile || true
-
-# dom
-elif [[ "${BASHRC_HOST}" == "dom" ]]; then
-    test -s ~/.profile && . ~/.profile || true
 
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     module load git
