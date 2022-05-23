@@ -26,6 +26,9 @@ cd ..
 echo "Link bashrc"
 ln -s -f $(pwd)/bashrc ~/.bashrc
 
+echo "Link profile"
+ln -s -f $(pwd)/profile ~/.profile
+
 echo "Link vimrc"
 ln -s -f $(pwd)/vimrc ~/.vimrc
 
