@@ -20,6 +20,8 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     else
         return
     fi
+elif [[ "${HOSTNAME}" == levante* ]]; then 
+    BASHRC_HOST='levante'
 elif [[ "${HOSTNAME}" == m* ]]; then 
     BASHRC_HOST='mistral'
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
@@ -152,6 +154,13 @@ elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
     alias sq='squeue -u b381473'
     alias squ='squeue'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
+
+# levante
+elif [[ "${BASHRC_HOST}" == "levante" ]]; then
+    alias aall="scancel -u b381473"
+    alias sq='squeue -u b381473'
+    alias squ='squeue'
+    alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
 fi
 
 # Model specific aliases
@@ -161,6 +170,7 @@ alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
 alias mistral="ssh -X b381473@mistral.dkrz.de"
+alias levante="ssh -X b381473@levante.dkrz.de"
 
 # COSMO
 alias ct="cat testsuite.out"
