@@ -177,6 +177,10 @@ alias tL='tail -f LOG*'
 
 
 # General aliases
+alias m8='make -j 8'
+alias m3='make -j 3'
+
+# navigation
 alias ls='ls --color'
 alias lsl='ls -ltrh --color'
 alias la='ls -A'
@@ -184,17 +188,20 @@ alias g='grep -i'
 alias t='tail -f'
 alias ..='cd ..'
 alias ....='cd ../..'
+alias fp='find "$PWD" -name'
 alias lsC='ctags -R'
+
+#environment
 alias ml='module load'
 alias mll='module load'
 alias su='source'
 alias srcrc='source ~/.bashrc'
 alias rcvim='vim ~/.bashrc'
+
+# git
 alias gt='git status'
 alias ga='git add'
 alias gsi='git submodule init'
 alias gsu='git submodule update'
-alias ncd='ncdump -h'
-alias ncw='ncview'
-alias fp='find "$PWD" -name'
 alias gpo='git push origin'
+
