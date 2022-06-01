@@ -72,13 +72,6 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
     test -s ~/.profile && . ~/.profile || true
 
-# iac-laptop
-elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
-    __conda_setup="$('/mnt/c/Users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    fi
-    unset __conda_setup
 fi
 
 # Spack
@@ -186,18 +179,28 @@ alias lvi="vi"
 alias vi="vim -p"
 alias nd="ncdump -h"
 alias nv="ncview"
+alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/scratch/snx3000/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
+    conda_home=/mnt/c/Users/mjaehn
+    __conda_setup="$('/mnt/c/Users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+elif [[ "${BASHRC_HOST}" == "daint" ]]; then
+    conda_home=/scratch/snx3000/mjaehn
+    __conda_setup="$('/scratch/snx3000/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+else 
+    conda_home=/home/mjaehn
+    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+fi
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "${conda_home}/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "${conda_home}/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/scratch/snx3000/mjaehn/miniconda3/bin:$PATH"
+        export PATH="${conda_home}/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
