@@ -77,7 +77,6 @@ if [[ "${BASHRC_HOST}" == "tsa" ]]; then
 # daint
 elif [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-    export PATH=$PATH:/users/juckerj/script_utils
 
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     module load git
@@ -121,6 +120,7 @@ elif [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias squ='squeue'
     alias hh='cd /users/juckerj/'
     alias jenkins='cd /scratch/snx3000/jenkins/workspace'
+    alias touch-spack='touch_all /scratch/snx3000/juckerj/SPACK-INSTALL'
 
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
@@ -204,4 +204,28 @@ alias ga='git add'
 alias gsi='git submodule init'
 alias gsu='git submodule update'
 alias gpo='git push origin'
+
+# helper functions
+
+touch_all() {
+
+# Touch all files in a folder
+# Usage:
+#       touch_all -> touch all files in current folder
+#       touch_all <folder> -> touch all files in <folder>
+
+    if [ $# -eq 0 ]; then
+        folder=$(pwd)
+    else
+        folder=$1
+    fi 
+    cd $folder
+
+    find -print | while read filename; do
+        # do whatever you want with the file
+        echo "touch $filename"
+        touch "$filename"
+    done
+    cd -
+}
 
