@@ -22,15 +22,15 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     else
         return
     fi
-elif [[ "${HOSTNAME}" == m* ]]; then 
-    BASHRC_HOST='mistral'
-
 elif [[ "${HOSTNAME}" == *levante* ]]; then 
     if tty -s; then
         BASHRC_HOST='levante'
 
-    # do nothing for me as Jenkins user
+    # load java and git as Jenkins user
     else
+        source /sw/etc/profile.levante
+        module load openjdk/17.0.0_35-gcc-11.2.0
+        module load git
         return
     fi
 fi
