@@ -90,8 +90,6 @@ elif [[ "${BASHRC_HOST}" == "dom" ]]; then
 
 # iac-laptop
 elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
-    # activate ssh-agent
-    eval $(ssh-agent) && ssh-add
     __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
