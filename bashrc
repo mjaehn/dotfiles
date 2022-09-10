@@ -231,3 +231,12 @@ touch_all() {
     cd -
 }
 
+scp_to_daint() {
+
+    scp -o ProxyCommand="ssh -W %h:%p juckerj@ela.cscs.ch" $1 juckerj@daint.cscs.ch:$2
+}
+
+scp_from_daint() {
+
+    scp -o ProxyCommand="ssh -W %h:%p juckerj@ela.cscs.ch" juckerj@daint.cscs.ch:$1 $2
+}
