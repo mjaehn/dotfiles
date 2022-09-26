@@ -125,3 +125,6 @@ au BufReadPost *   highlight ACCKeysLoop ctermfg=208 ctermbg=235 cterm=bold
 au BufReadPost *   highlight ACCKeysData ctermfg=132 ctermbg=235 cterm=bold
 au BufReadPost *   highlight ACCKeysCond ctermfg=124 ctermbg=235 cterm=bold
 au BufReadPost * endif
+
+"cylc files"
+autocmd BufNewFile,BufRead *.cylc set syntax=clean

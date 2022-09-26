@@ -18,6 +18,8 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     else
         return
     fi
+elif [[ "${HOSTNAME}" == levante* ]]; then 
+    BASHRC_HOST='levante'
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
@@ -62,14 +64,21 @@ PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
 
+# Eeuler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     export PATH=/cluster/home/mjaehn/bin:$PATH
 
 # iac-laptop
 elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
-    __conda_setup="$('/mnt/c/Users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
+    else
+        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+        else
+            export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+        fi
     fi
     unset __conda_setup
 fi
@@ -99,6 +108,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias nn="module load daint-gpu NCO ncview"
     alias o="xdg-open"
     alias venv="source /users/mjaehn/venv-jae/bin/activate"
+    alias psy=". activate_psyplot"
 
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
@@ -116,8 +126,8 @@ elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias sq='bjobs'
     alias squ='bbjobs'
 
-# mistral
-elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
+# levante
+elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias aall="scancel -u b381473"
     alias sq='squeue -u b381473'
     alias squ='squeue'
@@ -130,7 +140,7 @@ fi
 alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
-alias mistral="ssh -X b381473@mistral.dkrz.de"
+alias levante="ssh -X b381473@levante.dkrz.de"
 
 # COSMO
 alias ct="cat testsuite.out"
@@ -179,20 +189,5 @@ alias lvi="vi"
 alias vi="vim -p"
 alias nd="ncdump -h"
 alias nv="ncview"
-
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/scratch/snx3000/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/scratch/snx3000/mjaehn/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 
