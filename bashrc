@@ -22,8 +22,6 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     fi
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     BASHRC_HOST='levante'
-elif [[ "${HOSTNAME}" == m* ]]; then 
-    BASHRC_HOST='mistral'
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
@@ -146,13 +144,6 @@ elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias sq='bjobs'
     alias squ='bbjobs'
 
-# mistral
-elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
-    alias aall="scancel -u b381473"
-    alias sq='squeue -u b381473'
-    alias squ='squeue'
-    alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
-
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias aall="scancel -u b381473"
@@ -167,7 +158,6 @@ fi
 alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
-alias mistral="ssh -X b381473@mistral.dkrz.de"
 alias levante="ssh -X b381473@levante.dkrz.de"
 
 # COSMO
