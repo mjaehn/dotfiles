@@ -122,9 +122,9 @@ elif [[ "${BASHRC_HOST}" == "dom" ]]; then
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias aall="bkill 0"
-    alias sq='bjobs'
-    alias squ='bbjobs'
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
+    alias squ='squeue'
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
