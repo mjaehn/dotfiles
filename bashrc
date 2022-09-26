@@ -12,16 +12,12 @@ if [[ "${HOSTNAME}" == daint* ]]; then
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
-
     if tty -s; then
         BASHRC_HOST='euler'
-
     # do nothing for me as Jenkins user
     else
         return
     fi
-elif [[ "${HOSTNAME}" == m* ]]; then 
-    BASHRC_HOST='mistral'
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
@@ -65,12 +61,9 @@ PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-    export PATH=$PATH:/users/mjaehn/script_utils
-    test -s ~/.profile && . ~/.profile || true
 
-# dom
-elif [[ "${BASHRC_HOST}" == "dom" ]]; then
-    test -s ~/.profile && . ~/.profile || true
+elif [[ "${BASHRC_HOST}" == "euler" ]]; then
+    export PATH=/cluster/home/mjaehn/bin:$PATH
 
 # iac-laptop
 elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
