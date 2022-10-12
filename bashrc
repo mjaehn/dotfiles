@@ -198,6 +198,9 @@ alias gsi='git submodule init'
 alias gsu='git submodule update'
 alias gpo='git push origin'
 
+#vim
+alias vims='vim -S Session.vim'
+
 # helper functions
 
 touch_all() {
