@@ -139,19 +139,10 @@ elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
     alias sc='cd /cluster/scratch/juckerj/'
-    alias aall="bkill 0"
+    alias aall="scancel -u juckerj"
     alias hh='cd /cluster/home/juckerj/'
-    alias sq='bjobs'
-    alias squ='bbjobs'
-
-# mistral
-elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
-    alias aall="scancel -u b381001"
-    alias sq='squeue -u b381001'
+    alias sq='squeue -u juckerj'
     alias squ='squeue'
-    alias hh='cd /pf/b/b381001'
-    alias sc='cd /scratch/b/b381001'
-    alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
