@@ -12,18 +12,14 @@ if [[ "${HOSTNAME}" == daint* ]]; then
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
-
     if tty -s; then
         BASHRC_HOST='euler'
-
     # do nothing for me as Jenkins user
     else
         return
     fi
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     BASHRC_HOST='levante'
-elif [[ "${HOSTNAME}" == m* ]]; then 
-    BASHRC_HOST='mistral'
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
@@ -69,43 +65,13 @@ PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-    export PATH=$PATH:/users/mjaehn/script_utils
-    test -s ~/.profile && . ~/.profile || true
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
-        else
-            export PATH="/users/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
 
-# dom
-elif [[ "${BASHRC_HOST}" == "dom" ]]; then
-    test -s ~/.profile && . ~/.profile || true
+# Euler
+elif [[ "${BASHRC_HOST}" == "euler" ]]; then
+    export PATH=/cluster/home/mjaehn/bin:$PATH
 
-# iac-laptop
-    # activate ssh-agent
-    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
-        else
-            export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
-        fi
-    fi
-    unset __conda_setup
-
-# co2
-elif [[ "${BASHRC_HOST}" == "co2" ]]; then
+# iac-laptop / co2
+elif [[ "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "iac-laptop"  ]]; then
     __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -158,16 +124,9 @@ elif [[ "${BASHRC_HOST}" == "dom" ]]; then
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias aall="bkill 0"
-    alias sq='bjobs'
-    alias squ='bbjobs'
-
-# mistral
-elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
-    alias aall="scancel -u b381473"
-    alias sq='squeue -u b381473'
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
     alias squ='squeue'
-    alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
@@ -183,7 +142,6 @@ fi
 alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
-alias mistral="ssh -X b381473@mistral.dkrz.de"
 alias levante="ssh -X b381473@levante.dkrz.de"
 
 # COSMO
