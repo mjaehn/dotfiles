@@ -28,6 +28,8 @@ elif [[ "${HOSTNAME}" == IACPC* ]]; then
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
     BASHRC_HOST='home-pc'
+elif [[ "${HOSTNAME}" == co2 ]]; then 
+    BASHRC_HOST='co2'
 fi
 export BASHRC_HOST
 
@@ -89,9 +91,21 @@ elif [[ "${BASHRC_HOST}" == "dom" ]]; then
     test -s ~/.profile && . ~/.profile || true
 
 # iac-laptop
-elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
     # activate ssh-agent
-    eval $(ssh-agent) && ssh-add
+    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+        else
+            export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+        fi
+    fi
+    unset __conda_setup
+
+# co2
+elif [[ "${BASHRC_HOST}" == "co2" ]]; then
     __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
