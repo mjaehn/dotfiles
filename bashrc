@@ -14,12 +14,14 @@ elif [[ "${HOSTNAME}" == daint* ]]; then
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
-
     if tty -s; then
         BASHRC_HOST='euler'
 
-    # do nothing for me as Jenkins user
+    # Source global definitions as Jenkins user
     else
+        if [ -f /etc/bashrc ]; then
+            . /etc/bashrc
+        fi
         return
     fi
 elif [[ "${HOSTNAME}" == *levante* ]]; then 
