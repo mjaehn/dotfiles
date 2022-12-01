@@ -12,22 +12,20 @@ if [[ "${HOSTNAME}" == daint* ]]; then
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
-
     if tty -s; then
         BASHRC_HOST='euler'
-
     # do nothing for me as Jenkins user
     else
         return
     fi
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     BASHRC_HOST='levante'
-elif [[ "${HOSTNAME}" == m* ]]; then 
-    BASHRC_HOST='mistral'
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
     BASHRC_HOST='home-pc'
+elif [[ "${HOSTNAME}" == co2 ]]; then 
+    BASHRC_HOST='co2'
 fi
 export BASHRC_HOST
 
@@ -67,17 +65,13 @@ PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-    export PATH=$PATH:/users/mjaehn/script_utils
-    test -s ~/.profile && . ~/.profile || true
 
-# dom
-elif [[ "${BASHRC_HOST}" == "dom" ]]; then
-    test -s ~/.profile && . ~/.profile || true
+# Euler
+elif [[ "${BASHRC_HOST}" == "euler" ]]; then
+    export PATH=/cluster/home/mjaehn/bin:$PATH
 
-# iac-laptop
-elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
-    # activate ssh-agent
-    eval $(ssh-agent) && ssh-add
+# iac-laptop / co2
+elif [[ "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "iac-laptop"  ]]; then
     __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -130,16 +124,9 @@ elif [[ "${BASHRC_HOST}" == "dom" ]]; then
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias aall="bkill 0"
-    alias sq='bjobs'
-    alias squ='bbjobs'
-
-# mistral
-elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
-    alias aall="scancel -u b381473"
-    alias sq='squeue -u b381473'
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
     alias squ='squeue'
-    alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
