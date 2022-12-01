@@ -69,20 +69,6 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/mjaehn/script_utils
     test -s ~/.profile && . ~/.profile || true
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
-        else
-            export PATH="/users/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
 
 # dom
 elif [[ "${BASHRC_HOST}" == "dom" ]]; then
@@ -97,9 +83,9 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
         eval "$__conda_setup"
     else
         if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+  . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
         else
-            export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+  export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
         fi
     fi
     unset __conda_setup
@@ -169,8 +155,7 @@ fi
 alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
-alias mistral="ssh -X b381473@mistral.dkrz.de"
-alias levante="ssh -X b381473@levante.dkrz.de"
+alias levante="ssh -X levante"
 
 # COSMO
 alias ct="cat testsuite.out"
@@ -210,6 +195,7 @@ alias ga='git add'
 alias gsi='git submodule init'
 alias gsu='git submodule update'
 alias gsui='git submodule update --init'
+alias gsuir='git submodule update --init --recursive'
 alias gl='git log --pretty=format:"%h - %an, %ar : %s"'
 alias nd='ncdump -h'
 alias nv='ncview'
