@@ -34,6 +34,50 @@ export LS_COLORS='di=1;94:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31
 
 # Git settings
 export GIT_EDITOR="vim"
+
+# Custom modules/paths/envs for each machine
+
+# daint
+if [[ "${BASHRC_HOST}" == "daint" ]]; then
+    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
+# >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/scratch/snx3000/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/scratch/snx3000/mjaehn/miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+# <<< conda initialize <<<
+
+# levante / DKRZ
+elif [[ "${BASHRC_HOST}" == "levante" ]]; then
+    module load git
+
+# Euler
+elif [[ "${BASHRC_HOST}" == "euler" ]]; then
+    export PATH=/cluster/home/mjaehn/bin:$PATH
+
+# iac-laptop / co2
+elif [[ "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "iac-laptop"  ]]; then
+    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+          . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+          export PATH="/home/mjaehn/miniconda3/bin:$PATH" 
+        fi
+    fi
+    unset __conda_setup
+fi
+
 #parse_git_branch() {
 #git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 #}
@@ -59,45 +103,6 @@ BRANCH='\[\033[00;33m\]$(git_branch)\[\033[00m\]'
 COMMIT='\[\033[00;97m\]$(git_commit)\[\033[00m\]'
 END=' \n\$ '
 PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
-
-# Custom modules/paths/envs for each machine
-
-# daint
-if [[ "${BASHRC_HOST}" == "daint" ]]; then
-    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-# >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/scratch/snx3000/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/scratch/snx3000/mjaehn/miniconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-# <<< conda initialize <<<
-
-# Euler
-elif [[ "${BASHRC_HOST}" == "euler" ]]; then
-    export PATH=/cluster/home/mjaehn/bin:$PATH
-
-# iac-laptop / co2
-elif [[ "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "iac-laptop"  ]]; then
-    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-          . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
-        else
-          export PATH="/home/mjaehn/miniconda3/bin:$PATH" 
-        fi
-    fi
-    unset __conda_setup
-fi
 
 # Spack
 case ${BASHRC_HOST} in
