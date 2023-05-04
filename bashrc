@@ -157,6 +157,7 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias squ='squeue'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
     alias st='cd /pool/data/CLMcom/CCLM/reanalyses'
+    alias scra='cd /scratch/b/b381473'
 fi
 
 # Model specific aliases
