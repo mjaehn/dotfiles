@@ -18,7 +18,7 @@ if $BASHRC_HOST == "tsa"
     call vundle#end()            " required
     filetype plugin indent on    " required
 
-elseif $BASHRC_HOST == "euler"
+elseif $BASHRC_HOST == "euler" || $BASHRC_HOST == "levante"
     call vundle#begin()
     " " let Vundle manage Vundle, required
     Plugin 'VundleVim/Vundle.vim'

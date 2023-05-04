@@ -19,7 +19,14 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
         return
     fi
 elif [[ "${HOSTNAME}" == levante* ]]; then 
-    BASHRC_HOST='levante'
+    source /sw/etc/profile.levante
+    if tty -s; then
+        BASHRC_HOST='levante'
+    # load java and git as Jenkins user
+    else
+        module load git
+        return
+    fi
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
@@ -40,10 +47,6 @@ export GIT_EDITOR="vim"
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-
-# levante / DKRZ
-elif [[ "${BASHRC_HOST}" == "levante" ]]; then
-    module load git
 
 # Euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
@@ -139,6 +142,7 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias sq='squeue -u b381473'
     alias squ='squeue'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
+    alias st='cd /pool/data/CLMcom/CCLM/reanalyses'
 fi
 
 # Model specific aliases
