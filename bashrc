@@ -212,4 +212,4 @@ alias vi="vim -p"
 alias nd="ncdump -h"
 alias nv="ncview"
 alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
-
+alias f="find . -name"
