@@ -19,7 +19,14 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
         return
     fi
 elif [[ "${HOSTNAME}" == levante* ]]; then 
-    BASHRC_HOST='levante'
+    source /sw/etc/profile.levante
+    if tty -s; then
+        BASHRC_HOST='levante'
+        module load git
+    # load java and git as Jenkins user
+    else
+        return
+    fi
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
@@ -54,10 +61,6 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     fi
     unset __conda_setup
 # <<< conda initialize <<<
-
-# levante / DKRZ
-elif [[ "${BASHRC_HOST}" == "levante" ]]; then
-    module load git
 
 # Euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
@@ -153,6 +156,8 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias sq='squeue -u b381473'
     alias squ='squeue'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
+    alias st='cd /pool/data/CLMcom/CCLM/reanalyses'
+    export SCRATCH=/scratch/b/b381473
 fi
 
 # Model specific aliases
