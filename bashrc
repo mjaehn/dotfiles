@@ -47,20 +47,17 @@ export GIT_EDITOR="vim"
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-# >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/scratch/snx3000/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    __conda_setup="$('/project/d121/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        if [ -f "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+          . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh"
         else
-            export PATH="/scratch/snx3000/mjaehn/miniconda3/bin:$PATH"
+          export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH" 
         fi
     fi
     unset __conda_setup
-# <<< conda initialize <<<
 
 # Euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
@@ -218,3 +215,4 @@ alias nd="ncdump -h"
 alias nv="ncview"
 alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 alias f="find . -name"
+alias ml="module load"
