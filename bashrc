@@ -104,15 +104,52 @@ COMMIT='\[\033[00;97m\]$(git_commit)\[\033[00m\]'
 END=' \n\$ '
 PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 
-# Spack
-case ${BASHRC_HOST} in
-      daint) 
-          export SPACK_ROOT=/project/g110/spack/user/daint/spack
-          ;;
-      dom) 
-          export SPACK_ROOT=/project/g110/spack/user/dom/spack 
-          ;;
-esac
+# Custom modules/paths/envs for each machine
+
+# daint
+if [[ "${BASHRC_HOST}" == "daint" ]]; then
+    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
+    export PATH=$PATH:/users/mjaehn/script_utils
+    test -s ~/.profile && . ~/.profile || true
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+        else
+            export PATH="/users/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+
+# dom
+elif [[ "${BASHRC_HOST}" == "dom" ]]; then
+    test -s ~/.profile && . ~/.profile || true
+
+# iac-laptop
+elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
+    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+        else
+            export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+        fi
+    fi
+    unset __conda_setup
+    conda activate base
+
+    # Ruby for local gh pages testing
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(rbenv init -)"
+    export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+fi
 
 # Machine specific aliases
 
@@ -155,6 +192,9 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
     alias st='cd /pool/data/CLMcom/CCLM/reanalyses'
     export SCRATCH=/scratch/b/b381473
+
+elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" ]]; then
+    alias cscskey="cd /home/mjaehn/git/cscs-keys && ./generate-keys.sh"
 fi
 
 # Model specific aliases
