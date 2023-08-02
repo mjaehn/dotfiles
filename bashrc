@@ -19,7 +19,14 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
         return
     fi
 elif [[ "${HOSTNAME}" == levante* ]]; then 
-    BASHRC_HOST='levante'
+    source /sw/etc/profile.levante
+    if tty -s; then
+        BASHRC_HOST='levante'
+        module load git
+    # load java and git as Jenkins user
+    else
+        return
+    fi
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
@@ -40,10 +47,17 @@ export GIT_EDITOR="vim"
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-
-# levante / DKRZ
-elif [[ "${BASHRC_HOST}" == "levante" ]]; then
-    module load git
+    __conda_setup="$('/project/d121/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+          . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+          export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH" 
+        fi
+    fi
+    unset __conda_setup
 
 # Euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
@@ -56,9 +70,9 @@ elif [[ "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "iac-laptop"  ]]; then
         eval "$__conda_setup"
     else
         if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-  . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+          . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
         else
-  export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+          export PATH="/home/mjaehn/miniconda3/bin:$PATH" 
         fi
     fi
     unset __conda_setup
@@ -110,7 +124,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
     alias jenkins='cd /scratch/snx3000/jenkins/workspace'
-    alias proj="cd /project/s903/mjaehn"
+    alias proj="cd /project/d121/mjaehn"
     alias st="cd /store/c2sm/c2sme"
     alias nn="module load daint-gpu NCO ncview"
     alias o="xdg-open"
@@ -139,6 +153,8 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias sq='squeue -u b381473'
     alias squ='squeue'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
+    alias st='cd /pool/data/CLMcom/CCLM/reanalyses'
+    export SCRATCH=/scratch/b/b381473
 
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" ]]; then
     alias cscskey="cd /home/mjaehn/git/cscs-keys && ./generate-keys.sh"
@@ -201,4 +217,5 @@ alias vi="vim -p"
 alias nd="ncdump -h"
 alias nv="ncview"
 alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
-
+alias f="find . -name"
+alias ml="module load"
