@@ -12,22 +12,27 @@ if [[ "${HOSTNAME}" == daint* ]]; then
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
-
     if tty -s; then
         BASHRC_HOST='euler'
-
     # do nothing for me as Jenkins user
     else
         return
     fi
 elif [[ "${HOSTNAME}" == levante* ]]; then 
-    BASHRC_HOST='levante'
-elif [[ "${HOSTNAME}" == m* ]]; then 
-    BASHRC_HOST='mistral'
+    source /sw/etc/profile.levante
+    if tty -s; then
+        BASHRC_HOST='levante'
+        module load git
+    # load java and git as Jenkins user
+    else
+        return
+    fi
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
 elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
     BASHRC_HOST='home-pc'
+elif [[ "${HOSTNAME}" == co2 ]]; then 
+    BASHRC_HOST='co2'
 fi
 export BASHRC_HOST
 
@@ -36,6 +41,43 @@ export LS_COLORS='di=1;94:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31
 
 # Git settings
 export GIT_EDITOR="vim"
+
+# Custom modules/paths/envs for each machine
+
+# daint
+if [[ "${BASHRC_HOST}" == "daint" ]]; then
+    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
+    __conda_setup="$('/project/d121/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+          . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+          export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH" 
+        fi
+    fi
+    unset __conda_setup
+
+# Euler
+elif [[ "${BASHRC_HOST}" == "euler" ]]; then
+    export PATH=/cluster/home/mjaehn/bin:$PATH
+
+# iac-laptop / co2
+elif [[ "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "iac-laptop"  ]]; then
+    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+          . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+          export PATH="/home/mjaehn/miniconda3/bin:$PATH" 
+        fi
+    fi
+    unset __conda_setup
+fi
+
 #parse_git_branch() {
 #git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 #}
@@ -62,6 +104,7 @@ COMMIT='\[\033[00;97m\]$(git_commit)\[\033[00m\]'
 END=' \n\$ '
 PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 
+<<<<<<< HEAD
 # Custom modules/paths/envs for each machine
 
 # daint
@@ -102,17 +145,12 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
     fi
     unset __conda_setup
     conda activate base
-fi
 
-# Spack
-case ${BASHRC_HOST} in
-      daint) 
-          export SPACK_ROOT=/project/g110/spack/user/daint/spack
-          ;;
-      dom) 
-          export SPACK_ROOT=/project/g110/spack/user/dom/spack 
-          ;;
-esac
+    # Ruby for local gh pages testing
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(rbenv init -)"
+    export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+fi
 
 # Machine specific aliases
 
@@ -124,7 +162,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
     alias jenkins='cd /scratch/snx3000/jenkins/workspace'
-    alias proj="cd /project/s903/mjaehn"
+    alias proj="cd /project/d121/mjaehn"
     alias st="cd /store/c2sm/c2sme"
     alias nn="module load daint-gpu NCO ncview"
     alias o="xdg-open"
@@ -143,16 +181,9 @@ elif [[ "${BASHRC_HOST}" == "dom" ]]; then
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
     alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
-    alias aall="bkill 0"
-    alias sq='bjobs'
-    alias squ='bbjobs'
-
-# mistral
-elif [[ "${BASHRC_HOST}" == "mistral" ]]; then
-    alias aall="scancel -u b381473"
-    alias sq='squeue -u b381473'
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
     alias squ='squeue'
-    alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
@@ -160,6 +191,11 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias sq='squeue -u b381473'
     alias squ='squeue'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
+    alias st='cd /pool/data/CLMcom/CCLM/reanalyses'
+    export SCRATCH=/scratch/b/b381473
+
+elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" ]]; then
+    alias cscskey="cd /home/mjaehn/git/cscs-keys && ./generate-keys.sh"
 fi
 
 # Model specific aliases
@@ -168,8 +204,7 @@ fi
 alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
-alias mistral="ssh -X b381473@mistral.dkrz.de"
-alias levante="ssh -X b381473@levante.dkrz.de"
+alias levante="ssh -X levante"
 
 # COSMO
 alias ct="cat testsuite.out"
@@ -209,6 +244,7 @@ alias ga='git add'
 alias gsi='git submodule init'
 alias gsu='git submodule update'
 alias gsui='git submodule update --init'
+alias gsuir='git submodule update --init --recursive'
 alias gl='git log --pretty=format:"%h - %an, %ar : %s"'
 alias nd='ncdump -h'
 alias nv='ncview'
@@ -219,7 +255,5 @@ alias vi="vim -p"
 alias nd="ncdump -h"
 alias nv="ncview"
 alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
-
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+alias f="find . -name"
+alias ml="module load"
