@@ -104,7 +104,6 @@ COMMIT='\[\033[00;97m\]$(git_commit)\[\033[00m\]'
 END=' \n\$ '
 PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 
-<<<<<<< HEAD
 # Custom modules/paths/envs for each machine
 
 # daint
