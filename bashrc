@@ -101,6 +101,7 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
         fi
     fi
     unset __conda_setup
+    conda activate base
 fi
 
 # Spack
@@ -219,3 +220,6 @@ alias nd="ncdump -h"
 alias nv="ncview"
 alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
