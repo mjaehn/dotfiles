@@ -139,6 +139,9 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias sq='squeue -u b381473'
     alias squ='squeue'
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
+
+elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" ]]; then
+    alias cscskey="cd /home/mjaehn/git/cscs-keys && ./generate-keys.sh"
 fi
 
 # Model specific aliases
