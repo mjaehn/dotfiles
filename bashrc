@@ -169,7 +169,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias psy=". activate_psyplot"
 
 # dom and balfrin
-elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin"]]; then
+elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
