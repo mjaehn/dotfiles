@@ -9,6 +9,8 @@ test -s ~/.alias && . ~/.alias || true
 # determine hostname for later use in all dotfiles
 if [[ "${HOSTNAME}" == daint* ]]; then 
     BASHRC_HOST='daint'
+elif [[ "${HOSTNAME}" == balfrin* ]]; then 
+    BASHRC_HOST='balfrin'
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
@@ -155,8 +157,6 @@ fi
 
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
-    alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
-    alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
@@ -168,18 +168,14 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias venv="source /users/mjaehn/venv-jae/bin/activate"
     alias psy=". activate_psyplot"
 
-# dom
-elif [[ "${BASHRC_HOST}" == "dom" ]]; then
-    alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
-    alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
+# dom and balfrin
+elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin"]]; then
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
 
 # euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
-    alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
-    alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
