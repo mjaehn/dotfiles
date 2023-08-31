@@ -64,6 +64,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
 # Euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     export PATH=/cluster/home/mjaehn/bin:$PATH
+fi
 
 #parse_git_branch() {
 #git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
