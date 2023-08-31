@@ -32,6 +32,9 @@ ln -s -f $(pwd)/profile ~/.profile
 echo "Link vimrc"
 ln -s -f $(pwd)/vimrc ~/.vimrc
 
+echo "Link ssh-config"
+ln -s -f $(pwd)/config ~/.ssh/config
+
 echo ""
 echo "Run:"
 echo ""
