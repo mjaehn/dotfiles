@@ -131,6 +131,8 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" ||  "${BASHRC_HOST}" == "home-pc" ]]; t
         fi
     fi
     unset __conda_setup
+    # Use default environment instead of base
+    conda activate default
 
     # Ruby for local gh pages testing
     export GEM_HOME="$HOME/gems"
