@@ -131,12 +131,13 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" ||  "${BASHRC_HOST}" == "home-pc" ]]; t
         fi
     fi
     unset __conda_setup
-    conda activate base
 
     # Ruby for local gh pages testing
     export PATH="$HOME/.rbenv/bin:$PATH"
     eval "$(rbenv init -)"
     export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+    export GEM_HOME=$HOME/gems
+    export PATH="$HOME/gems/bin:$PATH"
 fi
 
 # Machine specific aliases
