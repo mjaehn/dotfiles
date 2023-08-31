@@ -65,21 +65,6 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     export PATH=/cluster/home/mjaehn/bin:$PATH
 
-# iac-laptop / co2
-elif [[ "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "iac-laptop"  ]]; then
-    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-          . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
-        else
-          export PATH="/home/mjaehn/miniconda3/bin:$PATH" 
-        fi
-    fi
-    unset __conda_setup
-fi
-
 #parse_git_branch() {
 #git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 #}
@@ -133,7 +118,7 @@ elif [[ "${BASHRC_HOST}" == "dom" ]]; then
     test -s ~/.profile && . ~/.profile || true
 
 # iac-laptop
-elif [[ "${BASHRC_HOST}" == "iac-laptop" ]]; then
+elif [[ "${BASHRC_HOST}" == "iac-laptop" ||  "${BASHRC_HOST}" == "home-pc" ]]; then
     __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -189,7 +174,7 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias st='cd /pool/data/CLMcom/CCLM/reanalyses'
     export SCRATCH=/scratch/b/b381473
 
-elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" ]]; then
+elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "home-pc" ]]; then
     alias cscskey="cd /home/mjaehn/git/cscs-keys && ./generate-keys.sh"
 fi
 
