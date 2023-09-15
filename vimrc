@@ -52,7 +52,7 @@ else
     Plugin 'itchyny/lightline.vim'
     Plugin 'luochen1990/rainbow'
     Plugin 'airblade/vim-gitgutter'
-    Plugin 'taglist.vim'
+    " " Plugin 'taglist.vim'
     Plugin 'ctrlp.vim'
     Plugin 'craigemery/vim-autotag'
     call vundle#end()            " required
