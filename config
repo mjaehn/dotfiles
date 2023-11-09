@@ -7,6 +7,11 @@ Host dom
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
+Host vial
+ HostName vial.cscs.ch
+ User mjaehn
+ ProxyJump ela
+ IdentityFile ~/.ssh/cscs-key
 Host balfrin
  HostName balfrin.cscs.ch
  User mjaehn
