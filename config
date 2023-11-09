@@ -30,6 +30,10 @@ Host ch4
  Hostname ch4.ethz.ch
  User mjaehn
  IdentityFile ~/.ssh/id_ed25519_iac
+Host atmos
+ Hostname atmos.ethz.ch
+ User mjaehn
+ IdentityFile ~/.ssh/id_ed25519_iac
 Host euler
  Hostname euler.ethz.ch
  User mjaehn

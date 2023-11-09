@@ -182,6 +182,7 @@ fi
 # Model specific aliases
 
 # Connect to machines
+alias balfrin="ssh -X mjaehn@balfrin"
 alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
