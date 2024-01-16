@@ -11,6 +11,8 @@ if [[ "${HOSTNAME}" == daint* ]]; then
     BASHRC_HOST='daint'
 elif [[ "${HOSTNAME}" == balfrin* ]]; then 
     BASHRC_HOST='balfrin'
+elif [[ "${CLUSTER_NAME}" == vial* ]]; then 
+    BASHRC_HOST='vial'
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
@@ -160,6 +162,12 @@ elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" ]]; then
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
 
+# vial
+elif [[ "${BASHRC_HOST}" == "vial" ]]; then
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
+    alias squ='squeue'
+
 # euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias aall="scancel -u mjaehn"
@@ -187,6 +195,7 @@ alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
 alias levante="ssh -X levante"
+alias vial="ssh -X vial"
 
 # COSMO
 alias ct="cat testsuite.out"
