@@ -9,6 +9,10 @@ test -s ~/.alias && . ~/.alias || true
 # determine hostname for later use in all dotfiles
 if [[ "${HOSTNAME}" == daint* ]]; then 
     BASHRC_HOST='daint'
+elif [[ "${HOSTNAME}" == balfrin* ]]; then 
+    BASHRC_HOST='balfrin'
+elif [[ "${CLUSTER_NAME}" == vial* ]]; then 
+    BASHRC_HOST='vial'
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
@@ -47,38 +51,21 @@ export GIT_EDITOR="vim"
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-# >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/scratch/snx3000/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    __conda_setup="$('/project/d121/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/scratch/snx3000/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        if [ -f "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+          . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh"
         else
-            export PATH="/scratch/snx3000/mjaehn/miniconda3/bin:$PATH"
+          export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH" 
         fi
     fi
     unset __conda_setup
-# <<< conda initialize <<<
 
 # Euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     export PATH=/cluster/home/mjaehn/bin:$PATH
-
-# iac-laptop / co2
-elif [[ "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "iac-laptop"  ]]; then
-    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-          . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
-        else
-          export PATH="/home/mjaehn/miniconda3/bin:$PATH" 
-        fi
-    fi
-    unset __conda_setup
 fi
 
 #parse_git_branch() {
@@ -107,22 +94,57 @@ COMMIT='\[\033[00;97m\]$(git_commit)\[\033[00m\]'
 END=' \n\$ '
 PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 
-# Spack
-case ${BASHRC_HOST} in
-      daint) 
-          export SPACK_ROOT=/project/g110/spack/user/daint/spack
-          ;;
-      dom) 
-          export SPACK_ROOT=/project/g110/spack/user/dom/spack 
-          ;;
-esac
+# Custom modules/paths/envs for each machine
+
+# daint
+if [[ "${BASHRC_HOST}" == "daint" ]]; then
+    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
+    export PATH=$PATH:/users/mjaehn/script_utils
+    test -s ~/.profile && . ~/.profile || true
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+        else
+            export PATH="/users/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+
+# dom
+elif [[ "${BASHRC_HOST}" == "dom" ]]; then
+    test -s ~/.profile && . ~/.profile || true
+
+# iac-laptop
+elif [[ "${BASHRC_HOST}" == "iac-laptop" ||  "${BASHRC_HOST}" == "home-pc" ]]; then
+    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+        else
+            export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+        fi
+    fi
+    unset __conda_setup
+    # Use default environment instead of base
+    conda activate default
+
+    # Ruby for local gh pages testing
+    export GEM_HOME="$HOME/gems"
+    export PATH="$HOME/gems/bin:$PATH"
+fi
 
 # Machine specific aliases
 
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
-    alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
-    alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
@@ -134,18 +156,20 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias venv="source /users/mjaehn/venv-jae/bin/activate"
     alias psy=". activate_psyplot"
 
-# dom
-elif [[ "${BASHRC_HOST}" == "dom" ]]; then
-    alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
-    alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
+# dom and balfrin
+elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" ]]; then
+    alias aall="scancel -u mjaehn"
+    alias sq='squeue -u mjaehn'
+    alias squ='squeue'
+
+# vial
+elif [[ "${BASHRC_HOST}" == "vial" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
 
 # euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
-    alias srcspack="source $SPACK_ROOT/share/spack/setup-env.sh"
-    alias spak="spack  --config-scope=${HOME}/.spack/$BASHRC_HOST"
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
@@ -158,15 +182,20 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
     alias st='cd /pool/data/CLMcom/'
     export SCRATCH=/scratch/b/b381473
+
+elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "home-pc" ]]; then
+    alias cscskey="cd /home/mjaehn/git/cscs-keys && ./generate-keys.sh"
 fi
 
 # Model specific aliases
 
 # Connect to machines
+alias balfrin="ssh -X mjaehn@balfrin"
 alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
 alias levante="ssh -X levante"
+alias vial="ssh -X vial"
 
 # COSMO
 alias ct="cat testsuite.out"
@@ -207,7 +236,8 @@ alias gsi='git submodule init'
 alias gsu='git submodule update'
 alias gsui='git submodule update --init'
 alias gsuir='git submodule update --init --recursive'
-alias gl='git log --pretty=format:"%h - %an, %ar : %s"'
+#alias gl='git log --pretty=format:"%h - %an, %ar : %s"'
+alias gl='git log --graph --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)" --all'
 alias nd='ncdump -h'
 alias nv='ncview'
 alias fp='find "$PWD" -name'
@@ -217,4 +247,6 @@ alias vi="vim -p"
 alias nd="ncdump -h"
 alias nv="ncview"
 alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
-
+alias f="find . -name"
+alias ml="module load"
+alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
