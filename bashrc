@@ -231,17 +231,14 @@ alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 # https://github.com/diogocavilha/fancy-git
 # curl -sS https://raw.githubusercontent.com/diogocavilha/fancy-git/master/install.sh | sh -s -- --nofontconfig
 
-# Branch icon.
-export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH=""
-
 # Path is a git repository
-export FANCYGIT_ICON_GIT_REPO=""
+export FANCYGIT_ICON_GIT_REPO=""
 
 # Only local branch icon.
-export FANCYGIT_ICON_LOCAL_BRANCH=""
+export FANCYGIT_ICON_LOCAL_BRANCH=""
 
 # Branch icon.
-export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH=""
+export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH="󱓎"
 
 # Merged branch icon.
 export FANCYGIT_ICON_MERGED_BRANCH=""
