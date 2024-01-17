@@ -264,12 +264,12 @@ export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=""
 # Path is a python virtual environment
 export FANCYGIT_ICON_VENV=""
 
+# Source the prompt
+. ~/.fancy-git/prompt.sh
+
 # Settings
 fancygit --color-scheme-batman
 fancygit --enable-full-path
 fancygit --enable-host-name
 fancygit --enable-show-user-at-machine
 fancygit --enable-double-line
-
-# Source the prompt
-. ~/.fancy-git/prompt.sh
