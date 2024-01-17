@@ -1,9 +1,3 @@
-# There are 3 different types of shells in bash: the login shell, normal shell
-# and interactive shell. Login shells read ~/.profile and interactive shells
-# read ~/.bashrc; in our setup, /etc/profile sources ~/.bashrc - thus all
-# settings made here will also take effect in a login shell.
-#
-
 test -s ~/.alias && . ~/.alias || true
 
 # determine hostname for later use in all dotfiles
@@ -73,26 +67,27 @@ fi
 #}
 
 git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \1/'
 }
 git_commit() {
-     git rev-parse --short HEAD 2> /dev/null | sed -e 's/^/ -> /'
+     git rev-parse --short HEAD 2> /dev/null
 }
 git_repo() {
      basename -s .git `git config --get remote.origin.url` 2> /dev/null | sed -e 's/^/\n/'
 }
 
 # Command prompt
-#short_host="${HOSTNAME:0:2}-${HOSTNAME:${#HOSTNAME}-1:${#HOSTNAME}}"
-#export PS1="\u@$short_host:\W\[\033[33m\]\$(parse_git_branch)\[\033[00m\]> "
-MYHOST='\[\033[02;36m\]\h'; MYHOST=' '$MYHOST
 TIME='\[\033[01;31m\]\t \[\033[01;32m\]'
+USER_HOST='\[\033[01;33m\]\u @ \h\[\033[00m\]'
 LOCATION=' \[\033[00;96m\]`pwd | sed "s#\(/[^/]\{1,\}/[^/]\{1,\}/[^/]\{1,\}/\).*\(/[^/]\{1,\}/[^/]\{1,\}\)/\{0,1\}#\1_\2#g"`'
 REPO='\[\033[00;33m\]$(git_repo)\[\033[00m\]'
-BRANCH='\[\033[00;33m\]$(git_branch)\[\033[00m\]'
-COMMIT='\[\033[00;97m\]$(git_commit)\[\033[00m\]'
-END=' \n\$ '
-PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
+BRANCH='\[\033[01;36m\]$(git_branch) \[\033[00m\]'
+COMMIT='\[\033[01;34m\]$(git_commit)\[\033[00m\]'
+END=' \n\342\224\224\342\224\200 '
+
+# Combine all components for the prompt
+PS1=$TIME$USER_HOST$LOCATION$REPO$BRANCH$COMMIT$END$TREEBRANCH
+
 
 # Custom modules/paths/envs for each machine
 
@@ -100,25 +95,6 @@ PS1=$TIME$USER$MYHOST$LOCATION$REPO$BRANCH$COMMIT$END
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/mjaehn/script_utils
-    test -s ~/.profile && . ~/.profile || true
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
-        else
-            export PATH="/users/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
-
-# dom
-elif [[ "${BASHRC_HOST}" == "dom" ]]; then
-    test -s ~/.profile && . ~/.profile || true
 
 # iac-laptop
 elif [[ "${BASHRC_HOST}" == "iac-laptop" ||  "${BASHRC_HOST}" == "home-pc" ]]; then
@@ -250,3 +226,40 @@ alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
+
+
+# https://github.com/diogocavilha/fancy-git
+. ~/.fancy-git/prompt.sh
+# Branch icon.
+export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH=""
+
+# Path is a git repository
+export FANCYGIT_ICON_GIT_REPO=""
+
+# Only local branch icon.
+export FANCYGIT_ICON_LOCAL_BRANCH=""
+
+# Branch icon.
+export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH=""
+
+# Merged branch icon.
+export FANCYGIT_ICON_MERGED_BRANCH=""
+
+# Staged files.
+export FANCYGIT_ICON_HAS_STASHES=""
+
+# Untracked files.
+export FANCYGIT_ICON_HAS_UNTRACKED_FILES=""
+
+# Changed files.
+export FANCYGIT_ICON_HAS_CHANGED_FILES=""
+
+# Added files.
+export FANCYGIT_ICON_HAS_ADDED_FILES=""
+
+# Unpushed commits.
+export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=""
+
+# Path is a python virtual environment
+export FANCYGIT_ICON_VENV=""
+
