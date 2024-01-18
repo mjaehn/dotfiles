@@ -48,3 +48,8 @@ Host github.com
  Hostname github.com
  PreferredAuthentications publickey
  IdentityFile ~/.ssh/id_ed25519_github 
+Host gitlab.dkrz.de
+  HostName gitlab.dkrz.de
+  User b381473 
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/id_ed25519_dkrz_gitlab
