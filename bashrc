@@ -35,7 +35,9 @@ fi
 export BASHRC_HOST
 
 # ls colors
+unset LS_COLORS
 export LS_COLORS='di=1;94:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31'
+
 
 # Git settings
 export GIT_EDITOR="vim"
@@ -267,7 +269,7 @@ export FANCYGIT_ICON_VENV=" "
 
 # Settings
 fancygit --color-scheme-batman
-fancygit --enable-full-path
+fancygit --disable-full-path
 fancygit --enable-host-name
 fancygit --enable-show-user-at-machine
 fancygit --enable-double-line
