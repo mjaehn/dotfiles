@@ -90,6 +90,50 @@ END=' \n\342\224\224\342\224\200 '
 # Combine all components for the prompt
 PS1=$TIME$USER_HOST$LOCATION$REPO$BRANCH$COMMIT$END$TREEBRANCH
 
+# FancyGit settings
+# Website: https://github.com/diogocavilha/fancy-git
+# Install: curl -sS https://raw.githubusercontent.com/diogocavilha/fancy-git/master/install.sh | sh -s -- --nofontconfig
+# Icons:   https://www.nerdfonts.com/cheat-sheet --> search 'nf-fa-'
+
+# Path is a git repository
+export FANCYGIT_ICON_GIT_REPO=""
+
+# Only local branch icon.
+export FANCYGIT_ICON_LOCAL_BRANCH=""
+
+# Branch icon.
+export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH=""
+
+# Merged branch icon.
+export FANCYGIT_ICON_MERGED_BRANCH=""
+
+# Staged files.
+export FANCYGIT_ICON_HAS_STASHES=" "
+
+# Untracked files.
+export FANCYGIT_ICON_HAS_UNTRACKED_FILES=" "
+
+# Changed files.
+export FANCYGIT_ICON_HAS_CHANGED_FILES=" "
+
+# Added files.
+export FANCYGIT_ICON_HAS_ADDED_FILES=" "
+
+# Unpushed commits.
+export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=" "
+
+# Path is a python virtual environment
+export FANCYGIT_ICON_VENV=" "
+
+# Source the prompt
+. ~/.fancy-git/prompt.sh
+
+# Settings
+fancygit --color-scheme-batman
+fancygit --disable-full-path
+fancygit --enable-host-name
+fancygit --enable-show-user-at-machine
+fancygit --enable-double-line
 
 # Custom modules/paths/envs for each machine
 
@@ -129,7 +173,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias jenkins='cd /scratch/snx3000/jenkins/workspace'
     alias proj="cd /project/d121/mjaehn"
     alias st="cd /store/c2sm/c2sme"
-    alias nn="module load daint-gpu NCO ncview"
+    alias nn="module load daint-gpu NCO ncview CDO"
     alias o="xdg-open"
     alias venv="source /users/mjaehn/venv-jae/bin/activate"
     alias psy=". activate_psyplot"
@@ -215,7 +259,7 @@ alias gsu='git submodule update'
 alias gsui='git submodule update --init'
 alias gsuir='git submodule update --init --recursive'
 #alias gl='git log --pretty=format:"%h - %an, %ar : %s"'
-alias gl='git log --graph --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)" --all'
+alias gl='git log --graph --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)"'
 alias nd='ncdump -h'
 alias nv='ncview'
 alias fp='find "$PWD" -name'
@@ -230,46 +274,5 @@ alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 
 
-# https://github.com/diogocavilha/fancy-git
-# curl -sS https://raw.githubusercontent.com/diogocavilha/fancy-git/master/install.sh | sh -s -- --nofontconfig
-# Icons: https://www.nerdfonts.com/cheat-sheet --> search 'nf-fa-'
 
-# Path is a git repository
-export FANCYGIT_ICON_GIT_REPO=""
-
-# Only local branch icon.
-export FANCYGIT_ICON_LOCAL_BRANCH=""
-
-# Branch icon.
-export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH=""
-
-# Merged branch icon.
-export FANCYGIT_ICON_MERGED_BRANCH=""
-
-# Staged files.
-export FANCYGIT_ICON_HAS_STASHES=" "
-
-# Untracked files.
-export FANCYGIT_ICON_HAS_UNTRACKED_FILES=" "
-
-# Changed files.
-export FANCYGIT_ICON_HAS_CHANGED_FILES=" "
-
-# Added files.
-export FANCYGIT_ICON_HAS_ADDED_FILES=" "
-
-# Unpushed commits.
-export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=" "
-
-# Path is a python virtual environment
-export FANCYGIT_ICON_VENV=" "
-
-# Source the prompt
 . ~/.fancy-git/prompt.sh
-
-# Settings
-fancygit --color-scheme-batman
-fancygit --disable-full-path
-fancygit --enable-host-name
-fancygit --enable-show-user-at-machine
-fancygit --enable-double-line
