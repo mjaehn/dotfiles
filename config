@@ -12,6 +12,11 @@ Host vial
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
+Host santis
+ HostName santis.cscs.ch
+ User mjaehn
+ ProxyJump ela
+ IdentityFile ~/.ssh/cscs-key
 Host balfrin
  HostName balfrin.cscs.ch
  User mjaehn
@@ -36,6 +41,10 @@ Host atmos
  IdentityFile ~/.ssh/id_ed25519_iac
 Host euler
  Hostname euler.ethz.ch
+ User mjaehn
+ IdentityFile ~/.ssh/id_ed25519_euler
+Host euler-beta
+ Hostname login-beta.euler.ethz.ch
  User mjaehn
  IdentityFile ~/.ssh/id_ed25519_euler
 Host levante
