@@ -173,7 +173,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias jenkins='cd /scratch/snx3000/jenkins/workspace'
     alias proj="cd /project/d121/mjaehn"
     alias st="cd /store/c2sm/c2sme"
-    alias nn="module load daint-gpu NCO ncview"
+    alias nn="module load daint-gpu NCO ncview CDO"
     alias o="xdg-open"
     alias venv="source /users/mjaehn/venv-jae/bin/activate"
     alias psy=". activate_psyplot"
