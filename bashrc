@@ -274,3 +274,5 @@ alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 
 
+
+. ~/.fancy-git/prompt.sh

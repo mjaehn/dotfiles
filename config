@@ -38,6 +38,10 @@ Host euler
  Hostname euler.ethz.ch
  User mjaehn
  IdentityFile ~/.ssh/id_ed25519_euler
+Host euler-beta
+ Hostname login-beta.euler.ethz.ch
+ User mjaehn
+ IdentityFile ~/.ssh/id_ed25519_euler
 Host levante
  Hostname levante.dkrz.de
  IdentityFile ~/.ssh/id_ed25519_dkrz
