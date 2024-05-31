@@ -142,6 +142,10 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/mjaehn/script_utils
 
+# balfrin
+elif [[ "${BASHRC_HOST}" == "balfrin" ]]; then
+    export MODULEPATH=/mch-environment/v5/modules:${MODULEPATH}
+
 # iac-laptop
 elif [[ "${BASHRC_HOST}" == "iac-laptop" ||  "${BASHRC_HOST}" == "home-pc" ]]; then
     __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
@@ -273,6 +277,3 @@ alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 
-
-
-. ~/.fancy-git/prompt.sh
