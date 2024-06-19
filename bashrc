@@ -147,7 +147,7 @@ elif [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     export MODULEPATH=/mch-environment/v5/modules:${MODULEPATH}
 
 # iac-laptop
-elif [[ "${BASHRC_HOST}" == "iac-laptop" ||  "${BASHRC_HOST}" == "home-pc" ]]; then
+elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
     __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -188,11 +188,9 @@ elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" ]]; then
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
 
-# vial
-elif [[ "${BASHRC_HOST}" == "vial" ]]; then
-    alias aall="scancel -u mjaehn"
-    alias sq='squeue -u mjaehn'
-    alias squ='squeue'
+# co2
+elif [[ "${BASHRC_HOST}" == "co2" ]]; then
+    alias json='cd /net/co2/c2sm-data/jenkins/zephyr/file_index'
 
 # euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
