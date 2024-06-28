@@ -7,8 +7,13 @@ Host dom
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
-Host vial
- HostName vial.cscs.ch
+Host santis
+ HostName santis.cscs.ch
+ User mjaehn
+ ProxyJump ela
+ IdentityFile ~/.ssh/cscs-key
+Host todi
+ HostName todi.cscs.ch
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
@@ -22,6 +27,7 @@ Host daint
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
+ ForwardX11 yes
 Host co2
  Hostname co2.ethz.ch
  User mjaehn
