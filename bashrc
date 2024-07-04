@@ -5,8 +5,8 @@ if [[ "${HOSTNAME}" == daint* ]]; then
     BASHRC_HOST='daint'
 elif [[ "${HOSTNAME}" == balfrin* ]]; then 
     BASHRC_HOST='balfrin'
-elif [[ "${CLUSTER_NAME}" == vial* ]]; then 
-    BASHRC_HOST='vial'
+elif [[ "${CLUSTER_NAME}" == todi* ]]; then 
+    BASHRC_HOST='todi'
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
@@ -183,7 +183,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias psy=". activate_psyplot"
 
 # dom and balfrin
-elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" ]]; then
+elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
@@ -222,7 +222,7 @@ alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
 alias levante="ssh -X levante"
-alias vial="ssh -X vial"
+alias todi="ssh -X todi"
 
 # COSMO
 alias ct="cat testsuite.out"
