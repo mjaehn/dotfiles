@@ -7,8 +7,8 @@ Host dom
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
-Host vial
- HostName vial.cscs.ch
+Host todi
+ HostName todi.cscs.ch
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
@@ -22,6 +22,10 @@ Host daint
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
+Host fog
+ Hostname fog.ethz.ch
+ User mjaehn
+ IdentityFile ~/.ssh/id_ed25519_iac
 Host co2
  Hostname co2.ethz.ch
  User mjaehn
@@ -34,6 +38,7 @@ Host atmos
  Hostname atmos.ethz.ch
  User mjaehn
  IdentityFile ~/.ssh/id_ed25519_iac
+ ProxyJump co2
 Host euler
  Hostname euler.ethz.ch
  User mjaehn

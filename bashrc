@@ -276,3 +276,7 @@ alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 
 
 . ~/.fancy-git/prompt.sh
+
+# fnm
+export PATH="/home/mjaehn/.local/share/fnm:$PATH"
+eval "`fnm env`"
