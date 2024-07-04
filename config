@@ -12,6 +12,11 @@ Host todi
  User mjaehn
  ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
+Host santis
+ HostName santis.cscs.ch
+ User mjaehn
+ ProxyJump ela
+ IdentityFile ~/.ssh/cscs-key
 Host balfrin
  HostName balfrin.cscs.ch
  User mjaehn
@@ -26,6 +31,7 @@ Host fog
  Hostname fog.ethz.ch
  User mjaehn
  IdentityFile ~/.ssh/id_ed25519_iac
+ ForwardX11 yes
 Host co2
  Hostname co2.ethz.ch
  User mjaehn
