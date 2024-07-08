@@ -125,15 +125,17 @@ export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=" "
 # Path is a python virtual environment
 export FANCYGIT_ICON_VENV=" "
 
-# Source the prompt
-. ~/.fancy-git/prompt.sh
-
-# Settings
-fancygit --color-scheme-batman
-fancygit --disable-full-path
-fancygit --enable-host-name
-fancygit --enable-show-user-at-machine
-fancygit --enable-double-line
+# Check for interactive shell
+if [[ $- == *i* ]]; then
+    # Source the prompt
+    . ~/.fancy-git/prompt.sh
+    # Settings
+    fancygit --color-scheme-batman
+    fancygit --disable-full-path
+    fancygit --enable-host-name
+    fancygit --enable-show-user-at-machine
+    fancygit --enable-double-line
+fi
 
 # Custom modules/paths/envs for each machine
 
@@ -291,6 +293,3 @@ alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
-
-. ~/.fancy-git/prompt.sh
-
