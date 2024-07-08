@@ -222,7 +222,6 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     export SCRATCH=/scratch/b/b381473
 
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "home-pc" ]]; then
-    alias cscskey="cd /home/mjaehn/git/cscs-keys && ./generate-keys.sh"
     # fnm
     export PATH="/home/mjaehn/.local/share/fnm:$PATH"
     eval "`fnm env`"
@@ -291,6 +290,7 @@ alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
+alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
 
 . ~/.fancy-git/prompt.sh
 
