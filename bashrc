@@ -52,9 +52,9 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
         eval "$__conda_setup"
     else
         if [ -f "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-          . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh"
+            . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" 
         else
-          export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH" 
+            export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH"
         fi
     fi
     unset __conda_setup
@@ -142,6 +142,20 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/mjaehn/script_utils
 
+# todi
+elif [[ "${BASHRC_HOST}" == "todi" ]]; then
+    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/users/mjaehn/miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+
 # balfrin
 elif [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     export MODULEPATH=/mch-environment/v5/modules:${MODULEPATH}
@@ -153,9 +167,9 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${
         eval "$__conda_setup"
     else
         if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
         else
-            export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+            export PATH="/home/mjaehn/miniconda3/bin:$PATH"
         fi
     fi
     unset __conda_setup
