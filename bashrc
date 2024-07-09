@@ -128,13 +128,13 @@ export FANCYGIT_ICON_VENV=" "
 # Check for interactive shell
 if [[ $- == *i* ]]; then
     # Source the prompt
-    . ~/.fancy-git/prompt.sh
+    . ~/.fancy-git/prompt.sh 2>/dev/null
     # Settings
-    fancygit --color-scheme-batman
-    fancygit --disable-full-path
-    fancygit --enable-host-name
-    fancygit --enable-show-user-at-machine
-    fancygit --enable-double-line
+    fancygit --color-scheme-batman 2>/dev/null
+    fancygit --disable-full-path 2>/dev/null
+    fancygit --enable-host-name 2>/dev/null
+    fancygit --enable-show-user-at-machine 2>/dev/null
+    fancygit --enable-double-line 2>/dev/null
 fi
 
 # Custom modules/paths/envs for each machine
