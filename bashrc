@@ -293,3 +293,4 @@ alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
+
