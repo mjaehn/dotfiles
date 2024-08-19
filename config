@@ -2,37 +2,17 @@ Host ela
  HostName ela.cscs.ch
  User mjaehn
  IdentityFile ~/.ssh/cscs-key
-Host dom
- HostName dom.cscs.ch
- User mjaehn
- ProxyJump ela
- IdentityFile ~/.ssh/cscs-key
-Host santis
- HostName santis.cscs.ch
- User mjaehn
- ProxyJump ela
- IdentityFile ~/.ssh/cscs-key
-Host todi
- HostName todi.cscs.ch
- User mjaehn
- ProxyJump ela
- IdentityFile ~/.ssh/cscs-key
-Host santis
- HostName santis.cscs.ch
- User mjaehn
- ProxyJump ela
- IdentityFile ~/.ssh/cscs-key
-Host balfrin
- HostName balfrin.cscs.ch
- User mjaehn
- ProxyJump ela
- IdentityFile ~/.ssh/cscs-key
 Host daint
  HostName daint.cscs.ch
  User mjaehn
- ProxyJump ela
  IdentityFile ~/.ssh/cscs-key
+ ProxyJump ela
  ForwardX11 yes
+Host balfrin* daint* santis* todi*
+  Hostname %h.cscs.ch
+  User mjaehn
+  IdentityFile ~/.ssh/cscs-key
+  ProxyJump ela
 Host co2
  Hostname co2.ethz.ch
  User mjaehn
@@ -47,10 +27,6 @@ Host atmos
  IdentityFile ~/.ssh/id_ed25519_iac
 Host euler
  Hostname euler.ethz.ch
- User mjaehn
- IdentityFile ~/.ssh/id_ed25519_euler
-Host euler-beta
- Hostname login-beta.euler.ethz.ch
  User mjaehn
  IdentityFile ~/.ssh/id_ed25519_euler
 Host levante
