@@ -5,8 +5,8 @@ if [[ "${HOSTNAME}" == daint* ]]; then
     BASHRC_HOST='daint'
 elif [[ "${HOSTNAME}" == balfrin* ]]; then 
     BASHRC_HOST='balfrin'
-elif [[ "${CLUSTER_NAME}" == vial* ]]; then 
-    BASHRC_HOST='vial'
+elif [[ "${CLUSTER_NAME}" == todi* ]]; then 
+    BASHRC_HOST='todi'
 elif [[ "${HOSTNAME}" == dom* ]]; then 
     BASHRC_HOST='dom'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
@@ -52,9 +52,9 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
         eval "$__conda_setup"
     else
         if [ -f "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-          . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh"
+            . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" 
         else
-          export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH" 
+            export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH"
         fi
     fi
     unset __conda_setup
@@ -125,15 +125,17 @@ export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=" "
 # Path is a python virtual environment
 export FANCYGIT_ICON_VENV=" "
 
-# Source the prompt
-. ~/.fancy-git/prompt.sh
-
-# Settings
-fancygit --color-scheme-batman
-fancygit --disable-full-path
-fancygit --enable-host-name
-fancygit --enable-show-user-at-machine
-fancygit --enable-double-line
+# Check for interactive shell
+if [[ $- == *i* ]]; then
+    # Source the prompt
+    . ~/.fancy-git/prompt.sh 2>/dev/null
+    # Settings
+    fancygit --color-scheme-batman 2>/dev/null
+    fancygit --disable-full-path 2>/dev/null
+    fancygit --enable-host-name 2>/dev/null
+    fancygit --enable-show-user-at-machine 2>/dev/null
+    fancygit --enable-double-line 2>/dev/null
+fi
 
 # Custom modules/paths/envs for each machine
 
@@ -141,6 +143,20 @@ fancygit --enable-double-line
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
     test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
     export PATH=$PATH:/users/mjaehn/script_utils
+
+# todi
+elif [[ "${BASHRC_HOST}" == "todi" ]]; then
+    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/users/mjaehn/miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
 
 # balfrin
 elif [[ "${BASHRC_HOST}" == "balfrin" ]]; then
@@ -153,9 +169,9 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${
         eval "$__conda_setup"
     else
         if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
         else
-            export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize
+            export PATH="/home/mjaehn/miniconda3/bin:$PATH"
         fi
     fi
     unset __conda_setup
@@ -183,7 +199,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias psy=". activate_psyplot"
 
 # dom and balfrin
-elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" ]]; then
+elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq='squeue -u mjaehn'
     alias squ='squeue'
@@ -208,7 +224,9 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     export SCRATCH=/scratch/b/b381473
 
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "home-pc" ]]; then
-    alias cscskey="cd /home/mjaehn/git/cscs-keys && ./generate-keys.sh"
+    # fnm
+    export PATH="/home/mjaehn/.local/share/fnm:$PATH"
+    eval "`fnm env`"
 fi
 
 # Model specific aliases
@@ -219,7 +237,7 @@ alias daint="ssh -X mjaehn@daint"
 alias euler="ssh -X mjaehn@euler"
 alias dom="ssh -X mjaehn@dom"
 alias levante="ssh -X levante"
-alias vial="ssh -X vial"
+alias todi="ssh -X todi"
 
 # COSMO
 alias ct="cat testsuite.out"
@@ -274,4 +292,5 @@ alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
+alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
 
