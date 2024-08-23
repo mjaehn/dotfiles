@@ -11,6 +11,11 @@ Host co2* ch4* atmos* fog*
  Hostname %h.ethz.ch
  User mjaehn
  IdentityFile ~/.ssh/id_ed25519_iac
+Host atmos
+ Hostname atmos.ethz.ch
+ User mjaehn
+ IdentityFile ~/.ssh/id_ed25519_iac
+ ProxyJump fog
 Host euler
  Hostname euler.ethz.ch
  User mjaehn
