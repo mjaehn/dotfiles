@@ -2,6 +2,13 @@ Host ela
  HostName ela.cscs.ch
  User mjaehn
  IdentityFile ~/.ssh/cscs-key
+Host daint.alps
+  Hostname daint.alps.cscs.ch
+  User mjaehn
+  IdentityFile ~/.ssh/cscs-key
+  ProxyJump ela
+  AddKeysToAgent yes
+  ForwardAgent yes
 Host balfrin* daint* santis* todi*
   Hostname %h.cscs.ch
   User mjaehn
