@@ -29,7 +29,7 @@ Host euler
  IdentityFile ~/.ssh/id_ed25519_euler
 Host levante
  Hostname levante.dkrz.de
- IdentityFile ~/.ssh/id_ed25519_dkrz
+ IdentityFile ~/.ssh/id_ed25519_levante
  User b381473
  IdentitiesOnly yes
 Host github.com
