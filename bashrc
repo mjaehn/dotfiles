@@ -229,6 +229,14 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASH
     eval "`fnm env`"
 fi
 
+# Additional aliases for Alps
+
+if [[ "${BASHRC_HOST}" == "todi" ]]
+    alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
+    alias uenv_icon="uenv start --view=spack icon-wcp/v1:rc4"
+fi
+
+
 # Model specific aliases
 
 # Connect to machines
