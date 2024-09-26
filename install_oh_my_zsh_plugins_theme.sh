@@ -13,6 +13,7 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
 else
     echo "Oh-My-Zsh is already installed."
 fi
+cp aliases.zsh $HOME/.oh-my-zsh/custom
 
 # Step 2: Install Zsh Plugins
 
