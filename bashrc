@@ -1,3 +1,8 @@
+# Skip this if not running interactively 
+if [[ $- != *i* ]]; then
+    return
+fi
+
 test -s ~/.alias && . ~/.alias || true
 
 # determine hostname for later use in all dotfiles
