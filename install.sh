@@ -23,11 +23,20 @@ ln -s -f $(pwd)/colors ~/.vim/.
 
 cd ..
 
+echo "Link profile"
+ln -s -f $(pwd)/profile ~/.profile
+
 echo "Link bashrc"
 ln -s -f $(pwd)/bashrc ~/.bashrc
 
-echo "Link profile"
-ln -s -f $(pwd)/profile ~/.profile
+echo "Link zsh"
+ln -s -f $(pwd)/zshrc ~/.zshrc
+
+echo "Link p10k.zsh"
+ln -s -f $(pwd)/p10k.zsh ~/.p10k.zsh
+
+echo "Link aliases.zsh"
+ln -fs $(pwd)/aliases.zsh $HOME/.oh-my-zsh/custom
 
 echo "Link vimrc"
 ln -s -f $(pwd)/vimrc ~/.vimrc
@@ -38,7 +47,7 @@ ln -s -f $(pwd)/config ~/.ssh/config
 echo ""
 echo "Run:"
 echo ""
-echo "source ~/.bashrc"
+echo "source ~/.zshrc"
 echo ""
 echo ":PluginInstall in Vim"
 echo ""

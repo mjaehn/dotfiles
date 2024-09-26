@@ -1,0 +1,12 @@
+alias c="clear"
+alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
+alias f="find . -name"
+alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
+alias ml='module load'
+alias nd="ncdump -h"
+alias nv="ncview"
+alias ohmyzsh="vi ~/.oh-my-zsh"
+alias scra='cd ${SCRATCH}'
+alias sq='squeue -u mjaehn'
+alias vi="vim -p"
+alias zshconfig="vi ~/.zshrc"

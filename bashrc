@@ -231,6 +231,14 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASH
     eval "`fnm env`"
 fi
 
+# Additional aliases for Alps
+
+if [[ "${BASHRC_HOST}" == "todi" ]]; then
+    alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
+    alias uenv_icon="uenv start --view=spack icon-wcp/v1:rc4"
+fi
+
+
 # Model specific aliases
 
 # Connect to machines
@@ -296,3 +304,6 @@ alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
 
+export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
+export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
+exec "${HOME}/local/zsh-5.9/bin/zsh" -l
