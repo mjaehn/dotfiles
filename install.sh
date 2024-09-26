@@ -23,14 +23,17 @@ ln -s -f $(pwd)/colors ~/.vim/.
 
 cd ..
 
+echo "Link profile"
+ln -s -f $(pwd)/profile ~/.profile
+
 echo "Link bashrc"
 ln -s -f $(pwd)/bashrc ~/.bashrc
 
 echo "Link zsh"
 ln -s -f $(pwd)/zshrc ~/.zshrc
 
-echo "Link profile"
-ln -s -f $(pwd)/profile ~/.profile
+echo "Link p10k.zsh"
+ln -s -f $(pwd)/p10k.zsh ~/.p10k.zsh
 
 echo "Link vimrc"
 ln -s -f $(pwd)/vimrc ~/.vimrc
