@@ -1,3 +1,4 @@
+alias c="clear"
 alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
 alias f="find . -name"
 alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
