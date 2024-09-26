@@ -145,7 +145,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     export PATH=$PATH:/users/mjaehn/script_utils
 
 # todi
-elif [[ "${BASHRC_HOST}" == "todi" ]]; then
+elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "balfrin" ]]; then
     __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -157,10 +157,6 @@ elif [[ "${BASHRC_HOST}" == "todi" ]]; then
         fi
     fi
     unset __conda_setup
-
-# balfrin
-elif [[ "${BASHRC_HOST}" == "balfrin" ]]; then
-    export MODULEPATH=/mch-environment/v5/modules:${MODULEPATH}
 
 # iac-laptop
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
@@ -182,6 +178,12 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${
     export GEM_HOME="$HOME/gems"
     export PATH="$HOME/gems/bin:$PATH"
 fi
+
+# balfrin
+if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
+    export MODULEPATH=/mch-environment/v6/modules:${MODULEPATH}
+fi
+
 
 # Machine specific aliases
 
