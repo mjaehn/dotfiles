@@ -35,6 +35,9 @@ ln -s -f $(pwd)/zshrc ~/.zshrc
 echo "Link p10k.zsh"
 ln -s -f $(pwd)/p10k.zsh ~/.p10k.zsh
 
+echo "Link aliases.zsh"
+ln -fs $(pwd)/aliases.zsh $HOME/.oh-my-zsh/custom
+
 echo "Link vimrc"
 ln -s -f $(pwd)/vimrc ~/.vimrc
 
