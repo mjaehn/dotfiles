@@ -98,19 +98,98 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
 
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-#
-source $HOME/.oh-my-zsh/custom/aliases.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Machine-specific settings
+#
+# Determine hostname for later use in all dotfiles
+if [[ "${HOSTNAME}" == daint* ]]; then
+    ZSHRC_HOST='daint'
+    CLUSTER='alps'
+elif [[ "${HOSTNAME}" == santis* ]]; then
+    ZSHRC_HOST='santis'
+    CLUSTER='alps'
+elif [[ "${HOSTNAME}" == balfrin* ]]; then
+    ZSHRC_HOST='balfrin'
+    CLUSTER='alps'
+elif [[ "${CLUSTER_NAME}" == todi* ]]; then
+    ZSHRC_HOST='todi'
+    CLUSTER='alps'
+elif [[ "${HOSTNAME}" == eu* ]]; then
+    if tty -s; then
+        ZSHRC_HOST='euler'
+        CLUSTER='eth'
+    else
+        return
+    fi
+elif [[ "${HOSTNAME}" == levante* ]]; then
+    source /sw/etc/profile.levante
+    if tty -s; then
+        ZSHRC_HOST='levante'
+        CLUSTER='dkrz'
+        module load git
+    else
+        return
+    fi
+elif [[ "${HOSTNAME}" == IACPC* ]]; then
+    ZSHRC_HOST='iac-laptop'
+    CLUSTER='local'
+elif [[ "${HOSTNAME}" == DESKTOP* ]]; then
+    ZSHRC_HOST='home-pc'
+    CLUSTER='local'
+elif [[ "${HOSTNAME}" == co2 ]]; then
+    ZSHRC_HOST='co2'
+    CLUSTER='iac'
+fi
+
+export ZSHRC_HOST
+export CLUSTER
+
+# Set default Git editor
+export GIT_EDITOR="vim"
+
+# Custom modules/paths/envs for each machine
+#
+# Euler
+if [[ "${ZSHRC_HOST}" == "euler" ]]; then
+    export PATH=/cluster/home/mjaehn/bin:$PATH
+# Balfrin
+elif [[ "${ZSHRC_HOST}" == "balfrin" ]]; then
+    export MODULEPATH=/mch-environment/v6/modules:${MODULEPATH}
+    source /usr/share/Modules/3.2.10/init/zsh
+fi
+
+# Conda settings
+if [[ "${CLUSTER}" == "alps" ]]; then
+    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/users/mjaehn/miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+elif [[ "${ZSHRC_HOST}" == "iac-laptop" || "${ZSHRC_HOST}" == "home-pc" || "${ZSHRC_HOST}" == "co2" ]]; then
+    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/home/mjaehn/miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # Use default environment instead of base
+    conda activate default
+fi
+
+# Source aliases file
+source $HOME/.oh-my-zsh/custom/aliases.zsh
+
