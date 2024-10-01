@@ -313,4 +313,6 @@ if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
     export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
+else
+    exec zsh
 fi
