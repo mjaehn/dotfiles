@@ -313,6 +313,9 @@ if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
     export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
+# Use bash on Alps (uenv tool not working with zsh until end of 2024)
+elif [[ "${BASHRC_HOST}" == "todi" ]]; then
+    echo "Using bash due to uenv tool support."
 else
     exec zsh
 fi
