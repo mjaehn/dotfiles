@@ -308,6 +308,9 @@ alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
 
-export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
-export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
-exec "${HOME}/local/zsh-5.9/bin/zsh" -l
+# Use local zsh installation on balfrin
+if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
+    export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
+    export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
+    exec "${HOME}/local/zsh-5.9/bin/zsh" -l
+fi
