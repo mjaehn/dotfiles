@@ -240,6 +240,10 @@ fi
 if [[ "${BASHRC_HOST}" == "todi" ]]; then
     alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
     alias uenv_icon="uenv start --view=spack icon-wcp/v1:rc4"
+    alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
+fi
+if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
+    alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."
 fi
 
 
