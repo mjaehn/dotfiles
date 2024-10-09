@@ -212,7 +212,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
 elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq="squeue -u mjaehn -o \"${squeue_format}\""
-    alias sqw="watch -n 60 squeue -u mjaehn -o \"${squeue_format}\""
+    alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
 
 # co2
 elif [[ "${BASHRC_HOST}" == "co2" ]]; then
@@ -222,13 +222,13 @@ elif [[ "${BASHRC_HOST}" == "co2" ]]; then
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq="squeue -u mjaehn -o \"${squeue_format}\""
-    alias sqw="watch -n 60 squeue -u mjaehn -o \"${squeue_format}\""
+    alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias aall="scancel -u b381473"
     alias sq="squeue -u b381473 -o \"${squeue_format}\""
-    alias sqw="watch -n 60 squeue -u b381473 \"${squeue_format}\""
+    alias sqw="watch -x -n 60 squeue -u b381473 -o \"${squeue_format}\""
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
     alias st='cd /pool/data/CLMcom/'
     export SCRATCH=/scratch/b/b381473

@@ -13,7 +13,7 @@ alias nv="ncview"
 alias ohmyzsh="vi ~/.oh-my-zsh"
 alias scra="cd ${SCRATCH}"
 alias sq="squeue -u mjaehn -o \"${squeue_format}\""
-alias sqw="watch -n 60 squeue -u mjaehn -o \"${squeue_format}\""
+alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
 alias vi="vim -p"
 alias zshconfig="vi ~/.zshrc"
 
