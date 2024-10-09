@@ -1,3 +1,6 @@
+# Squeue format
+squeue_format="%.7i %.24j %.8u %.2t %.10M %.6D %R"
+
 # General aliases
 alias aliases="vi $HOME/.oh-my-zsh/custom/aliases.zsh"
 alias bashconfig="vi ~/.bashrc"
@@ -9,8 +12,8 @@ alias nd="ncdump -h"
 alias nv="ncview"
 alias ohmyzsh="vi ~/.oh-my-zsh"
 alias scra="cd ${SCRATCH}"
-alias sq="squeue -u mjaehn"
-alias sqw="watch -n 60 squeue -u mjaehn"
+alias sq="squeue -u mjaehn -o \"${squeue_format}\""
+alias sqw="watch -n 60 squeue -u mjaehn \"${squeue_format}\""
 alias vi="vim -p"
 alias zshconfig="vi ~/.zshrc"
 
