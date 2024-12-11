@@ -12,8 +12,8 @@ elif [[ "${HOSTNAME}" == balfrin* ]]; then
     BASHRC_HOST='balfrin'
 elif [[ "${CLUSTER_NAME}" == todi* ]]; then 
     BASHRC_HOST='todi'
-elif [[ "${HOSTNAME}" == dom* ]]; then 
-    BASHRC_HOST='dom'
+elif [[ "${CLUSTER_NAME}" == santis* ]]; then 
+    BASHRC_HOST='santis'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     if tty -s; then
         BASHRC_HOST='euler'
@@ -150,7 +150,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     export PATH=$PATH:/users/mjaehn/script_utils
 
 # todi
-elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "balfrin" ]]; then
+elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "balfrin" ]]; then
     __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -209,7 +209,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias psy=". activate_psyplot"
 
 # dom and balfrin
-elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" ]]; then
+elif [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis"]]; then
     alias aall="scancel -u mjaehn"
     alias sq="squeue -u mjaehn -o \"${squeue_format}\""
     alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
@@ -240,7 +240,7 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASH
 fi
 
 # Additional aliases for Alps
-if [[ "${BASHRC_HOST}" == "todi" ]]; then
+if [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
     alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
     alias uenv_icon="uenv start --view=spack icon-wcp/v1:rc4"
     alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
@@ -252,23 +252,6 @@ fi
 
 
 # Model specific aliases
-
-# Connect to machines
-alias balfrin="ssh -X mjaehn@balfrin"
-alias daint="ssh -X mjaehn@daint"
-alias euler="ssh -X mjaehn@euler"
-alias dom="ssh -X mjaehn@dom"
-alias levante="ssh -X levante"
-alias todi="ssh -X todi"
-
-# COSMO
-alias ct="cat testsuite.out"
-alias tt="tail -f testsuite.out"
-alias bu='./test/jenkins/build.sh'
-alias vo='vim INPUT_ORG'
-alias vp='vim INPUT_PHY'
-alias vd='vim INPUT_DYN'
-alias vio='vim INPUT_IO'
 
 # ICON
 alias lsL='ls -ltr LOG*' 
@@ -322,7 +305,8 @@ if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
 # Use bash on Alps (uenv tool not working with zsh until end of 2024)
-elif [[ "${BASHRC_HOST}" == "todi" ]]; then
+elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
     echo "Using bash due to uenv tool support."
 else
     exec zsh

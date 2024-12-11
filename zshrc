@@ -117,6 +117,9 @@ elif [[ "${HOSTNAME}" == balfrin* ]]; then
 elif [[ "${CLUSTER_NAME}" == todi* ]]; then
     ZSHRC_HOST='todi'
     CLUSTER='alps'
+elif [[ "${CLUSTER_NAME}" == santis* ]]; then
+    ZSHRC_HOST='santis'
+    CLUSTER='alps'
 elif [[ "${HOSTNAME}" == eu* ]]; then
     if tty -s; then
         ZSHRC_HOST='euler'
