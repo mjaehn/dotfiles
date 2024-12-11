@@ -150,7 +150,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     export PATH=$PATH:/users/mjaehn/script_utils
 
 # todi
-elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "balfrin" ]]; then
+elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_HOST}" == "balfrin" ]]; then
     __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
