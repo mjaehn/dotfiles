@@ -311,3 +311,8 @@ elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
 else
     exec zsh
 fi
+
+if [[ "${BASHRC_HOST}" == "santis" ]]; then
+    export SCRATCH=/capstor/scratch/cscs/$USER
+    export CLUSTER_NAME=todi
+fi
