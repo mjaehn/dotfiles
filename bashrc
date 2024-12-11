@@ -209,7 +209,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias psy=". activate_psyplot"
 
 # dom and balfrin
-elif [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis"]]; then
+elif [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq="squeue -u mjaehn -o \"${squeue_format}\""
     alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
