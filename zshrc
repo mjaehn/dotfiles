@@ -196,3 +196,6 @@ fi
 # Source aliases file
 source $HOME/.oh-my-zsh/custom/aliases.zsh
 
+# Export SHELL environment variable
+export SHELL=$(which zsh)
+

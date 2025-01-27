@@ -307,12 +307,9 @@ if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
 # Use bash on Alps (uenv tool not working with zsh until end of 2024)
 elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
-    echo "Using bash due to uenv tool support."
-else
     exec zsh
 fi
 
 if [[ "${BASHRC_HOST}" == "santis" ]]; then
-    export SCRATCH=/capstor/scratch/cscs/$USER
     export CLUSTER_NAME=todi
 fi
