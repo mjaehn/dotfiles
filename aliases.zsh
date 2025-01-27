@@ -18,10 +18,11 @@ alias vi="vim -p"
 alias zshconfig="vi ~/.zshrc"
 
 # Machine-dependent aliases
-if [[ "${ZSHRC_HOST}" == "todi" ]]; then
+if [[ "${ZSHRC_HOST}" == "todi" || "${ZSHRC_HOST}" == "santis" ]]; then
     alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
-    alias uenv_icon="uenv start --view=spack icon-wcp/v1:rc4"
+    alias uenv_icon="uenv start icon-wcp/v1:rc4"
     alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
+    alias st="cd /capstor/store/cscs/c2sm/c2sme"
 fi
 if [[ "${ZSHRC_HOST}" == "balfrin" ]]; then
     alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."
