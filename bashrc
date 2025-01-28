@@ -10,9 +10,9 @@ if [[ "${HOSTNAME}" == daint* ]]; then
     BASHRC_HOST='daint'
 elif [[ "${HOSTNAME}" == balfrin* ]]; then 
     BASHRC_HOST='balfrin'
-elif [[ "${CLUSTER_NAME}" == todi* ]]; then 
+elif [[ "${HOSTNAME}" == todi* ]]; then 
     BASHRC_HOST='todi'
-elif [[ "${CLUSTER_NAME}" == santis* ]]; then 
+elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     if tty -s; then
@@ -299,20 +299,12 @@ alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
 
-if [[ "${BASHRC_HOST}" == "santis" ]]; then
-    export CLUSTER_NAME=todi
-fi
-
 # Use local zsh installation on balfrin
 if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
     export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
-# Use bash on Alps (uenv tool not working with zsh until end of 2024)
-elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
-    exec zsh
-else
-    exec zsh
 fi
+
+exec zsh
 

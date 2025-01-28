@@ -117,9 +117,11 @@ elif [[ "${HOSTNAME}" == balfrin* ]]; then
 elif [[ "${CLUSTER_NAME}" == todi* ]]; then
     ZSHRC_HOST='todi'
     CLUSTER='alps'
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
 elif [[ "${CLUSTER_NAME}" == santis* ]]; then
     ZSHRC_HOST='santis'
     CLUSTER='alps'
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
 elif [[ "${HOSTNAME}" == eu* ]]; then
     if tty -s; then
         ZSHRC_HOST='euler'
@@ -199,3 +201,4 @@ source $HOME/.oh-my-zsh/custom/aliases.zsh
 # Export SHELL environment variable
 export SHELL=$(which zsh)
 
+export CLUSTER_NAME=todi
