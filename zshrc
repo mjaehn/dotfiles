@@ -202,6 +202,9 @@ fi
 # Source aliases file
 source $HOME/.oh-my-zsh/custom/aliases.zsh
 
+# Disable error if a pattern does not match any files (same as bash)
+setopt nonomatch
+
 # Export SHELL environment variable
 export SHELL=$(which zsh)
 
