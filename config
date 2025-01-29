@@ -14,6 +14,8 @@ Host balfrin* daint* santis* todi*
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
   ProxyJump ela
+  ForwardX11 yes
+  ForwardX11Trusted yes
 Host co2* ch4* atmos* fog*
   Hostname %h.ethz.ch
   User mjaehn

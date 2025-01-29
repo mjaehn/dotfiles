@@ -10,10 +10,10 @@ if [[ "${HOSTNAME}" == daint* ]]; then
     BASHRC_HOST='daint'
 elif [[ "${HOSTNAME}" == balfrin* ]]; then 
     BASHRC_HOST='balfrin'
-elif [[ "${CLUSTER_NAME}" == todi* ]]; then 
+elif [[ "${HOSTNAME}" == todi* ]]; then 
     BASHRC_HOST='todi'
-elif [[ "${HOSTNAME}" == dom* ]]; then 
-    BASHRC_HOST='dom'
+elif [[ "${HOSTNAME}" == santis* ]]; then 
+    BASHRC_HOST='santis'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     if tty -s; then
         BASHRC_HOST='euler'
@@ -150,7 +150,7 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     export PATH=$PATH:/users/mjaehn/script_utils
 
 # todi
-elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "balfrin" ]]; then
+elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_HOST}" == "balfrin" ]]; then
     __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
@@ -191,6 +191,9 @@ fi
 
 
 # Machine specific aliases
+#
+# Squeue format
+squeue_format="%.7i %.24j %.8u %.2t %.10M %.6D %R"
 
 # daint
 if [[ "${BASHRC_HOST}" == "daint" ]]; then
@@ -206,10 +209,10 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
     alias psy=". activate_psyplot"
 
 # dom and balfrin
-elif [[ "${BASHRC_HOST}" == "dom" || "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" ]]; then
+elif [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
     alias aall="scancel -u mjaehn"
-    alias sq='squeue -u mjaehn'
-    alias squ='squeue'
+    alias sq="squeue -u mjaehn -o \"${squeue_format}\""
+    alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
 
 # co2
 elif [[ "${BASHRC_HOST}" == "co2" ]]; then
@@ -218,14 +221,14 @@ elif [[ "${BASHRC_HOST}" == "co2" ]]; then
 # euler
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias aall="scancel -u mjaehn"
-    alias sq='squeue -u mjaehn'
-    alias squ='squeue'
+    alias sq="squeue -u mjaehn -o \"${squeue_format}\""
+    alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
     alias aall="scancel -u b381473"
-    alias sq='squeue -u b381473'
-    alias squ='squeue'
+    alias sq="squeue -u b381473 -o \"${squeue_format}\""
+    alias sqw="watch -x -n 60 squeue -u b381473 -o \"${squeue_format}\""
     alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
     alias st='cd /pool/data/CLMcom/'
     export SCRATCH=/scratch/b/b381473
@@ -237,31 +240,18 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASH
 fi
 
 # Additional aliases for Alps
-
-if [[ "${BASHRC_HOST}" == "todi" ]]; then
+if [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
     alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
     alias uenv_icon="uenv start --view=spack icon-wcp/v1:rc4"
+    alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
+    alias st="cd /store/migration/store/c2sm/c2sme/"
+fi
+if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
+    alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."
 fi
 
 
 # Model specific aliases
-
-# Connect to machines
-alias balfrin="ssh -X mjaehn@balfrin"
-alias daint="ssh -X mjaehn@daint"
-alias euler="ssh -X mjaehn@euler"
-alias dom="ssh -X mjaehn@dom"
-alias levante="ssh -X levante"
-alias todi="ssh -X todi"
-
-# COSMO
-alias ct="cat testsuite.out"
-alias tt="tail -f testsuite.out"
-alias bu='./test/jenkins/build.sh'
-alias vo='vim INPUT_ORG'
-alias vp='vim INPUT_PHY'
-alias vd='vim INPUT_DYN'
-alias vio='vim INPUT_IO'
 
 # ICON
 alias lsL='ls -ltr LOG*' 
@@ -309,6 +299,12 @@ alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
 
-export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
-export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
-exec "${HOME}/local/zsh-5.9/bin/zsh" -l
+# Use local zsh installation on balfrin
+if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
+    export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
+    export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
+    exec "${HOME}/local/zsh-5.9/bin/zsh" -l
+fi
+
+exec zsh
+

@@ -9,8 +9,22 @@ SRC_DIR="$HOME/src"
 ZSH_TAR="zsh-$ZSH_VERSION.tar.xz"
 ZSH_URL="https://sourceforge.net/projects/zsh/files/zsh/$ZSH_VERSION/$ZSH_TAR"
 
+# Set paths for local ncurses installation
+LOCAL_NCURSES_DIR="$HOME/local/ncurses"
+
+# Check if local ncurses is installed
+if [[ -d "$LOCAL_NCURSES_DIR/lib" && -d "$LOCAL_NCURSES_DIR/include" ]]; then
+    echo "Local ncurses installation found. Using local ncurses."
+    export LDFLAGS="-L$LOCAL_NCURSES_DIR/lib"
+    export CPPFLAGS="-I$LOCAL_NCURSES_DIR/include"
+    export CFLAGS="-I$LOCAL_NCURSES_DIR/include"
+    export PKG_CONFIG_PATH="$LOCAL_NCURSES_DIR/lib/pkgconfig"
+else
+    echo "Local ncurses not found. Proceeding with system libraries."
+fi
+
 # Step 1: Create necessary directories
-mkdir -p "$INSTALL_DIR"
+mkdir -p "$ZSH_INSTALL_DIR"
 mkdir -p "$SRC_DIR"
 
 # Step 2: Download Zsh source code
