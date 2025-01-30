@@ -1,5 +1,5 @@
 # Squeue format
-squeue_format="%.7i %.24j %.8u %.2t %.10M %.6D %R"
+squeue_format="%.7i %.22j %.6u %.2t %.10M %.6a %.9l %.5D %R"
 
 # General aliases
 alias aliases="vi $HOME/.oh-my-zsh/custom/aliases.zsh"
