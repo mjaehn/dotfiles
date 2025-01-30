@@ -17,6 +17,12 @@ alias sqw="watch -x -n 60 squeue -u $USER -o \"${squeue_format}\""
 alias vi="vim -p"
 alias zshconfig="vi ~/.zshrc"
 
+unalias sq2 2>/dev/null  # Ensure no conflicting alias exists
+sq2() {
+    squeue -u "$USER" --format=$'%i\nUser: %u\nAccount: %a\nPartition: %P\nJob Name: %j\nState: %T\nPriority: %Q\nTime Used: %M\nTime Limit: %l\nNodes: %D\nCPUs: %C\nMemory: %m\nNode List: %R\nSubmit Time: %V\nStart Time: %S\nDependency: %E\nWork Dir: %Z\n-------------------------'
+}
+
+
 # Machine-dependent aliases
 if [[ "${ZSHRC_HOST}" == "todi" || "${ZSHRC_HOST}" == "santis" ]]; then
     alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
