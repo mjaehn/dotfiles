@@ -1,3 +1,8 @@
+# Skip certain configurations for SCP, SFTP, and VS Code Remote SSH
+if [[ "$SSH_TTY" == "" ]] && [[ "$-" != *i* ]]; then
+    return
+fi
+
 test -s ~/.alias && . ~/.alias || true
 
 USE_ZSH=1
@@ -166,25 +171,23 @@ elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_
     fi
     unset __conda_setup
 
-# iac-laptop
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
-    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
+    # Only enable Conda in interactive shells (avoid breaking SCP)
+    if [[ "$-" == *i* ]]; then
+        __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+        if [ $? -eq 0 ]; then
+            eval "$__conda_setup"
         else
-            export PATH="/home/mjaehn/miniconda3/bin:$PATH"
+            if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+                . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
+            else
+                export PATH="/home/mjaehn/miniconda3/bin:$PATH"
+            fi
         fi
+        unset __conda_setup
+        # Use default environment instead of base
+        conda activate default
     fi
-    unset __conda_setup
-    # Use default environment instead of base
-    conda activate default
-
-    # Ruby for local gh pages testing
-    export GEM_HOME="$HOME/gems"
-    export PATH="$HOME/gems/bin:$PATH"
 elif [[ "${BASHRC_HOST}" == "atmos" ]]; then
     # >>> conda initialize >>>
     # !! Contents within this block are managed by 'conda init' !!
