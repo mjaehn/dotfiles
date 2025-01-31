@@ -1,5 +1,5 @@
 # Squeue format
-squeue_format="%.7i %.24j %.8u %.2t %.10M %.6D %R"
+squeue_format="%.7i %.22j %.6u %.6a %.2t %.10M %.9l %.5D %24R"
 
 # General aliases
 alias aliases="vi $HOME/.oh-my-zsh/custom/aliases.zsh"
@@ -16,6 +16,12 @@ alias sq="squeue -u $USER -o \"${squeue_format}\""
 alias sqw="watch -x -n 60 squeue -u $USER -o \"${squeue_format}\""
 alias vi="vim -p"
 alias zshconfig="vi ~/.zshrc"
+
+unalias sq2 2>/dev/null  # Ensure no conflicting alias exists
+sq2() {
+    squeue -u "$USER" --format=$'%i\nUser: %u\nAccount: %a\nPartition: %P\nJob Name: %j\nState: %T\nPriority: %Q\nTime Used: %M\nTime Limit: %l\nNodes: %D\nCPUs: %C\nMemory: %m\nNode List: %R\nSubmit Time: %V\nStart Time: %S\nDependency: %E\nWork Dir: %Z\n-------------------------'
+}
+
 
 # Machine-dependent aliases
 if [[ "${ZSHRC_HOST}" == "todi" || "${ZSHRC_HOST}" == "santis" ]]; then

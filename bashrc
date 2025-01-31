@@ -1,26 +1,27 @@
-# Skip this if not running interactively 
-if [[ $- != *i* ]]; then
-    return
-fi
-
 test -s ~/.alias && . ~/.alias || true
 
+USE_ZSH=1
 # determine hostname for later use in all dotfiles
 if [[ "${HOSTNAME}" == daint* ]]; then 
     BASHRC_HOST='daint'
 elif [[ "${HOSTNAME}" == balfrin* ]]; then 
     BASHRC_HOST='balfrin'
-elif [[ "${CLUSTER_NAME}" == todi* ]]; then 
+elif [[ "${HOSTNAME}" == todi* ]]; then 
     BASHRC_HOST='todi'
-elif [[ "${CLUSTER_NAME}" == santis* ]]; then 
+elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     if tty -s; then
         BASHRC_HOST='euler'
-    # do nothing for me as Jenkins user
+    # Source global definitions as Jenkins user
     else
+        if [ -f /etc/bashrc ]; then
+            . /etc/bashrc
+            module load stack openjdk
+        fi
         return
     fi
+    USE_ZSH=0
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
     if tty -s; then
@@ -316,20 +317,14 @@ alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
 alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
 
-if [[ "${BASHRC_HOST}" == "santis" ]]; then
-    export CLUSTER_NAME=todi
-fi
-
 # Use local zsh installation on balfrin
 if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
     export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
-# Use bash on Alps (uenv tool not working with zsh until end of 2024)
-elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
-    exec zsh
-else
+fi
+
+if [[ "${USE_ZSH}" == 1 ]]; then
     exec zsh
 fi
 

@@ -102,6 +102,10 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 # Machine-specific settings
 #
 # Determine hostname for later use in all dotfiles
@@ -117,9 +121,11 @@ elif [[ "${HOSTNAME}" == balfrin* ]]; then
 elif [[ "${CLUSTER_NAME}" == todi* ]]; then
     ZSHRC_HOST='todi'
     CLUSTER='alps'
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
 elif [[ "${CLUSTER_NAME}" == santis* ]]; then
     ZSHRC_HOST='santis'
     CLUSTER='alps'
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
 elif [[ "${HOSTNAME}" == eu* ]]; then
     if tty -s; then
         ZSHRC_HOST='euler'
@@ -196,6 +202,10 @@ fi
 # Source aliases file
 source $HOME/.oh-my-zsh/custom/aliases.zsh
 
+# Disable error if a pattern does not match any files (same as bash)
+setopt nonomatch
+
 # Export SHELL environment variable
 export SHELL=$(which zsh)
 
+export CLUSTER_NAME=todi
