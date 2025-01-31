@@ -1,10 +1,6 @@
-# Skip this if not running interactively 
-if [[ $- != *i* ]]; then
-    return
-fi
-
 test -s ~/.alias && . ~/.alias || true
 
+USE_ZSH=1
 # determine hostname for later use in all dotfiles
 if [[ "${HOSTNAME}" == daint* ]]; then 
     BASHRC_HOST='daint'
@@ -17,10 +13,15 @@ elif [[ "${HOSTNAME}" == santis* ]]; then
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     if tty -s; then
         BASHRC_HOST='euler'
-    # do nothing for me as Jenkins user
+    # Source global definitions as Jenkins user
     else
+        if [ -f /etc/bashrc ]; then
+            . /etc/bashrc
+            module load stack openjdk
+        fi
         return
     fi
+    USE_ZSH=0
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
     if tty -s; then
@@ -306,5 +307,7 @@ if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
 fi
 
-exec zsh
+if [[ "${USE_ZSH}" == 1 ]]; then
+    exec zsh
+fi
 
