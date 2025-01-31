@@ -36,6 +36,8 @@ elif [[ "${HOSTNAME}" == DESKTOP* ]]; then
     BASHRC_HOST='home-pc'
 elif [[ "${HOSTNAME}" == co2 ]]; then 
     BASHRC_HOST='co2'
+elif [[ "${HOSTNAME}" == atmos ]]; then 
+    BASHRC_HOST='atmos'
 fi
 export BASHRC_HOST
 
@@ -182,6 +184,21 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${
     # Ruby for local gh pages testing
     export GEM_HOME="$HOME/gems"
     export PATH="$HOME/gems/bin:$PATH"
+elif [[ "${BASHRC_HOST}" == "atmos" ]]; then
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/usr/local/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/usr/local/Miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/usr/local/Miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/usr/local/Miniconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
 fi
 
 # balfrin
