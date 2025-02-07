@@ -32,6 +32,7 @@ if [[ "${ZSHRC_HOST}" == "todi" || "${ZSHRC_HOST}" == "santis" ]]; then
 fi
 if [[ "${ZSHRC_HOST}" == "balfrin" ]]; then
     alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."
+    alias st="cd /capstor/store/cscs/c2sm"
 fi
 if [[ "${ZSHRC_HOST}" == "levante" ]]; then
     alias st="cd /pool/data/CLMcom/CCLM/reanalyses/ERA5"
