@@ -1,5 +1,5 @@
 # Squeue format
-squeue_format="%.7i %.24j %.8u %.2t %.10M %.6D %R"
+squeue_format="%.7i %.22j %.6u %.6a %.2t %.10M %.9l %.5D %24R"
 
 # General aliases
 alias aliases="vi $HOME/.oh-my-zsh/custom/aliases.zsh"
@@ -17,14 +17,22 @@ alias sqw="watch -x -n 60 squeue -u $USER -o \"${squeue_format}\""
 alias vi="vim -p"
 alias zshconfig="vi ~/.zshrc"
 
+unalias sq2 2>/dev/null  # Ensure no conflicting alias exists
+sq2() {
+    squeue -u "$USER" --format=$'%i\nUser: %u\nAccount: %a\nPartition: %P\nJob Name: %j\nState: %T\nPriority: %Q\nTime Used: %M\nTime Limit: %l\nNodes: %D\nCPUs: %C\nMemory: %m\nNode List: %R\nSubmit Time: %V\nStart Time: %S\nDependency: %E\nWork Dir: %Z\n-------------------------'
+}
+
+
 # Machine-dependent aliases
-if [[ "${ZSHRC_HOST}" == "todi" ]]; then
+if [[ "${ZSHRC_HOST}" == "todi" || "${ZSHRC_HOST}" == "santis" ]]; then
     alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
-    alias uenv_icon="uenv start --view=spack icon-wcp/v1:rc4"
+    alias uenv_icon="uenv start icon-wcp/v1:rc4"
     alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
+    alias st="cd /capstor/store/cscs/c2sm/c2sme"
 fi
 if [[ "${ZSHRC_HOST}" == "balfrin" ]]; then
     alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."
+    alias st="cd /capstor/store/cscs/c2sm"
 fi
 if [[ "${ZSHRC_HOST}" == "levante" ]]; then
     alias st="cd /pool/data/CLMcom/CCLM/reanalyses/ERA5"

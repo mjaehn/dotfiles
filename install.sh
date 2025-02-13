@@ -29,7 +29,7 @@ ln -s -f $(pwd)/profile ~/.profile
 echo "Link bashrc"
 ln -s -f $(pwd)/bashrc ~/.bashrc
 
-echo "Link zsh"
+echo "Link zshrc"
 ln -s -f $(pwd)/zshrc ~/.zshrc
 
 echo "Link p10k.zsh"

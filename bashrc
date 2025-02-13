@@ -1,26 +1,32 @@
-# Skip this if not running interactively 
-if [[ $- != *i* ]]; then
+# Skip certain configurations for SCP, SFTP, and VS Code Remote SSH
+if [[ "$SSH_TTY" == "" ]] && [[ "$-" != *i* ]]; then
     return
 fi
 
 test -s ~/.alias && . ~/.alias || true
 
+USE_ZSH=1
 # determine hostname for later use in all dotfiles
 if [[ "${HOSTNAME}" == daint* ]]; then 
     BASHRC_HOST='daint'
 elif [[ "${HOSTNAME}" == balfrin* ]]; then 
     BASHRC_HOST='balfrin'
-elif [[ "${CLUSTER_NAME}" == todi* ]]; then 
+elif [[ "${HOSTNAME}" == todi* ]]; then 
     BASHRC_HOST='todi'
-elif [[ "${CLUSTER_NAME}" == santis* ]]; then 
+elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     if tty -s; then
         BASHRC_HOST='euler'
-    # do nothing for me as Jenkins user
+    # Source global definitions as Jenkins user
     else
+        if [ -f /etc/bashrc ]; then
+            . /etc/bashrc
+            module load stack openjdk
+        fi
         return
     fi
+    USE_ZSH=0
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
     if tty -s; then
@@ -36,6 +42,8 @@ elif [[ "${HOSTNAME}" == DESKTOP* ]]; then
     BASHRC_HOST='home-pc'
 elif [[ "${HOSTNAME}" == co2 ]]; then 
     BASHRC_HOST='co2'
+elif [[ "${HOSTNAME}" == atmos ]]; then 
+    BASHRC_HOST='atmos'
 fi
 export BASHRC_HOST
 
@@ -163,25 +171,38 @@ elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_
     fi
     unset __conda_setup
 
-# iac-laptop
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
-    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    # Only enable Conda in interactive shells (avoid breaking SCP)
+    if [[ "$-" == *i* ]]; then
+        __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+        if [ $? -eq 0 ]; then
+            eval "$__conda_setup"
+        else
+            if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+                . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
+            else
+                export PATH="/home/mjaehn/miniconda3/bin:$PATH"
+            fi
+        fi
+        unset __conda_setup
+        # Use default environment instead of base
+        conda activate default
+    fi
+elif [[ "${BASHRC_HOST}" == "atmos" ]]; then
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/usr/local/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        if [ -f "/usr/local/Miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/usr/local/Miniconda3/etc/profile.d/conda.sh"
         else
-            export PATH="/home/mjaehn/miniconda3/bin:$PATH"
+            export PATH="/usr/local/Miniconda3/bin:$PATH"
         fi
     fi
     unset __conda_setup
-    # Use default environment instead of base
-    conda activate default
-
-    # Ruby for local gh pages testing
-    export GEM_HOME="$HOME/gems"
-    export PATH="$HOME/gems/bin:$PATH"
+    # <<< conda initialize <<<
 fi
 
 # balfrin
@@ -304,15 +325,9 @@ if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
     export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
-# Use bash on Alps (uenv tool not working with zsh until end of 2024)
-elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
-    echo "Using bash due to uenv tool support."
-else
+fi
+
+if [[ "${USE_ZSH}" == 1 ]]; then
     exec zsh
 fi
 
-if [[ "${BASHRC_HOST}" == "santis" ]]; then
-    export SCRATCH=/capstor/scratch/cscs/$USER
-    export CLUSTER_NAME=todi
-fi
