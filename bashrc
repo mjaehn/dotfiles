@@ -16,16 +16,7 @@ elif [[ "${HOSTNAME}" == todi* ]]; then
 elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
-    if tty -s; then
-        BASHRC_HOST='euler'
-    # Source global definitions as Jenkins user
-    else
-        if [ -f /etc/bashrc ]; then
-            . /etc/bashrc
-            module load stack openjdk
-        fi
-        return
-    fi
+    module load stack git
     USE_ZSH=0
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
