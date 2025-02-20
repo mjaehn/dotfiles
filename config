@@ -20,6 +20,10 @@ Host co2* ch4* fog*
   Hostname %h.ethz.ch
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_iac
+Host l_co2
+  Hostname co2.ethz.ch
+  User l_mjaehn
+  IdentityFile ~/.ssh/id_ed25519_l_co2
 Host ti_co2
   Hostname co2.ethz.ch
   User ti16102
@@ -42,6 +46,10 @@ Host euler
   Hostname euler.ethz.ch
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_euler
+Host ti_euler
+  Hostname euler.ethz.ch
+  User ti16120
+  IdentityFile ~/.ssh/id_ed25519_euler_ti
 Host levante
   Hostname levante.dkrz.de
   IdentityFile ~/.ssh/id_ed25519_levante
