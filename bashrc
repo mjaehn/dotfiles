@@ -16,7 +16,8 @@ elif [[ "${HOSTNAME}" == todi* ]]; then
 elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
 elif [[ "${HOSTNAME}" == eu* ]]; then 
-    module load stack git
+    BASHRC_HOST='euler'
+    module load stack eth_proxy
     USE_ZSH=0
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
@@ -62,10 +63,6 @@ if [[ "${BASHRC_HOST}" == "daint" ]]; then
         fi
     fi
     unset __conda_setup
-
-# Euler
-elif [[ "${BASHRC_HOST}" == "euler" ]]; then
-    export PATH=/cluster/home/mjaehn/bin:$PATH
 fi
 
 #parse_git_branch() {
