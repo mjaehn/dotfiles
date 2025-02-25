@@ -207,3 +207,6 @@ setopt nonomatch
 
 # Export SHELL environment variable
 export SHELL=$(which zsh)
+
+# Initialize module system for zsh
+source /usr/share/lmod/lmod/init/zsh
