@@ -15,6 +15,7 @@ elif [[ "${HOSTNAME}" == todi* ]]; then
     BASHRC_HOST='todi'
 elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
+    USE_ZSH=0 # temporary until modules in zsh is working again
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     BASHRC_HOST='euler'
     module load stack eth_proxy
