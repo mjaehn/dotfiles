@@ -207,5 +207,3 @@ setopt nonomatch
 
 # Export SHELL environment variable
 export SHELL=$(which zsh)
-
-export CLUSTER_NAME=todi
