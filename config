@@ -9,7 +9,14 @@ Host daint.alps
   ProxyJump ela
   AddKeysToAgent yes
   ForwardAgent yes
-Host balfrin* daint* santis* todi*
+Host santis*
+  Hostname %h.alps.cscs.ch
+  User mjaehn
+  IdentityFile ~/.ssh/cscs-key
+  ProxyJump ela
+  ForwardX11 yes
+  ForwardX11Trusted yes
+Host balfrin* daint* todi*
   Hostname %h.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
