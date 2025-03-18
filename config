@@ -31,6 +31,10 @@ Host l_co2
   Hostname co2.ethz.ch
   User l_mjaehn
   IdentityFile ~/.ssh/id_ed25519_l_co2
+Host l_iacdipl-7
+  Hostname iacdipl-7.ethz.ch
+  User l_c2sm
+  IdentityFile ~/.ssh/id_ed25519_l_co2
 Host ti_co2
   Hostname co2.ethz.ch
   User ti16102
