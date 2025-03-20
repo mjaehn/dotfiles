@@ -209,4 +209,6 @@ setopt nonomatch
 export SHELL=$(which zsh)
 
 # Initialize module system for zsh
-source /usr/share/lmod/lmod/init/zsh
+if [[ "${ZSHRC_HOST}" == "santis" ]]; then
+    source /usr/share/lmod/lmod/init/zsh
+fi
