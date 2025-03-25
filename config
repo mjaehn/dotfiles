@@ -29,12 +29,12 @@ Host co2* ch4* fog*
   IdentityFile ~/.ssh/id_ed25519_iac
 Host l_co2
   Hostname co2.ethz.ch
-  User l_mjaehn
-  IdentityFile ~/.ssh/id_ed25519_l_co2
+  User l_c2sm
+  IdentityFile ~/.ssh/id_ed25519_l_c2sm
 Host l_iacdipl-7
   Hostname iacdipl-7.ethz.ch
   User l_c2sm
-  IdentityFile ~/.ssh/id_ed25519_l_co2
+  IdentityFile ~/.ssh/id_ed25519_l_c2sm
 Host ti_co2
   Hostname co2.ethz.ch
   User ti16102
