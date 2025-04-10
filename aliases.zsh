@@ -44,3 +44,7 @@ fi
 if [[ "${CLUSTER}" == "iac" ]]; then
     alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 fi
+if [[ "${ZSHRC_HOST}" == "euler" ]]; then
+    alias st="cd /cluster/work/climate/icon_testing_input"
+    alias scra="cd /cluster/scratch/$USER" 
+fi
