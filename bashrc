@@ -18,7 +18,6 @@ elif [[ "${HOSTNAME}" == santis* ]]; then
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     BASHRC_HOST='euler'
     module load stack eth_proxy
-    USE_ZSH=0
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
     if tty -s; then

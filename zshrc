@@ -105,7 +105,6 @@ source $ZSH/oh-my-zsh.sh
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 # Machine-specific settings
 #
 # Determine hostname for later use in all dotfiles
@@ -126,7 +125,7 @@ elif [[ "${CLUSTER_NAME}" == santis* ]]; then
     ZSHRC_HOST='santis'
     CLUSTER='alps'
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
-elif [[ "${HOSTNAME}" == eu* ]]; then
+elif [[ "${HOSTNAME}" == eu* || "${HOST}" == eu* ]]; then
     if tty -s; then
         ZSHRC_HOST='euler'
         CLUSTER='eth'
