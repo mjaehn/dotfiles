@@ -144,7 +144,7 @@ elif [[ "${HOSTNAME}" == levante* ]]; then
 elif [[ "${HOSTNAME}" == IACPC* ]]; then
     ZSHRC_HOST='iac-laptop'
     CLUSTER='local'
-elif [[ "${HOSTNAME}" == DESKTOP* ||"${HOSTNAME}" == SurfacePro* ]]; then
+elif [[ "${HOSTNAME}" == DESKTOP* || "${HOST}" == SurfacePro* ]]; then
     ZSHRC_HOST='home-pc'
     CLUSTER='local'
 elif [[ "${HOSTNAME}" == co2 ]]; then
