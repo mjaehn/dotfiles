@@ -144,7 +144,7 @@ elif [[ "${HOSTNAME}" == levante* ]]; then
 elif [[ "${HOSTNAME}" == IACPC* ]]; then
     ZSHRC_HOST='iac-laptop'
     CLUSTER='local'
-elif [[ "${HOSTNAME}" == DESKTOP* ]]; then
+elif [[ "${HOSTNAME}" == DESKTOP* ||"${HOSTNAME}" == SurfacePro* ]]; then
     ZSHRC_HOST='home-pc'
     CLUSTER='local'
 elif [[ "${HOSTNAME}" == co2 ]]; then
@@ -183,14 +183,23 @@ if [[ "${CLUSTER}" == "alps" ]]; then
     fi
     unset __conda_setup
 elif [[ "${ZSHRC_HOST}" == "iac-laptop" || "${ZSHRC_HOST}" == "home-pc" || "${ZSHRC_HOST}" == "co2" ]]; then
-    __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+    if [ -d "/home/mjaehn/miniconda3" ]; then
+        __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+        if [ $? -eq 0 ]; then
+            eval "$__conda_setup"
+        elif [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
             . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
         else
             export PATH="/home/mjaehn/miniconda3/bin:$PATH"
+        fi
+    elif [ -d "/home/mjaehn/miniforge3" ]; then
+        __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+        if [ $? -eq 0 ]; then
+            eval "$__conda_setup"
+        elif [ -f "/home/mjaehn/miniforge3/etc/profile.d/conda.sh" ]; then
+            . "/home/mjaehn/miniforge3/etc/profile.d/conda.sh"
+        else
+            export PATH="/home/mjaehn/miniforge3/bin:$PATH"
         fi
     fi
     unset __conda_setup
