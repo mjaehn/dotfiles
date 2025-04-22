@@ -29,7 +29,7 @@ elif [[ "${HOSTNAME}" == levante* ]]; then
     fi
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
-elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
+elif [[ "${HOSTNAME}" == DESKTOP* || "${HOSTNAME}" == SurfacePro* ]]; then
     BASHRC_HOST='home-pc'
 elif [[ "${HOSTNAME}" == co2 ]]; then 
     BASHRC_HOST='co2'
