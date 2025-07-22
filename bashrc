@@ -18,7 +18,6 @@ elif [[ "${HOSTNAME}" == santis* ]]; then
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     BASHRC_HOST='euler'
     module load stack eth_proxy
-    USE_ZSH=0
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
     if tty -s; then
@@ -30,7 +29,7 @@ elif [[ "${HOSTNAME}" == levante* ]]; then
     fi
 elif [[ "${HOSTNAME}" == IACPC* ]]; then 
     BASHRC_HOST='iac-laptop'
-elif [[ "${HOSTNAME}" == DESKTOP* ]]; then 
+elif [[ "${HOSTNAME}" == DESKTOP* || "${HOST}" == SurfacePro* ]]; then
     BASHRC_HOST='home-pc'
 elif [[ "${HOSTNAME}" == co2 ]]; then 
     BASHRC_HOST='co2'
@@ -158,18 +157,26 @@ elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_
         fi
     fi
     unset __conda_setup
-
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
     # Only enable Conda in interactive shells (avoid breaking SCP)
     if [[ "$-" == *i* ]]; then
-        __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-        if [ $? -eq 0 ]; then
-            eval "$__conda_setup"
-        else
-            if [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+        if [ -d "/home/mjaehn/miniconda3" ]; then
+            __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+            if [ $? -eq 0 ]; then
+                eval "$__conda_setup"
+            elif [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
                 . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
             else
                 export PATH="/home/mjaehn/miniconda3/bin:$PATH"
+            fi
+        elif [ -d "/home/mjaehn/miniforge3" ]; then
+            __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+            if [ $? -eq 0 ]; then
+                eval "$__conda_setup"
+            elif [ -f "/home/mjaehn/miniforge3/etc/profile.d/conda.sh" ]; then
+                . "/home/mjaehn/miniforge3/etc/profile.d/conda.sh"
+            else
+                export PATH="/home/mjaehn/miniforge3/bin:$PATH"
             fi
         fi
         unset __conda_setup
@@ -244,8 +251,10 @@ elif [[ "${BASHRC_HOST}" == "levante" ]]; then
 
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "home-pc" ]]; then
     # fnm
-    export PATH="/home/mjaehn/.local/share/fnm:$PATH"
-    eval "`fnm env`"
+    if [ -d "/home/mjaehn/.local/share/fnm" ]; then
+        export PATH="/home/mjaehn/.local/share/fnm:$PATH"
+        eval "$(fnm env)"
+    fi
 fi
 
 # Additional aliases for Alps
@@ -319,3 +328,6 @@ if [[ "${USE_ZSH}" == 1 ]]; then
     exec zsh
 fi
 
+export PATH="/home/mjaehn/local/zsh-5.9/bin:$PATH"
+export SHELL="/home/mjaehn/local/zsh-5.9/bin/zsh"
+exec "/home/mjaehn/local/zsh-5.9/bin/zsh" -l
