@@ -37,6 +37,11 @@ git lfs install
 echo "Installing ImageMagick (for convert)..."
 sudo apt install -y imagemagick
 
+echo "Installing Zsh..."
+sudo apt install -y zsh
+echo "Setting Zsh as default shell for current user..."
+chsh -s $(which zsh)
+
 echo "Downloading and installing Miniforge..."
 MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
 wget $MINIFORGE_URL -O Miniforge3.sh
