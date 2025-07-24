@@ -1,0 +1,47 @@
+[
+  {
+    "key": "ctrl+a",
+    "command": "editor.action.selectAll",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+c",
+    "command": "editor.action.clipboardCopyAction",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+v",
+    "command": "editor.action.clipboardPasteAction",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+z",
+    "command": "undo",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+y",
+    "command": "redo",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+f",
+    "command": "actions.find",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "editor.action.startFindReplaceAction",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+  "key": "tab",
+  "command": "editor.action.indentLines",
+  "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
+  "key": "shift+tab",
+  "command": "editor.action.outdentLines",
+  "when": "editorTextFocus && vim.active && !inDebugRepl"
+  }
+]
