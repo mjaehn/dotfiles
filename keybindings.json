@@ -10,6 +10,11 @@
     "when": "editorTextFocus && vim.active && !inDebugRepl"
   },
   {
+    "key": "ctrl+x",
+    "command": "editor.action.clipboardCutAction",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
+  },
+  {
     "key": "ctrl+v",
     "command": "editor.action.clipboardPasteAction",
     "when": "editorTextFocus && vim.active && !inDebugRepl"
