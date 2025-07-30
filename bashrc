@@ -331,3 +331,5 @@ fi
 export PATH="/home/mjaehn/local/zsh-5.9/bin:$PATH"
 export SHELL="/home/mjaehn/local/zsh-5.9/bin/zsh"
 exec "/home/mjaehn/local/zsh-5.9/bin/zsh" -l
+
+. "$HOME/.local/bin/env"
