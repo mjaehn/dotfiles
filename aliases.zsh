@@ -28,11 +28,12 @@ sq2() {
 
 
 # Machine-dependent aliases
-if [[ "${ZSHRC_HOST}" == "todi" || "${ZSHRC_HOST}" == "santis" ]]; then
-    alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
+if [[ "${ZSHRC_HOST}" == "santis" ]]; then
+    alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1"
     alias uenv_icon="uenv start icon-wcp/v1:rc4"
     alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
     alias st="cd /capstor/store/cscs/c2sm/c2sme"
+    alias clm="cd /capstor/store/cscs/userlab/cwp06/mjaehn/ICON-CLM"
 fi
 if [[ "${ZSHRC_HOST}" == "balfrin" ]]; then
     alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."
@@ -43,4 +44,8 @@ if [[ "${ZSHRC_HOST}" == "levante" ]]; then
 fi
 if [[ "${CLUSTER}" == "iac" ]]; then
     alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
+fi
+if [[ "${ZSHRC_HOST}" == "euler" ]]; then
+    alias st="cd /cluster/work/climate/icon_testing_input"
+    alias scra="cd /cluster/scratch/$USER" 
 fi

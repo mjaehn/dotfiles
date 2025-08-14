@@ -2,13 +2,6 @@ Host ela
   HostName ela.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
-Host daint.alps
-  Hostname daint.alps.cscs.ch
-  User mjaehn
-  IdentityFile ~/.ssh/cscs-key
-  ProxyJump ela
-  AddKeysToAgent yes
-  ForwardAgent yes
 Host santis*
   Hostname %h.alps.cscs.ch
   User mjaehn
@@ -16,21 +9,25 @@ Host santis*
   ProxyJump ela
   ForwardX11 yes
   ForwardX11Trusted yes
-Host balfrin* daint* todi*
+Host balfrin*
   Hostname %h.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
   ProxyJump ela
   ForwardX11 yes
   ForwardX11Trusted yes
-Host co2* ch4* fog*
+Host co2* ch4* fog* iacdipl*
   Hostname %h.ethz.ch
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_iac
-Host iacdipl-7
+Host l_co2
+  Hostname co2.ethz.ch
+  User l_c2sm
+  IdentityFile ~/.ssh/id_ed25519_l_c2sm
+Host l_iacdipl-7
   Hostname iacdipl-7.ethz.ch
   User l_c2sm
-  IdentityFile ~/.ssh/id_ed25519_iac
+  IdentityFile ~/.ssh/id_ed25519_l_c2sm
 Host ti_co2
   Hostname co2.ethz.ch
   User ti16102
