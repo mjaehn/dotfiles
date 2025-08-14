@@ -52,7 +52,7 @@ Host euler
   IdentityFile ~/.ssh/id_ed25519_euler
 Host ti_euler
   Hostname euler.ethz.ch
-  User ti16120
+  User ti16102
   IdentityFile ~/.ssh/id_ed25519_euler_ti
 Host levante
   Hostname levante.dkrz.de
