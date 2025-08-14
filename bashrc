@@ -7,9 +7,7 @@ test -s ~/.alias && . ~/.alias || true
 
 USE_ZSH=1
 # determine hostname for later use in all dotfiles
-if [[ "${HOSTNAME}" == daint* ]]; then 
-    BASHRC_HOST='daint'
-elif [[ "${HOSTNAME}" == balfrin* ]]; then 
+if [[ "${HOSTNAME}" == balfrin* ]]; then 
     BASHRC_HOST='balfrin'
 elif [[ "${HOSTNAME}" == todi* ]]; then 
     BASHRC_HOST='todi'
@@ -47,22 +45,6 @@ export LS_COLORS='di=1;94:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31
 export GIT_EDITOR="vim"
 
 # Custom modules/paths/envs for each machine
-
-# daint
-if [[ "${BASHRC_HOST}" == "daint" ]]; then
-    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-    __conda_setup="$('/project/d121/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/project/d121/mjaehn/miniconda3/etc/profile.d/conda.sh" 
-        else
-            export PATH="/project/d121/mjaehn/miniconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-fi
 
 #parse_git_branch() {
 #git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
@@ -139,24 +121,21 @@ fi
 
 # Custom modules/paths/envs for each machine
 
-# daint
-if [[ "${BASHRC_HOST}" == "daint" ]]; then
-    test -s /etc/bash_completion.d/git.sh && . /etc/bash_completion.d/git.sh || true
-    export PATH=$PATH:/users/mjaehn/script_utils
-
-# todi
-elif [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_HOST}" == "balfrin" ]]; then
+# alps
+if [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_HOST}" == "balfrin" ]]; then
+    # >>> conda initialize >>>
     __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
         if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
+            :  # no-op placeholder, old line intentionally ignored
         else
             export PATH="/users/mjaehn/miniconda3/bin:$PATH"
         fi
     fi
     unset __conda_setup
+    # <<< conda initialize <<<
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
     # Only enable Conda in interactive shells (avoid breaking SCP)
     if [[ "$-" == *i* ]]; then
@@ -165,7 +144,7 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${
             if [ $? -eq 0 ]; then
                 eval "$__conda_setup"
             elif [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-                . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
+                :
             else
                 export PATH="/home/mjaehn/miniconda3/bin:$PATH"
             fi
@@ -174,9 +153,9 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${
             if [ $? -eq 0 ]; then
                 eval "$__conda_setup"
             elif [ -f "/home/mjaehn/miniforge3/etc/profile.d/conda.sh" ]; then
-                . "/home/mjaehn/miniforge3/etc/profile.d/conda.sh"
+                :
             else
-                export PATH="/home/mjaehn/miniforge3/bin:$PATH"
+                : # export PATH="/home/mjaehn/miniforge3/bin:$PATH"  # commented out by conda initialize
             fi
         fi
         unset __conda_setup
@@ -191,7 +170,7 @@ elif [[ "${BASHRC_HOST}" == "atmos" ]]; then
         eval "$__conda_setup"
     else
         if [ -f "/usr/local/Miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/usr/local/Miniconda3/etc/profile.d/conda.sh"
+            : # . "/usr/local/Miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
         else
             export PATH="/usr/local/Miniconda3/bin:$PATH"
         fi
@@ -211,21 +190,8 @@ fi
 # Squeue format
 squeue_format="%.7i %.24j %.8u %.2t %.10M %.6D %R"
 
-# daint
-if [[ "${BASHRC_HOST}" == "daint" ]]; then
-    alias aall="scancel -u mjaehn"
-    alias sq='squeue -u mjaehn'
-    alias squ='squeue'
-    alias jenkins='cd /scratch/snx3000/jenkins/workspace'
-    alias proj="cd /project/d121/mjaehn"
-    alias st="cd /store/c2sm/c2sme"
-    alias nn="module load daint-gpu NCO ncview CDO"
-    alias o="xdg-open"
-    alias venv="source /users/mjaehn/venv-jae/bin/activate"
-    alias psy=". activate_psyplot"
-
-# dom and balfrin
-elif [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
+# alps
+if [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq="squeue -u mjaehn -o \"${squeue_format}\""
     alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
