@@ -324,12 +324,6 @@ if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
 fi
 
-if [[ "${USE_ZSH}" == 1 ]]; then
+if [[ -n "$USE_ZSH" && $- == *i* && -z "$SLURM_JOB_ID" && -z "$ZSH_VERSION" ]]; then
     exec zsh
 fi
-
-export PATH="/home/mjaehn/local/zsh-5.9/bin:$PATH"
-export SHELL="/home/mjaehn/local/zsh-5.9/bin/zsh"
-exec "/home/mjaehn/local/zsh-5.9/bin/zsh" -l
-
-. "$HOME/.local/bin/env"
