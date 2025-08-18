@@ -293,3 +293,5 @@ fi
 if [[ -n "$USE_ZSH" && $- == *i* && -z "$SLURM_JOB_ID" && -z "$ZSH_VERSION" ]]; then
     exec zsh
 fi
+
+. "$HOME/.local/bin/env"

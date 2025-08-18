@@ -12,6 +12,8 @@ if [[ "${HOSTNAME}" == iacpc* ]]; then
   export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 fi
 
+source $HOME/.local/bin/env
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -202,6 +204,7 @@ elif [[ "${ZSHRC_HOST}" == "iac-laptop" ]]; then
         fi
     fi
     unset __conda_setup
+    . "$HOME/.local/bin/env"
 elif [[ "${ZSHRC_HOST}" == "home-pc" || "${ZSHRC_HOST}" == "co2" ]]; then
     if [ -d "/home/mjaehn/miniconda3" ]; then
         __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -225,6 +228,7 @@ elif [[ "${ZSHRC_HOST}" == "home-pc" || "${ZSHRC_HOST}" == "co2" ]]; then
     unset __conda_setup
     # Use default environment instead of base
     conda activate default
+    . "$HOME/.local/bin/env"
 fi
 
 # Source aliases file
