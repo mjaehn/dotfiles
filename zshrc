@@ -12,7 +12,9 @@ if [[ "${HOSTNAME}" == iacpc* ]]; then
   export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 fi
 
-source $HOME/.local/bin/env
+if [ -f "$HOME/.local/bin/env" ]; then
+    source $HOME/.local/bin/env
+fi
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
