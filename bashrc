@@ -79,7 +79,7 @@ PS1=$TIME$USER_HOST$LOCATION$REPO$BRANCH$COMMIT$END$TREEBRANCH
 # Icons:   https://www.nerdfonts.com/cheat-sheet --> search 'nf-fa-'
 
 # Path is a git repository
-export FANCYGIT_ICON_GIT_REPO=""
+export FANCYGIT_ICON_GIT_REPO=""
 
 # Only local branch icon.
 export FANCYGIT_ICON_LOCAL_BRANCH=""
@@ -106,7 +106,7 @@ export FANCYGIT_ICON_HAS_ADDED_FILES=" "
 export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=" "
 
 # Path is a python virtual environment
-export FANCYGIT_ICON_VENV=" "
+export FANCYGIT_ICON_VENV=" "
 
 # Check for interactive shell
 if [[ $- == *i* ]]; then
