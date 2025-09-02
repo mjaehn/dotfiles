@@ -62,16 +62,16 @@ git_repo() {
 }
 
 # Command prompt
-TIME='\[\033[01;31m\]\t \[\033[01;32m\]'
-USER_HOST='\[\033[01;33m\]\u @ \h\[\033[00m\]'
-LOCATION=' \[\033[00;96m\]`pwd | sed "s#\(/[^/]\{1,\}/[^/]\{1,\}/[^/]\{1,\}/\).*\(/[^/]\{1,\}/[^/]\{1,\}\)/\{0,1\}#\1_\2#g"`'
-REPO='\[\033[00;33m\]$(git_repo)\[\033[00m\]'
-BRANCH='\[\033[01;36m\]$(git_branch) \[\033[00m\]'
-COMMIT='\[\033[01;34m\]$(git_commit)\[\033[00m\]'
-END=' \n\342\224\224\342\224\200 '
+TIME='\[\033[38;5;208m\]\t '
+USER_HOST='\[\033[38;5;39m\]\u \[\033[38;5;244m\]@ \h\[\033[00m\]'
+LOCATION=' \[\033[38;5;76m\]`pwd | sed "s#\(/[^/]\{1,\}/[^/]\{1,\}/[^/]\{1,\}/\).*\(/[^/]\{1,\}/[^/]\{1,\}\)/\{0,1\}#\1_\2#g"`\[\033[00m\]'
+REPO='\[\033[38;5;220m\]$(git_repo)\[\033[00m\]'
+BRANCH='\[\033[38;5;45m\]$(git_branch)\[\033[00m\]'
+COMMIT='\[\033[38;5;213m\]$(git_commit)\[\033[00m\]'
+END='\[\033[38;5;240m\] \n\342\224\224\342\224\200 \[\033[00m\]'
 
 # Combine all components for the prompt
-PS1=$TIME$USER_HOST$LOCATION$REPO$BRANCH$COMMIT$END$TREEBRANCH
+PS1="$TIME$USER_HOST$LOCATION$REPO$BRANCH$COMMIT$END$TREEBRANCH"
 
 # FancyGit settings
 # Website: https://github.com/diogocavilha/fancy-git
