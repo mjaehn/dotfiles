@@ -31,6 +31,7 @@ elif [[ "${HOSTNAME}" == DESKTOP* || "${HOST}" == SurfacePro* ]]; then
     BASHRC_HOST='home-pc'
 elif [[ "${HOSTNAME}" == co2 ]]; then 
     BASHRC_HOST='co2'
+    USE_ZSH=0
 elif [[ "${HOSTNAME}" == atmos ]]; then 
     BASHRC_HOST='atmos'
 fi
@@ -290,6 +291,6 @@ if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
     exec "${HOME}/local/zsh-5.9/bin/zsh" -l
 fi
 
-if [[ -n "$USE_ZSH" && $- == *i* && -z "$SLURM_JOB_ID" && -z "$ZSH_VERSION" ]]; then
+if [[ "$USE_ZSH" == "1" && $- == *i* && -z "$SLURM_JOB_ID" && -z "$ZSH_VERSION" ]]; then
     exec zsh
 fi
