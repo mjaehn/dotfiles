@@ -295,4 +295,6 @@ if [[ "$USE_ZSH" == "1" && $- == *i* && -z "$SLURM_JOB_ID" && -z "$ZSH_VERSION" 
     exec zsh
 fi
 
-. "$HOME/.local/bin/env"
+if [ -f "$HOME/.local/bin/env" ]; then
+    . "$HOME/.local/bin/env"
+fi
