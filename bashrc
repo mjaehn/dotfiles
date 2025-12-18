@@ -18,6 +18,7 @@ elif [[ "${HOSTNAME}" == santis* ]]; then
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     BASHRC_HOST='euler'
     module load stack eth_proxy
+    USE_ZSH=0 # problems with module command
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
     if tty -s; then
@@ -231,6 +232,8 @@ elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias aall="scancel -u mjaehn"
     alias sq="squeue -u mjaehn -o \"${squeue_format}\""
     alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
+    alias st="cd /cluster/work/climate/icon_testing_input"
+    alias scra="cd /cluster/scratch/$USER" 
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
