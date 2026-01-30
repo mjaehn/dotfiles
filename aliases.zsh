@@ -29,9 +29,9 @@ sq2() {
 
 # Machine-dependent aliases
 if [[ "${ZSHRC_HOST}" == "santis" ]]; then
-    alias uenv_tools="uenv start --view=netcdf netcdf-tools/2025:v1"
+    alias uenv_tools="uenv start netcdf-tools/2025:v1 --view=netcdf"
     alias uenv_icon="uenv start icon-wcp/v1:rc4"
-    alias climtools="uenv start --view=modules /capstor/store/cscs/userlab/cwd01/leclairm/uenvs/images/climtools_25.2_v2.sqfs"
+    alias climtools="uenv start climtools --view=climtools"
     alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
     alias st="cd /capstor/store/cscs/c2sm/c2sme"
     alias clm="cd /capstor/store/cscs/userlab/cwp06/mjaehn/ICON-CLM"
