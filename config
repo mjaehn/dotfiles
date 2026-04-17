@@ -2,7 +2,7 @@ Host ela
   HostName ela.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
-Host santis*
+Host santis* clariden*
   Hostname %h.alps.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
@@ -22,7 +22,7 @@ Host balfrin*
   ProxyJump ela
   ForwardX11 yes
   ForwardX11Trusted yes
-Host co2* ch4* fog* iacdipl*
+Host co2* ch4* fog* iacdipl* stratus*
   Hostname %h.ethz.ch
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_iac
