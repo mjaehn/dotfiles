@@ -29,7 +29,7 @@ Host fog
 Host co2* ch4* iacdipl* stratus*
   Hostname %h.ethz.ch
   User mjaehn
-  ProxyCommand ssh -W %h:%p fog
+  ProxyCommand ssh -q -W %h:%p fog
   IdentityFile ~/.ssh/id_ed25519_iac
 Host l_co2
   Hostname co2.ethz.ch
