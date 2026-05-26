@@ -34,7 +34,7 @@ elif [[ "${HOSTNAME}" == DESKTOP* || "${HOST}" == SurfacePro* ]]; then
     BASHRC_HOST='home-pc'
 elif [[ "${HOSTNAME}" == co2 ]]; then 
     BASHRC_HOST='co2'
-    USE_ZSH=0
+    #USE_ZSH=0
 elif [[ "${HOSTNAME}" == atmos ]]; then 
     BASHRC_HOST='atmos'
 fi

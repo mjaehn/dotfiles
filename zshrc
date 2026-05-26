@@ -208,6 +208,7 @@ elif [[ "${ZSHRC_HOST}" == "iac-laptop" ]]; then
     unset __conda_setup
     . "$HOME/.local/bin/env"
     . "$HOME/.cargo/env"
+    export PATH="$HOME/.cargo/bin:$PATH"
 elif [[ "${ZSHRC_HOST}" == "home-pc" || "${ZSHRC_HOST}" == "co2" ]]; then
     if [ -d "/home/mjaehn/miniconda3" ]; then
         __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -233,6 +234,7 @@ elif [[ "${ZSHRC_HOST}" == "home-pc" || "${ZSHRC_HOST}" == "co2" ]]; then
     conda activate default
     . "$HOME/.local/bin/env"
     . "$HOME/.cargo/env"
+    export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 # Source aliases file
