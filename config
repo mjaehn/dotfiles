@@ -2,7 +2,7 @@ Host ela
   HostName ela.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
-Host santis* clariden*
+Host santis* clariden* eiger*
   Hostname %h.alps.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
@@ -15,7 +15,7 @@ Host icontest_santis
   ProxyJump ela
   IdentitiesOnly yes
   IdentityFile ~/.ssh/icontest-key
-Host balfrin*
+Host balfrin* 
   Hostname %h.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
