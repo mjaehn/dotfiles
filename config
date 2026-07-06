@@ -80,3 +80,8 @@ Host gitlab.dkrz.de
   User b381473 
   PreferredAuthentications publickey
   IdentityFile ~/.ssh/id_ed25519_dkrz_gitlab
+Host git.iac.ethz.ch
+  HostName git.iac.ethz.ch
+  User mjaehn 
+  PreferredAuthentications publickey
+  IdentityFile ~/.ssh/id_ed25519_iac
