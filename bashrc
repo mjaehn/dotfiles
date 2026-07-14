@@ -194,7 +194,7 @@ fi
 # Machine specific aliases
 #
 # Squeue format
-squeue_format="%.7i %.24j %.8u %.2t %.10M %.6D %R"
+squeue_format="%.8i %.9P %.16j %.8u %.8T %.9M %.9l %.6D %R"
 
 # alps
 if [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
