@@ -22,8 +22,8 @@ Host balfrin*
   ProxyJump ela
   ForwardX11 yes
   ForwardX11Trusted yes
-Host fog
-  Hostname fog.ethz.ch
+Host fog* fog2*
+  Hostname %h.ethz.ch
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_iac
 Host co2* ch4* iacdipl* stratus*
