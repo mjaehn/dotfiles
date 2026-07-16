@@ -139,6 +139,8 @@ if [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_HO
     fi
     unset __conda_setup
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
+    # Activate cargo for cscs-key
+    . "$HOME/.cargo/env"
     # Only enable Conda in interactive shells (avoid breaking SCP)
     if [[ "$-" == *i* ]]; then
         if [ -d "/home/mjaehn/miniconda3" ]; then
