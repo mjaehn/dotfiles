@@ -13,6 +13,7 @@ elif [[ "${HOSTNAME}" == todi* ]]; then
     BASHRC_HOST='todi'
 elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
+    export PATH=$HOME/.local/$(uname -m)/bin:$PATH
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     BASHRC_HOST='euler'
     USE_ZSH=0 # problems with module command
