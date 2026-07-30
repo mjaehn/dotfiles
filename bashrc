@@ -14,6 +14,8 @@ elif [[ "${HOSTNAME}" == todi* ]]; then
 elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
     export PATH=$HOME/.local/$(uname -m)/bin:$PATH
+    export VSCODE_AGENT_FOLDER="$HOME/.vscode-server/$CLUSTER_NAME-tunnel/.vscode-server"
+    export VSCODE_CLI_DATA_DIR="$VSCODE_AGENT_FOLDER/cli"
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     BASHRC_HOST='euler'
     USE_ZSH=0 # problems with module command
