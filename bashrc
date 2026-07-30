@@ -1,5 +1,5 @@
 # Skip certain configurations for SCP, SFTP, and VS Code Remote SSH
-if [[ "$SSH_TTY" == "" ]] && [[ "$-" != *i* ]]; then
+if [[ -z "$SSH_TTY" ]] && [[ "$-" != *i* ]]; then
     return
 fi
 
@@ -18,8 +18,8 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     USE_ZSH=0 # problems with module command
     export APPTAINER_CACHEDIR="$SCRATCH/.apptainer"
     export APPTAINER_TMPDIR="${TMPDIR:-/tmp}"
-elif [[ "${HOSTNAME}" == levante* ]]; then 
-    source /sw/etc/profile.levante
+elif [[ "${HOSTNAME}" == levante* ]]; then
+    [[ -f /sw/etc/profile.levante ]] && source /sw/etc/profile.levante
     if tty -s; then
         BASHRC_HOST='levante'
         module load git
@@ -34,7 +34,7 @@ elif [[ "${HOSTNAME}" == DESKTOP* || "${HOST}" == SurfacePro* ]]; then
     BASHRC_HOST='home-pc'
 elif [[ "${HOSTNAME}" == co2 ]]; then 
     BASHRC_HOST='co2'
-    USE_ZSH=0
+    #USE_ZSH=0
 elif [[ "${HOSTNAME}" == atmos ]]; then 
     BASHRC_HOST='atmos'
 fi
@@ -74,7 +74,7 @@ COMMIT='\[\033[38;5;213m\]$(git_commit)\[\033[00m\]'
 END='\[\033[38;5;240m\] \n\342\224\224\342\224\200 \[\033[00m\]'
 
 # Combine all components for the prompt
-PS1="$TIME$USER_HOST$LOCATION$REPO$BRANCH$COMMIT$END$TREEBRANCH"
+PS1="$TIME$USER_HOST$LOCATION$REPO$BRANCH $COMMIT$END$TREEBRANCH"
 
 # FancyGit settings
 # Website: https://github.com/diogocavilha/fancy-git
@@ -114,7 +114,7 @@ export FANCYGIT_ICON_VENV=" "
 # Check for interactive shell
 if [[ $- == *i* ]]; then
     # Source the prompt
-    . ~/.fancy-git/prompt.sh 2>/dev/null
+    [[ -f ~/.fancy-git/prompt.sh ]] && . ~/.fancy-git/prompt.sh
     # Settings
     fancygit --color-scheme-batman 2>/dev/null
     fancygit --disable-full-path 2>/dev/null
@@ -127,37 +127,34 @@ fi
 
 # alps
 if [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_HOST}" == "balfrin" ]]; then
-    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
+    if __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"; then
         eval "$__conda_setup"
+    elif [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
     else
-        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            :  # no-op placeholder, old line intentionally ignored
-        else
-            export PATH="/users/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize  # commented out by conda initialize
-        fi
+        export PATH="/users/mjaehn/miniconda3/bin:$PATH"
     fi
     unset __conda_setup
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
+    # Activate cargo for cscs-key
+    [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
     # Only enable Conda in interactive shells (avoid breaking SCP)
     if [[ "$-" == *i* ]]; then
         if [ -d "/home/mjaehn/miniconda3" ]; then
-            __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-            if [ $? -eq 0 ]; then
+            if __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
                 eval "$__conda_setup"
             elif [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-                :
+                . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
             else
-                export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize  # commented out by conda initialize
+                export PATH="/home/mjaehn/miniconda3/bin:$PATH"
             fi
         elif [ -d "/home/mjaehn/miniforge3" ]; then
-            __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-            if [ $? -eq 0 ]; then
+            if __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
                 eval "$__conda_setup"
             elif [ -f "/home/mjaehn/miniforge3/etc/profile.d/conda.sh" ]; then
-                :
+                . "/home/mjaehn/miniforge3/etc/profile.d/conda.sh"
             else
-                : # export PATH="/home/mjaehn/miniforge3/bin:$PATH"  # commented out by conda initialize
+                export PATH="/home/mjaehn/miniforge3/bin:$PATH"
             fi
         fi
         unset __conda_setup
@@ -166,23 +163,17 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${
     fi
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        source "$HOME/miniconda3/etc/profile.d/conda.sh"
+        . "$HOME/miniconda3/etc/profile.d/conda.sh"
     fi
 elif [[ "${BASHRC_HOST}" == "atmos" ]]; then
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/usr/local/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
+    if __conda_setup="$('/usr/local/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"; then
         eval "$__conda_setup"
+    elif [ -f "/usr/local/Miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/usr/local/Miniconda3/etc/profile.d/conda.sh"
     else
-        if [ -f "/usr/local/Miniconda3/etc/profile.d/conda.sh" ]; then
-            : # . "/usr/local/Miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
-        else
-            export PATH="/usr/local/Miniconda3/bin:$PATH"
-        fi
+        export PATH="/usr/local/Miniconda3/bin:$PATH"
     fi
     unset __conda_setup
-    # <<< conda initialize <<<
 fi
 
 # balfrin
@@ -194,7 +185,7 @@ fi
 # Machine specific aliases
 #
 # Squeue format
-squeue_format="%.7i %.24j %.8u %.2t %.10M %.6D %R"
+squeue_format="%.8i %.9P %.16j %.8u %.8T %.9M %.9l %.6D %R"
 
 # alps
 if [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
