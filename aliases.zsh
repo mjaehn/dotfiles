@@ -5,7 +5,12 @@ squeue_format="%.7i %.22j %.6u %.6a %.2t %.10M %.9l %.5D %24R"
 alias aliases="vi $HOME/.oh-my-zsh/custom/aliases.zsh"
 alias bashconfig="vi ~/.bashrc"
 alias c="clear"
-alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
+# Renew the CSCS key/certificate, then mirror it into the Windows home so that
+# VS Code Remote-SSH (which runs as a Windows process) sees the fresh certificate.
+cscs-key() {
+    command cscs-key "$@" && ~/git/cscs-keys/sync-windows.sh
+}
+alias cscskey="cscs-key"
 alias f="find . -name"
 alias gsi='git submodule init'
 alias gsu='git submodule update'

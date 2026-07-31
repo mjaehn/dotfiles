@@ -280,7 +280,12 @@ alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
-alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
+# Renew the CSCS key/certificate, then mirror it into the Windows home so that
+# VS Code Remote-SSH (which runs as a Windows process) sees the fresh certificate.
+cscs-key() {
+    command cscs-key "$@" && ~/git/cscs-keys/sync-windows.sh
+}
+alias cscskey="cscs-key"
 
 # Use local zsh installation on balfrin
 if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
