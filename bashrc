@@ -18,6 +18,7 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     USE_ZSH=0 # problems with module command
     export APPTAINER_CACHEDIR="$SCRATCH/.apptainer"
     export APPTAINER_TMPDIR="${TMPDIR:-/tmp}"
+    export UV_CONFIG_FILE=${HOME}/.config/uv/uv.toml
 elif [[ "${HOSTNAME}" == levante* ]]; then 
     source /sw/etc/profile.levante
     if tty -s; then
