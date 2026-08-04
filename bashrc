@@ -284,6 +284,7 @@ alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
+alias account="sacctmgr show assoc user="$USER" format=account%20"
 # Renew the CSCS key/certificate, then mirror it into the Windows home so that
 # VS Code Remote-SSH (which runs as a Windows process) sees the fresh certificate.
 cscs-key() {
