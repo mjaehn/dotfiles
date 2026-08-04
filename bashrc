@@ -1,5 +1,5 @@
 # Skip certain configurations for SCP, SFTP, and VS Code Remote SSH
-if [[ "$SSH_TTY" == "" ]] && [[ "$-" != *i* ]]; then
+if [[ -z "$SSH_TTY" ]] && [[ "$-" != *i* ]]; then
     return
 fi
 
@@ -13,6 +13,9 @@ elif [[ "${HOSTNAME}" == todi* ]]; then
     BASHRC_HOST='todi'
 elif [[ "${HOSTNAME}" == santis* ]]; then 
     BASHRC_HOST='santis'
+    export PATH=$HOME/.local/$(uname -m)/bin:$PATH
+    export VSCODE_AGENT_FOLDER="$HOME/.vscode-server/$CLUSTER_NAME-tunnel/.vscode-server"
+    export VSCODE_CLI_DATA_DIR="$VSCODE_AGENT_FOLDER/cli"
 elif [[ "${HOSTNAME}" == eu* ]]; then 
     BASHRC_HOST='euler'
     USE_ZSH=0 # problems with module command
@@ -20,7 +23,7 @@ elif [[ "${HOSTNAME}" == eu* ]]; then
     export APPTAINER_TMPDIR="${TMPDIR:-/tmp}"
     export UV_CONFIG_FILE=${HOME}/.config/uv/uv.toml
 elif [[ "${HOSTNAME}" == levante* ]]; then 
-    source /sw/etc/profile.levante
+    [[ -f /sw/etc/profile.levante ]] && source /sw/etc/profile.levante
     if tty -s; then
         BASHRC_HOST='levante'
         module load git
@@ -115,7 +118,7 @@ export FANCYGIT_ICON_VENV=" "
 # Check for interactive shell
 if [[ $- == *i* ]]; then
     # Source the prompt
-    . ~/.fancy-git/prompt.sh 2>/dev/null
+    [[ -f ~/.fancy-git/prompt.sh ]] && . ~/.fancy-git/prompt.sh
     # Settings
     fancygit --color-scheme-batman 2>/dev/null
     fancygit --disable-full-path 2>/dev/null
@@ -128,37 +131,34 @@ fi
 
 # alps
 if [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_HOST}" == "balfrin" ]]; then
-    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
+    if __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"; then
         eval "$__conda_setup"
+    elif [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
     else
-        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            :  # no-op placeholder, old line intentionally ignored
-        else
-            export PATH="/users/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize  # commented out by conda initialize
-        fi
+        export PATH="/users/mjaehn/miniconda3/bin:$PATH"
     fi
     unset __conda_setup
 elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
+    # Activate cargo for cscs-key
+    [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
     # Only enable Conda in interactive shells (avoid breaking SCP)
     if [[ "$-" == *i* ]]; then
         if [ -d "/home/mjaehn/miniconda3" ]; then
-            __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-            if [ $? -eq 0 ]; then
+            if __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
                 eval "$__conda_setup"
             elif [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-                :
+                . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
             else
-                export PATH="/home/mjaehn/miniconda3/bin:$PATH"  # commented out by conda initialize  # commented out by conda initialize
+                export PATH="/home/mjaehn/miniconda3/bin:$PATH"
             fi
         elif [ -d "/home/mjaehn/miniforge3" ]; then
-            __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-            if [ $? -eq 0 ]; then
+            if __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
                 eval "$__conda_setup"
             elif [ -f "/home/mjaehn/miniforge3/etc/profile.d/conda.sh" ]; then
-                :
+                . "/home/mjaehn/miniforge3/etc/profile.d/conda.sh"
             else
-                : # export PATH="/home/mjaehn/miniforge3/bin:$PATH"  # commented out by conda initialize
+                export PATH="/home/mjaehn/miniforge3/bin:$PATH"
             fi
         fi
         unset __conda_setup
@@ -167,23 +167,17 @@ elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${
     fi
 elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        source "$HOME/miniconda3/etc/profile.d/conda.sh"
+        . "$HOME/miniconda3/etc/profile.d/conda.sh"
     fi
 elif [[ "${BASHRC_HOST}" == "atmos" ]]; then
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/usr/local/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
+    if __conda_setup="$('/usr/local/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"; then
         eval "$__conda_setup"
+    elif [ -f "/usr/local/Miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/usr/local/Miniconda3/etc/profile.d/conda.sh"
     else
-        if [ -f "/usr/local/Miniconda3/etc/profile.d/conda.sh" ]; then
-            : # . "/usr/local/Miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
-        else
-            export PATH="/usr/local/Miniconda3/bin:$PATH"
-        fi
+        export PATH="/usr/local/Miniconda3/bin:$PATH"
     fi
     unset __conda_setup
-    # <<< conda initialize <<<
 fi
 
 # balfrin
@@ -290,7 +284,12 @@ alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
 alias f="find . -name"
 alias ml="module load"
 alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
-alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
+# Renew the CSCS key/certificate, then mirror it into the Windows home so that
+# VS Code Remote-SSH (which runs as a Windows process) sees the fresh certificate.
+cscs-key() {
+    command cscs-key "$@" && ~/git/cscs-keys/sync-windows.sh
+}
+alias cscskey="cscs-key"
 
 # Use local zsh installation on balfrin
 if [[ "${BASHRC_HOST}" == "balfrin" ]]; then

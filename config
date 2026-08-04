@@ -26,37 +26,44 @@ Host fog* fog2*
   Hostname %h.ethz.ch
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_iac
-Host co2* ch4* iacdipl* stratus*
+Host atmos* co2* ch4* iacdipl* stratus*
   Hostname %h.ethz.ch
   User mjaehn
   ProxyCommand ssh -q -W %h:%p fog
   IdentityFile ~/.ssh/id_ed25519_iac
-Host l_co2
-  Hostname co2.ethz.ch
+Host l_co2* l_iacdipl-7*
+  Hostname %h.ethz.ch
   User l_c2sm
   IdentityFile ~/.ssh/id_ed25519_l_c2sm
-Host l_iacdipl-7
-  Hostname iacdipl-7.ethz.ch
-  User l_c2sm
-  IdentityFile ~/.ssh/id_ed25519_l_c2sm
-Host ti_co2
-  Hostname co2.ethz.ch
-  User ti16102
-  IdentityFile ~/.ssh/id_ed25519_iac_ti
+  ProxyCommand ssh -q -W %h:%p fog2
 Host ti_fog
   Hostname fog.ethz.ch
   User ti16102
   IdentityFile ~/.ssh/id_ed25519_iac_ti
-Host atmos
-  Hostname atmos.ethz.ch
-  User mjaehn
-  IdentityFile ~/.ssh/id_ed25519_iac
-  ProxyJump fog
+  IdentitiesOnly yes
+Host ti_fog2
+  Hostname fog2.ethz.ch
+  User ti16102
+  IdentityFile ~/.ssh/id_ed25519_iac_ti
+  IdentitiesOnly yes
+Host ti_co2
+  Hostname co2.ethz.ch
+  User ti16102
+  IdentityFile ~/.ssh/id_ed25519_iac_ti
+  IdentitiesOnly yes
+  ProxyJump ti_fog2
 Host ti_atmos
   Hostname atmos.ethz.ch
   User ti16102
   IdentityFile ~/.ssh/id_ed25519_iac_ti
-  ProxyJump fog
+  IdentitiesOnly yes
+  ProxyJump ti_fog2
+Host ti_l_iacdipl-7
+  Hostname iacdipl-7.ethz.ch
+  User l_c2sm
+  IdentityFile ~/.ssh/id_ed25519_l_c2sm
+  IdentitiesOnly yes
+  ProxyJump ti_fog
 Host euler
   Hostname euler.ethz.ch
   User mjaehn
