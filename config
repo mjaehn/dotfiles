@@ -67,6 +67,7 @@ Host ti_l_iacdipl-7
 Host euler
   Hostname euler.ethz.ch
   User mjaehn
+  ProxyCommand ssh -q -W %h:%p fog
   IdentityFile ~/.ssh/id_ed25519_euler
 Host ti_euler
   Hostname euler.ethz.ch
