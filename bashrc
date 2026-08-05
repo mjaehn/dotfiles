@@ -208,6 +208,7 @@ elif [[ "${BASHRC_HOST}" == "euler" ]]; then
     alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
     alias st="cd /cluster/work/climate/icon_testing_input"
     alias scra="cd /cluster/scratch/$USER" 
+    alias modules="module load stack/2025-06 openmpi/4.1.7 cdo/2.4.4 nco/5.2.4 netcdf-c/4.9.2 python/3.13.0"
 
 # levante
 elif [[ "${BASHRC_HOST}" == "levante" ]]; then
