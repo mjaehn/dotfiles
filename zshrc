@@ -183,6 +183,7 @@ if [[ "${CLUSTER}" == "alps" ]]; then
     fi
     unset __conda_setup
 elif [[ "${ZSHRC_HOST}" == "iac-laptop" || "${ZSHRC_HOST}" == "home-pc" || "${ZSHRC_HOST}" == "co2" ]]; then
+    export PATH="$HOME/.local/bin:$PATH"
     if [ -d "/home/mjaehn/miniconda3" ]; then
         __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
         if [ $? -eq 0 ]; then
