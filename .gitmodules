@@ -13,9 +13,6 @@
 [submodule "vim-extensions/lightline.vim"]
 	path = vim-extensions/lightline.vim
 	url = git@github.com:itchyny/lightline.vim.git
-[submodule "vim-extensions/taglist.vim"]
-	path = vim-extensions/taglist.vim
-	url = https://github.com/vim-scripts/taglist.vim.git
 [submodule "vim-extensions/Vundle.vim"]
 	path = vim-extensions/Vundle.vim
 	url = git@github.com:VundleVim/Vundle.vim.git
