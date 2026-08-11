@@ -1,63 +1,80 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# Provision a fresh Debian/Ubuntu machine (including WSL) with the tools these
+# dotfiles expect. Safe to re-run: every step is guarded.
+#
+# Run install.sh afterwards to symlink the configuration itself.
 
-set -e
+set -euo pipefail
+
+have() { command -v "$1" >/dev/null 2>&1; }
 
 echo "Updating system..."
 sudo apt update && sudo apt upgrade -y
 
-echo "Installing basic dependencies..."
-sudo apt install -y build-essential curl wget gnupg software-properties-common lsb-release ca-certificates
+echo "Installing base packages..."
+sudo apt install -y \
+    build-essential ca-certificates cdo curl gnupg imagemagick lsb-release \
+    ncview netcdf-bin software-properties-common wget zsh
 
-echo "Installing uv (Rust Python package manager)..."
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# wslu provides wslview, only meaningful under WSL
+if grep -qi microsoft /proc/version 2>/dev/null; then
+    echo "Installing wslu (WSL detected)..."
+    sudo apt install -y wslu
+fi
 
-echo "Installing wslview (from wslu)..."
-sudo apt install -y wslu
+if ! have uv; then
+    echo "Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
 
-echo "Installing netCDF tools (ncdump, ncview)..."
-sudo apt install -y netcdf-bin ncview
-
-echo "Installing CDO (Climate Data Operators)..."
-sudo apt install -y cdo
-
-echo "Installing Node.js and npm..."
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
+if ! have node; then
+    echo "Installing Node.js..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    sudo apt install -y nodejs
+fi
 
 echo "Installing latest Git..."
 sudo add-apt-repository ppa:git-core/ppa -y
 sudo apt update
 sudo apt install -y git
 
-echo "Installing Git LFS..."
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
-sudo apt install -y git-lfs
-git lfs install
+if ! have git-lfs; then
+    echo "Installing Git LFS..."
+    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+    sudo apt install -y git-lfs
+    git lfs install
+fi
 
-echo "Installing ImageMagick (for convert)..."
-sudo apt install -y imagemagick
+if [[ "$SHELL" != *zsh ]]; then
+    echo "Setting zsh as the default shell..."
+    chsh -s "$(command -v zsh)"
+fi
 
-echo "Installing Zsh..."
-sudo apt install -y zsh
-echo "Setting Zsh as default shell for current user..."
-chsh -s $(which zsh)
+# Match the prefix lib/conda.sh looks for, and the architecture we run on
+# (this repo is used on both x86_64 and aarch64 machines).
+CONDA_PREFIX_DIR="$HOME/miniforge3"
+if [[ ! -d "$CONDA_PREFIX_DIR" ]]; then
+    echo "Installing Miniforge for $(uname -m)..."
+    installer="Miniforge3-Linux-$(uname -m).sh"
+    wget -q "https://github.com/conda-forge/miniforge/releases/latest/download/$installer" \
+        -O "/tmp/$installer"
+    bash "/tmp/$installer" -b -p "$CONDA_PREFIX_DIR"
+    rm -f "/tmp/$installer"
+else
+    echo "Miniforge already installed at $CONDA_PREFIX_DIR."
+fi
 
-echo "Downloading and installing Miniforge..."
-MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
-wget $MINIFORGE_URL -O Miniforge3.sh
-bash Miniforge3.sh -b -p $HOME/miniforge
-eval "$($HOME/miniforge/bin/conda shell.bash hook)"
+eval "$("$CONDA_PREFIX_DIR/bin/conda" shell.bash hook)"
+conda init bash zsh
 
-echo "Initializing conda for bash..."
-conda init bash
+# The shells activate the "default" environment, not base
+if ! conda env list | awk '{print $1}' | grep -qx default; then
+    echo "Creating the 'default' conda environment..."
+    conda create -y -n default python
+else
+    echo "Conda environment 'default' already exists."
+fi
 
-echo "Updating base conda environment to latest Python..."
-conda activate base
-conda install -y python
-
-echo "Creating Python 3.7 environment..."
-conda create -y -n py37 python=3.7
-
-echo "All done!"
-echo "To activate the new conda environment, run: conda activate py37"
-
+echo
+echo "All done. Now run: ./install.sh"

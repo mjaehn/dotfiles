@@ -1,0 +1,12 @@
+# Editor and OS cruft
+*.swp
+*.swo
+*~
+.DS_Store
+
+# vim
+tags
+.netrwhist
+
+# Local overrides, not tracked
+*.local

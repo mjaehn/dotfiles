@@ -1,59 +1,14 @@
-# Squeue format
-squeue_format="%.7i %.22j %.6u %.6a %.2t %.10M %.9l %.5D %24R"
+# Zsh-only additions, symlinked into $ZSH_CUSTOM by install.sh and
+# auto-sourced by oh-my-zsh.
+#
+# Everything portable -- environment, aliases, functions, and the
+# machine-specific aliases -- lives in lib/common.sh so that bash gets it too.
+# Only put things here that genuinely cannot work in POSIX sh.
 
-# General aliases
-alias aliases="vi $HOME/.oh-my-zsh/custom/aliases.zsh"
-alias bashconfig="vi ~/.bashrc"
-alias c="clear"
-# Renew the CSCS key/certificate, then mirror it into the Windows home so that
-# VS Code Remote-SSH (which runs as a Windows process) sees the fresh certificate.
-cscs-key() {
-    command cscs-key "$@" && ~/git/cscs-keys/sync-windows.sh
-}
-alias cscskey="cscs-key"
-alias f="find . -name"
-alias gsi='git submodule init'
-alias gsu='git submodule update'
-alias gsui='git submodule update --init'
-alias gsuir='git submodule update --init --recursive'
-alias ml="module load"
-alias nd="ncdump -h"
-alias nv="ncview"
-alias ohmyzsh="vi ~/.oh-my-zsh"
-alias scra="cd ${SCRATCH}"
-alias sq="squeue -u $USER -o \"${squeue_format}\""
-alias sqw="watch -x -n 60 squeue -u $USER -o \"${squeue_format}\""
-alias vi="vim -p"
-alias zshconfig="vi ~/.zshrc"
+alias ohmyzsh='vi ~/.oh-my-zsh'
 
-unalias sq2 2>/dev/null  # Ensure no conflicting alias exists
+# Long-form squeue: one field per line, easier to read than the packed `sq`.
+# Uses $'...' for the embedded newlines.
 sq2() {
     squeue -u "$USER" --format=$'%i\nUser: %u\nAccount: %a\nPartition: %P\nJob Name: %j\nState: %T\nPriority: %Q\nTime Used: %M\nTime Limit: %l\nNodes: %D\nCPUs: %C\nMemory: %m\nNode List: %R\nSubmit Time: %V\nStart Time: %S\nDependency: %E\nWork Dir: %Z\n-------------------------'
 }
-
-
-# Machine-dependent aliases
-if [[ "${ZSHRC_HOST}" == "santis" ]]; then
-    alias uenv_tools="uenv start netcdf-tools/2025:v1 --view=netcdf"
-    alias uenv_icon="uenv start icon-wcp/v1:rc4"
-    alias climtools="uenv start climtools --view=climtools"
-    alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
-    alias st="cd /capstor/store/cscs/c2sm/c2sme"
-    alias clm="cd /capstor/store/cscs/userlab/cwp06/mjaehn/ICON-CLM"
-    alias cws="cd /capstor/store/cscs/userlab/cws01"
-    alias cwd="cd /capstor/store/cscs/userlab/cwd01"
-fi
-if [[ "${ZSHRC_HOST}" == "balfrin" ]]; then
-    alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."
-    alias st="cd /capstor/store/cscs/c2sm"
-fi
-if [[ "${ZSHRC_HOST}" == "levante" ]]; then
-    alias st="cd /pool/data/CLMcom/CCLM/reanalyses/ERA5"
-fi
-if [[ "${CLUSTER}" == "iac" ]]; then
-    alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
-fi
-if [[ "${ZSHRC_HOST}" == "euler" ]]; then
-    alias st="cd /cluster/work/climate/icon_testing_input"
-    alias scra="cd /cluster/scratch/$USER" 
-fi

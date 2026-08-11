@@ -40,13 +40,13 @@
     "when": "editorTextFocus && vim.active && !inDebugRepl"
   },
   {
-  "key": "tab",
-  "command": "editor.action.indentLines",
-  "when": "editorTextFocus && vim.active && !inDebugRepl"
+    "key": "tab",
+    "command": "editor.action.indentLines",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
   },
   {
-  "key": "shift+tab",
-  "command": "editor.action.outdentLines",
-  "when": "editorTextFocus && vim.active && !inDebugRepl"
+    "key": "shift+tab",
+    "command": "editor.action.outdentLines",
+    "when": "editorTextFocus && vim.active && !inDebugRepl"
   }
 ]

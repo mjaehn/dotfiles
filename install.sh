@@ -1,55 +1,59 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
+# Symlink the dotfiles in this repo into $HOME. Safe to re-run.
 
-echo Setup vim-extensions***
+set -euo pipefail
 
-vim_plugin_dir=~/.vim/vim-extensions
+REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-mkdir -p $vim_plugin_dir
+link() {
+    local src="$REPO/$1" dest="$2"
+    if [[ ! -e "$src" ]]; then
+        echo "  skip $1 (missing in repo)"
+        return
+    fi
+    mkdir -p "$(dirname -- "$dest")"
+    ln -sfn -- "$src" "$dest"
+    echo "  ${dest/#$HOME/\~} -> $1"
+}
 
-git submodule init &> /dev/null
-git submodule update &> /dev/null
+echo "Setting up vim extensions..."
+git -C "$REPO" submodule update --init --recursive >/dev/null
 
-cd vim-extensions
-
-for name in *; do
-  if [ -d "$name" ] && [ ! -L "$name" ]; then
-    echo "   Link $name to $vim_plugin_dir"
-    ln -s -f $(pwd)/$name $vim_plugin_dir
-  fi
+mkdir -p "$HOME/.vim/vim-extensions"
+for path in "$REPO"/vim-extensions/*/; do
+    name="$(basename -- "$path")"
+    [[ "$name" == "colors" ]] && continue
+    ln -sfn -- "${path%/}" "$HOME/.vim/vim-extensions/$name"
+    echo "  ~/.vim/vim-extensions/$name"
 done
+ln -sfn -- "$REPO/vim-extensions/colors" "$HOME/.vim/colors"
+echo "  ~/.vim/colors"
 
-echo "   Link colors to ~/.vim/colors"
-ln -s -f $(pwd)/colors ~/.vim/.
+echo "Linking dotfiles..."
+link profile "$HOME/.profile"
+link bashrc "$HOME/.bashrc"
+link zshrc "$HOME/.zshrc"
+link p10k.zsh "$HOME/.p10k.zsh"
+link vimrc "$HOME/.vimrc"
+link config "$HOME/.ssh/config"
 
-cd ..
+if [[ -d "$HOME/.oh-my-zsh" ]]; then
+    link aliases.zsh "$HOME/.oh-my-zsh/custom/aliases.zsh"
+else
+    echo "  skip aliases.zsh: ~/.oh-my-zsh not found"
+    echo "       run ./install_oh_my_zsh_plugins_theme.sh first, then re-run this script"
+fi
 
-echo "Link profile"
-ln -s -f $(pwd)/profile ~/.profile
+# lib/ is not linked: bashrc and zshrc resolve their own symlink to find it.
 
-echo "Link bashrc"
-ln -s -f $(pwd)/bashrc ~/.bashrc
+cat <<'EOF'
 
-echo "Link zshrc"
-ln -s -f $(pwd)/zshrc ~/.zshrc
+Done. To finish:
 
-echo "Link p10k.zsh"
-ln -s -f $(pwd)/p10k.zsh ~/.p10k.zsh
+  exec zsh          reload the shell
+  :PluginInstall    install the vim plugins (from inside vim)
 
-echo "Link aliases.zsh"
-ln -fs $(pwd)/aliases.zsh $HOME/.oh-my-zsh/custom
-
-echo "Link vimrc"
-ln -s -f $(pwd)/vimrc ~/.vimrc
-
-echo "Link ssh-config"
-ln -s -f $(pwd)/config ~/.ssh/config
-
-echo ""
-echo "Run:"
-echo ""
-echo "source ~/.zshrc"
-echo ""
-echo ":PluginInstall in Vim"
-echo ""
-echo "to complete installation"
-echo ""
+keybindings.json is for VS Code and is not linked automatically. Copy it to
+your VS Code user directory by hand (on WSL that lives on the Windows side).
+EOF

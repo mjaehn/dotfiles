@@ -1,125 +1,68 @@
-# Skip certain configurations for SCP, SFTP, and VS Code Remote SSH
+# ~/.bashrc -- symlinked from this repo by install.sh
+#
+# Shared logic lives in lib/; this file holds only what is bash-specific:
+# the prompt and the hand-off to zsh.
+
+# Skip everything for SCP, SFTP and VS Code Remote SSH
 if [[ -z "$SSH_TTY" ]] && [[ "$-" != *i* ]]; then
     return
 fi
 
-test -s ~/.alias && . ~/.alias || true
+# Resolve the repo through the ~/.bashrc symlink so lib/ can be sourced
+DOTFILES_DIR="$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd)"
+export DOTFILES_DIR
 
-USE_ZSH=1
-# determine hostname for later use in all dotfiles
-if [[ "${HOSTNAME}" == balfrin* ]]; then 
-    BASHRC_HOST='balfrin'
-elif [[ "${HOSTNAME}" == todi* ]]; then 
-    BASHRC_HOST='todi'
-elif [[ "${HOSTNAME}" == santis* ]]; then 
-    BASHRC_HOST='santis'
-    export PATH=$HOME/.local/$(uname -m)/bin:$PATH
-    export VSCODE_AGENT_FOLDER="$HOME/.vscode-server/$CLUSTER_NAME-tunnel/.vscode-server"
-    export VSCODE_CLI_DATA_DIR="$VSCODE_AGENT_FOLDER/cli"
-elif [[ "${HOSTNAME}" == eu* ]]; then 
-    BASHRC_HOST='euler'
-    USE_ZSH=0 # problems with module command
-    export APPTAINER_CACHEDIR="$SCRATCH/.apptainer"
-    export APPTAINER_TMPDIR="${TMPDIR:-/tmp}"
-    export UV_CONFIG_FILE=${HOME}/.config/uv/uv.toml
-elif [[ "${HOSTNAME}" == levante* ]]; then 
-    [[ -f /sw/etc/profile.levante ]] && source /sw/etc/profile.levante
-    if tty -s; then
-        BASHRC_HOST='levante'
-        module load git
-    # load java and git as Jenkins user
-    else
-        return
-    fi
-elif [[ "${HOSTNAME}" == IACPC* ]]; then 
-    BASHRC_HOST='iac-laptop'
-    export DISPLAY=:0
-elif [[ "${HOSTNAME}" == DESKTOP* || "${HOST}" == SurfacePro* ]]; then
-    BASHRC_HOST='home-pc'
-elif [[ "${HOSTNAME}" == co2 ]]; then 
-    BASHRC_HOST='co2'
-    #USE_ZSH=0
-elif [[ "${HOSTNAME}" == atmos ]]; then 
-    BASHRC_HOST='atmos'
-fi
-export BASHRC_HOST
+# --- shared configuration ------------------------------------------------
 
-# ls colors
-unset LS_COLORS
-export LS_COLORS='di=1;94:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31'
+source "$DOTFILES_DIR/lib/hostinfo.sh"
+[[ "$DOTFILES_ABORT_RC" == 1 ]] && return
 
+source "$DOTFILES_DIR/lib/common.sh"
+source "$DOTFILES_DIR/lib/conda.sh"
 
-# Git settings
-export GIT_EDITOR="vim"
+[[ -s "$HOME/.alias" ]] && source "$HOME/.alias"
 
-# Custom modules/paths/envs for each machine
-
-#parse_git_branch() {
-#git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-#}
+# --- prompt --------------------------------------------------------------
 
 git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \1/'
+    git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \1/'
 }
 git_commit() {
-     git rev-parse --short HEAD 2> /dev/null
+    git rev-parse --short HEAD 2>/dev/null
 }
 git_repo() {
-     basename -s .git `git config --get remote.origin.url` 2> /dev/null | sed -e 's/^/\n/'
+    basename -s .git "$(git config --get remote.origin.url)" 2>/dev/null | sed -e 's/^/\n/'
 }
 
-# Command prompt
-TIME='\[\033[38;5;208m\]\t '
-USER_HOST='\[\033[38;5;39m\]\u \[\033[38;5;244m\]@ \h\[\033[00m\]'
-LOCATION=' \[\033[38;5;76m\]`pwd | sed "s#\(/[^/]\{1,\}/[^/]\{1,\}/[^/]\{1,\}/\).*\(/[^/]\{1,\}/[^/]\{1,\}\)/\{0,1\}#\1_\2#g"`\[\033[00m\]'
-REPO='\[\033[38;5;220m\]$(git_repo)\[\033[00m\]'
-BRANCH='\[\033[38;5;45m\]$(git_branch)\[\033[00m\]'
-COMMIT='\[\033[38;5;213m\]$(git_commit)\[\033[00m\]'
-END='\[\033[38;5;240m\] \n\342\224\224\342\224\200 \[\033[00m\]'
+PROMPT_TIME='\[\033[38;5;208m\]\t '
+PROMPT_USER_HOST='\[\033[38;5;39m\]\u \[\033[38;5;244m\]@ \h\[\033[00m\]'
+PROMPT_LOCATION=' \[\033[38;5;76m\]`pwd | sed "s#\(/[^/]\{1,\}/[^/]\{1,\}/[^/]\{1,\}/\).*\(/[^/]\{1,\}/[^/]\{1,\}\)/\{0,1\}#\1_\2#g"`\[\033[00m\]'
+PROMPT_REPO='\[\033[38;5;220m\]$(git_repo)\[\033[00m\]'
+PROMPT_BRANCH='\[\033[38;5;45m\]$(git_branch)\[\033[00m\]'
+PROMPT_COMMIT='\[\033[38;5;213m\]$(git_commit)\[\033[00m\]'
+PROMPT_END='\[\033[38;5;240m\] \n\342\224\224\342\224\200 \[\033[00m\]'
 
-# Combine all components for the prompt
-PS1="$TIME$USER_HOST$LOCATION$REPO$BRANCH $COMMIT$END$TREEBRANCH"
+PS1="${PROMPT_TIME}${PROMPT_USER_HOST}${PROMPT_LOCATION}${PROMPT_REPO}${PROMPT_BRANCH} ${PROMPT_COMMIT}${PROMPT_END}"
 
-# FancyGit settings
+# --- FancyGit ------------------------------------------------------------
+#
 # Website: https://github.com/diogocavilha/fancy-git
 # Install: curl -sS https://raw.githubusercontent.com/diogocavilha/fancy-git/master/install.sh | sh -s -- --nofontconfig
 # Icons:   https://www.nerdfonts.com/cheat-sheet --> search 'nf-fa-'
 
-# Path is a git repository
-export FANCYGIT_ICON_GIT_REPO=""
+export FANCYGIT_ICON_GIT_REPO=""              # path is a git repository
+export FANCYGIT_ICON_LOCAL_BRANCH=""          # local-only branch
+export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH=""   # tracked branch
+export FANCYGIT_ICON_MERGED_BRANCH=""         # merged branch
+export FANCYGIT_ICON_HAS_STASHES=" "         # stashes
+export FANCYGIT_ICON_HAS_UNTRACKED_FILES=" " # untracked files
+export FANCYGIT_ICON_HAS_CHANGED_FILES=" "   # changed files
+export FANCYGIT_ICON_HAS_ADDED_FILES=" "     # added files
+export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=" "# unpushed commits
+export FANCYGIT_ICON_VENV=" "                # python virtual environment
 
-# Only local branch icon.
-export FANCYGIT_ICON_LOCAL_BRANCH=""
-
-# Branch icon.
-export FANCYGIT_ICON_LOCAL_REMOTE_BRANCH=""
-
-# Merged branch icon.
-export FANCYGIT_ICON_MERGED_BRANCH=""
-
-# Staged files.
-export FANCYGIT_ICON_HAS_STASHES=" "
-
-# Untracked files.
-export FANCYGIT_ICON_HAS_UNTRACKED_FILES=" "
-
-# Changed files.
-export FANCYGIT_ICON_HAS_CHANGED_FILES=" "
-
-# Added files.
-export FANCYGIT_ICON_HAS_ADDED_FILES=" "
-
-# Unpushed commits.
-export FANCYGIT_ICON_HAS_UNPUSHED_COMMITS=" "
-
-# Path is a python virtual environment
-export FANCYGIT_ICON_VENV=" "
-
-# Check for interactive shell
-if [[ $- == *i* ]]; then
-    # Source the prompt
-    [[ -f ~/.fancy-git/prompt.sh ]] && . ~/.fancy-git/prompt.sh
-    # Settings
+if [[ "$-" == *i* && -f "$HOME/.fancy-git/prompt.sh" ]]; then
+    source "$HOME/.fancy-git/prompt.sh"
     fancygit --color-scheme-batman 2>/dev/null
     fancygit --disable-full-path 2>/dev/null
     fancygit --enable-host-name 2>/dev/null
@@ -127,183 +70,15 @@ if [[ $- == *i* ]]; then
     fancygit --enable-double-line 2>/dev/null
 fi
 
-# Custom modules/paths/envs for each machine
+# --- hand off to zsh -----------------------------------------------------
 
-# alps
-if [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" || "${BASHRC_HOST}" == "balfrin" ]]; then
-    if __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"; then
-        eval "$__conda_setup"
-    elif [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/users/mjaehn/miniconda3/bin:$PATH"
-    fi
-    unset __conda_setup
-elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "home-pc" || "${BASHRC_HOST}" == "co2" ]]; then
-    # Activate cargo for cscs-key
-    [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
-    # Only enable Conda in interactive shells (avoid breaking SCP)
-    if [[ "$-" == *i* ]]; then
-        if [ -d "/home/mjaehn/miniconda3" ]; then
-            if __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
-                eval "$__conda_setup"
-            elif [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-                . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
-            else
-                export PATH="/home/mjaehn/miniconda3/bin:$PATH"
-            fi
-        elif [ -d "/home/mjaehn/miniforge3" ]; then
-            if __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
-                eval "$__conda_setup"
-            elif [ -f "/home/mjaehn/miniforge3/etc/profile.d/conda.sh" ]; then
-                . "/home/mjaehn/miniforge3/etc/profile.d/conda.sh"
-            else
-                export PATH="/home/mjaehn/miniforge3/bin:$PATH"
-            fi
-        fi
-        unset __conda_setup
-        # Use default environment instead of base
-        conda activate default
-    fi
-elif [[ "${BASHRC_HOST}" == "euler" ]]; then
-    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/miniconda3/etc/profile.d/conda.sh"
-    fi
-elif [[ "${BASHRC_HOST}" == "atmos" ]]; then
-    if __conda_setup="$('/usr/local/Miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"; then
-        eval "$__conda_setup"
-    elif [ -f "/usr/local/Miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/usr/local/Miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/usr/local/Miniconda3/bin:$PATH"
-    fi
-    unset __conda_setup
+# balfrin has no system zsh, use the locally built one (install_zsh_user.sh)
+if [[ "$DOTFILES_HOST" == "balfrin" && -x "$HOME/local/zsh-5.9/bin/zsh" ]]; then
+    export PATH="$HOME/local/zsh-5.9/bin:$PATH"
+    export SHELL="$HOME/local/zsh-5.9/bin/zsh"
+    exec "$HOME/local/zsh-5.9/bin/zsh" -l
 fi
 
-# balfrin
-if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
-    export MODULEPATH=/mch-environment/v6/modules:${MODULEPATH}
-fi
-
-
-# Machine specific aliases
-#
-# Squeue format
-squeue_format="%.8i %.9P %.16j %.8u %.8T %.9M %.9l %.6D %R"
-
-# alps
-if [[ "${BASHRC_HOST}" == "balfrin" || "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
-    alias aall="scancel -u mjaehn"
-    alias sq="squeue -u mjaehn -o \"${squeue_format}\""
-    alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
-
-# co2
-elif [[ "${BASHRC_HOST}" == "co2" ]]; then
-    alias json='cd /net/co2/c2sm-data/jenkins/zephyr/file_index'
-
-# euler
-elif [[ "${BASHRC_HOST}" == "euler" ]]; then
-    alias aall="scancel -u mjaehn"
-    alias sq="squeue -u mjaehn -o \"${squeue_format}\""
-    alias sqw="watch -x -n 60 squeue -u mjaehn -o \"${squeue_format}\""
-    alias st="cd /cluster/work/climate/icon_testing_input"
-    alias scra="cd /cluster/scratch/$USER" 
-    alias modules="module load stack/2025-06 openmpi/4.1.7 cdo/2.4.4 nco/5.2.4 netcdf-c/4.9.2 python/3.13.0"
-
-# levante
-elif [[ "${BASHRC_HOST}" == "levante" ]]; then
-    alias aall="scancel -u b381473"
-    alias sq="squeue -u b381473 -o \"${squeue_format}\""
-    alias sqw="watch -x -n 60 squeue -u b381473 -o \"${squeue_format}\""
-    alias jenkins='cd /mnt/lustre01/scratch/b/b380729/workspace'
-    alias st='cd /pool/data/CLMcom/'
-    export SCRATCH=/scratch/b/b381473
-
-elif [[ "${BASHRC_HOST}" == "iac-laptop" || "${BASHRC_HOST}" == "co2" || "${BASHRC_HOST}" == "home-pc" ]]; then
-    # fnm
-    if [ -d "/home/mjaehn/.local/share/fnm" ]; then
-        export PATH="/home/mjaehn/.local/share/fnm:$PATH"
-        eval "$(fnm env)"
-    fi
-fi
-
-# Additional aliases for Alps
-if [[ "${BASHRC_HOST}" == "todi" || "${BASHRC_HOST}" == "santis" ]]; then
-    alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1-rc1"
-    alias uenv_icon="uenv start --view=spack icon-wcp/v1:rc4"
-    alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
-    alias st="cd /store/migration/store/c2sm/c2sme/"
-fi
-if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
-    alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."
-fi
-
-
-# Model specific aliases
-
-# ICON
-alias lsL='ls -ltr LOG*' 
-alias tL='tail -f LOG*'
-
-# General aliases
-alias ls="ls --color"
-alias ll="ls -al"
-alias la='ls -A'
-alias l="ls -al"
-alias scra='cd ${SCRATCH}'
-alias c="clear"
-alias g='grep -i'
-alias h='history | grep'
-alias t='tail -f'
-alias dc="cd"
-alias ..='cd ..'
-alias l..='cd ..'
-alias cd..="cd .."
-alias ml='module load'
-alias src='source'
-alias ...='cd ../..'
-alias lsC='ctags -R'
-alias srcrc='source ~/.bashrc'
-alias rcvim='vim ~/.bashrc'
-alias gt='git status'
-alias ga='git add'
-alias gsi='git submodule init'
-alias gsu='git submodule update'
-alias gsui='git submodule update --init'
-alias gsuir='git submodule update --init --recursive'
-#alias gl='git log --pretty=format:"%h - %an, %ar : %s"'
-alias gl='git log --graph --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%an%C(reset)%C(bold yellow)%d%C(reset) %C(dim white)- %s%C(reset)"'
-alias nd='ncdump -h'
-alias nv='ncview'
-alias fp='find "$PWD" -name'
-alias lcd="cd"
-alias lvi="vi"
-alias vi="vim -p"
-alias nd="ncdump -h"
-alias nv="ncview"
-alias ftps="cd /net/iacftp/ftp/pub_read/mjaehn"
-alias f="find . -name"
-alias ml="module load"
-alias callGraph="perl /home/mjaehn/git/callGraph/callGraph"
-alias account="sacctmgr show assoc user="$USER" format=account%20"
-# Renew the CSCS key/certificate, then mirror it into the Windows home so that
-# VS Code Remote-SSH (which runs as a Windows process) sees the fresh certificate.
-cscs-key() {
-    command cscs-key "$@" && ~/git/cscs-keys/sync-windows.sh
-}
-alias cscskey="cscs-key"
-
-# Use local zsh installation on balfrin
-if [[ "${BASHRC_HOST}" == "balfrin" ]]; then
-    export PATH="${HOME}/local/zsh-5.9/bin:$PATH"
-    export SHELL="${HOME}/local/zsh-5.9/bin/zsh"
-    exec "${HOME}/local/zsh-5.9/bin/zsh" -l
-fi
-
-if [[ "$USE_ZSH" == "1" && $- == *i* && -z "$SLURM_JOB_ID" && -z "$ZSH_VERSION" ]]; then
-    exec zsh
-fi
-
-if [ -f "$HOME/.local/bin/env" ]; then
-    . "$HOME/.local/bin/env"
+if [[ "$DOTFILES_USE_ZSH" == 1 && "$-" == *i* && -z "$SLURM_JOB_ID" && -z "$ZSH_VERSION" ]]; then
+    command -v zsh >/dev/null 2>&1 && exec zsh
 fi

@@ -1,95 +1,129 @@
+# ~/.ssh/config -- symlinked from this repo by install.sh
+#
+# Grouped by site. Within each group: personal accounts first, then the shared
+# and teaching (ti_*) accounts.
+
+# --- CSCS ----------------------------------------------------------------
+
 Host ela
   HostName ela.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
+
 Host santis* clariden* eiger*
-  Hostname %h.alps.cscs.ch
+  HostName %h.alps.cscs.ch
   User mjaehn
   IdentityFile ~/.ssh/cscs-key
   ProxyJump ela
   ForwardX11 yes
   ForwardX11Trusted yes
+
+Host balfrin*
+  HostName %h.cscs.ch
+  User mjaehn
+  IdentityFile ~/.ssh/cscs-key
+  ProxyJump ela
+  ForwardX11 yes
+  ForwardX11Trusted yes
+
 Host icontest_santis
   HostName santis.alps.cscs.ch
   User icontest
-  ProxyJump ela
-  IdentitiesOnly yes
   IdentityFile ~/.ssh/icontest-key
-Host balfrin* 
-  Hostname %h.cscs.ch
-  User mjaehn
-  IdentityFile ~/.ssh/cscs-key
+  IdentitiesOnly yes
   ProxyJump ela
-  ForwardX11 yes
-  ForwardX11Trusted yes
-Host fog* fog2*
-  Hostname %h.ethz.ch
+
+# --- ETH IAC -------------------------------------------------------------
+#
+# fog and fog2 are the gateways; everything else jumps through them.
+
+Host fog*
+  HostName %h.ethz.ch
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_iac
+
 Host atmos* co2* ch4* iacdipl* stratus*
-  Hostname %h.ethz.ch
+  HostName %h.ethz.ch
   User mjaehn
-  ProxyCommand ssh -q -W %h:%p fog
   IdentityFile ~/.ssh/id_ed25519_iac
+  ProxyCommand ssh -q -W %h:%p fog
+
 Host l_co2* l_iacdipl-7*
-  Hostname %h.ethz.ch
+  HostName %h.ethz.ch
   User l_c2sm
   IdentityFile ~/.ssh/id_ed25519_l_c2sm
   ProxyCommand ssh -q -W %h:%p fog2
+
 Host ti_fog
-  Hostname fog.ethz.ch
+  HostName fog.ethz.ch
   User ti16102
   IdentityFile ~/.ssh/id_ed25519_iac_ti
   IdentitiesOnly yes
+
 Host ti_fog2
-  Hostname fog2.ethz.ch
+  HostName fog2.ethz.ch
   User ti16102
   IdentityFile ~/.ssh/id_ed25519_iac_ti
   IdentitiesOnly yes
-Host ti_co2
-  Hostname co2.ethz.ch
-  User ti16102
-  IdentityFile ~/.ssh/id_ed25519_iac_ti
-  IdentitiesOnly yes
-  ProxyJump ti_fog2
+
 Host ti_atmos
-  Hostname atmos.ethz.ch
+  HostName atmos.ethz.ch
   User ti16102
   IdentityFile ~/.ssh/id_ed25519_iac_ti
   IdentitiesOnly yes
   ProxyJump ti_fog2
+
+Host ti_co2
+  HostName co2.ethz.ch
+  User ti16102
+  IdentityFile ~/.ssh/id_ed25519_iac_ti
+  IdentitiesOnly yes
+  ProxyJump ti_fog2
+
 Host ti_l_iacdipl-7
-  Hostname iacdipl-7.ethz.ch
+  HostName iacdipl-7.ethz.ch
   User l_c2sm
   IdentityFile ~/.ssh/id_ed25519_l_c2sm
   IdentitiesOnly yes
   ProxyJump ti_fog
+
+# --- ETH Euler -----------------------------------------------------------
+
 Host euler
-  Hostname euler.ethz.ch
+  HostName euler.ethz.ch
   User mjaehn
-  ProxyCommand ssh -q -W %h:%p fog
   IdentityFile ~/.ssh/id_ed25519_euler
+  ProxyCommand ssh -q -W %h:%p fog
+
 Host ti_euler
-  Hostname euler.ethz.ch
+  HostName euler.ethz.ch
   User ti16102
   IdentityFile ~/.ssh/id_ed25519_euler_ti
+
+# --- DKRZ ----------------------------------------------------------------
+
 Host levante
-  Hostname levante.dkrz.de
-  IdentityFile ~/.ssh/id_ed25519_levante
+  HostName levante.dkrz.de
   User b381473
+  IdentityFile ~/.ssh/id_ed25519_levante
   IdentitiesOnly yes
+
+# --- Git forges ----------------------------------------------------------
+
 Host github.com
+  HostName github.com
   User git
-  Hostname github.com
+  IdentityFile ~/.ssh/id_ed25519_github
   PreferredAuthentications publickey
-  IdentityFile ~/.ssh/id_ed25519_github 
-Host gitlab.dkrz.de
-  HostName gitlab.dkrz.de
-  User b381473 
-  PreferredAuthentications publickey
-  IdentityFile ~/.ssh/id_ed25519_dkrz_gitlab
+
 Host git.iac.ethz.ch
   HostName git.iac.ethz.ch
-  User mjaehn 
-  PreferredAuthentications publickey
+  User mjaehn
   IdentityFile ~/.ssh/id_ed25519_iac
+  PreferredAuthentications publickey
+
+Host gitlab.dkrz.de
+  HostName gitlab.dkrz.de
+  User b381473
+  IdentityFile ~/.ssh/id_ed25519_dkrz_gitlab
+  PreferredAuthentications publickey
