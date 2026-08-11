@@ -16,6 +16,12 @@ Plugin 'itchyny/lightline.vim'
 Plugin 'luochen1990/rainbow'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'ctrlp.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-commentary'
+Plugin 'majutsushi/tagbar'
+Plugin 'dense-analysis/ale'
+Plugin 'christoomey/vim-tmux-navigator'
 
 " vim-autotag regenerates tags on every write, which is too slow on the Euler
 " and Levante filesystems
@@ -54,7 +60,7 @@ imap jk <Esc>
 map <F9> gT
 map <F10> gt
 nnoremap <silent> <expr> ff g:NERDTree.IsOpen() ? "\:NERDTreeClose<CR>" : bufexists(expand('%')) ? "\:NERDTreeFind<CR>" : "\:NERDTree<CR>"
-nnoremap <silent> tl<space> :Tlist<CR>
+nnoremap <silent> tl<space> :TagbarToggle<CR>
 nmap <silent> ft<space> :execute 'tab tag '.expand('<cword>')<CR>
 
 " --- file types ----------------------------------------------------------
