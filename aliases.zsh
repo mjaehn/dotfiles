@@ -5,7 +5,12 @@ squeue_format="%.7i %.22j %.6u %.6a %.2t %.10M %.9l %.5D %24R"
 alias aliases="vi $HOME/.oh-my-zsh/custom/aliases.zsh"
 alias bashconfig="vi ~/.bashrc"
 alias c="clear"
-alias cscskey="cd ~/git/cscs-keys && ./generate-keys.sh"
+# Renew the CSCS key/certificate, then mirror it into the Windows home so that
+# VS Code Remote-SSH (which runs as a Windows process) sees the fresh certificate.
+cscs-key() {
+    command cscs-key "$@" && ~/git/cscs-keys/sync-windows.sh
+}
+alias cscskey="cscs-key"
 alias f="find . -name"
 alias gsi='git submodule init'
 alias gsu='git submodule update'
@@ -28,11 +33,15 @@ sq2() {
 
 
 # Machine-dependent aliases
-if [[ "${ZSHRC_HOST}" == "todi" || "${ZSHRC_HOST}" == "santis" ]]; then
-    alias uenv_tools="uenv start --view=modules netcdf-tools/2024:v1"
+if [[ "${ZSHRC_HOST}" == "santis" ]]; then
+    alias uenv_tools="uenv start netcdf-tools/2025:v1 --view=netcdf"
     alias uenv_icon="uenv start icon-wcp/v1:rc4"
+    alias climtools="uenv start climtools --view=climtools"
     alias nn="module load netcdf-c/4.9.2 ncview/2.1.9 && echo Loading ncdump and ncview."
     alias st="cd /capstor/store/cscs/c2sm/c2sme"
+    alias clm="cd /capstor/store/cscs/userlab/cwp06/mjaehn/ICON-CLM"
+    alias cws="cd /capstor/store/cscs/userlab/cws01"
+    alias cwd="cd /capstor/store/cscs/userlab/cwd01"
 fi
 if [[ "${ZSHRC_HOST}" == "balfrin" ]]; then
     alias nn="module load netcdf-c/4.8.1-gcc && echo Loading ncdump."

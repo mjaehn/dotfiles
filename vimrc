@@ -97,6 +97,7 @@ autocmd BufNewFile  *.spec  call SKEL_spec()
 set updatetime=100
 :imap jk <Esc>
 set number
+set mouse=""
 map <F9> gT
 map <F10> gt
 nnoremap <silent> <expr> ff g:NERDTree.IsOpen() ? "\:NERDTreeClose<CR>" : bufexists(expand('%')) ? "\:NERDTreeFind<CR>" : "\:NERDTree<CR>"

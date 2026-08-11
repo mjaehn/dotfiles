@@ -6,7 +6,15 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export HOSTNAME=$(hostname)
+
+if [[ "${HOSTNAME}" == iacpc* ]]; then
+  export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+fi
+
+if [ -f "$HOME/.local/bin/env" ]; then
+    source "$HOME/.local/bin/env"
+fi
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -79,7 +87,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git zsh-completions zsh-syntax-highlighting zsh-autosuggestions)
 
-source $ZSH/oh-my-zsh.sh
+[[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
 
@@ -108,6 +116,7 @@ export NVM_DIR="$HOME/.nvm"
 # Machine-specific settings
 #
 # Determine hostname for later use in all dotfiles
+
 if [[ "${HOSTNAME}" == daint* ]]; then
     ZSHRC_HOST='daint'
     CLUSTER='alps'
@@ -120,11 +129,11 @@ elif [[ "${HOSTNAME}" == balfrin* ]]; then
 elif [[ "${CLUSTER_NAME}" == todi* ]]; then
     ZSHRC_HOST='todi'
     CLUSTER='alps'
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/users/mjaehn/miniconda3/lib"
 elif [[ "${CLUSTER_NAME}" == santis* ]]; then
     ZSHRC_HOST='santis'
     CLUSTER='alps'
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/users/mjaehn/miniconda3/lib
+    export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/users/mjaehn/miniconda3/lib"
 elif [[ "${HOSTNAME}" == eu* || "${HOST}" == eu* ]]; then
     if tty -s; then
         ZSHRC_HOST='euler'
@@ -133,7 +142,7 @@ elif [[ "${HOSTNAME}" == eu* || "${HOST}" == eu* ]]; then
         return
     fi
 elif [[ "${HOSTNAME}" == levante* ]]; then
-    source /sw/etc/profile.levante
+    [[ -f /sw/etc/profile.levante ]] && source /sw/etc/profile.levante
     if tty -s; then
         ZSHRC_HOST='levante'
         CLUSTER='dkrz'
@@ -141,7 +150,7 @@ elif [[ "${HOSTNAME}" == levante* ]]; then
     else
         return
     fi
-elif [[ "${HOSTNAME}" == IACPC* ]]; then
+elif [[ "${HOSTNAME}" == iacpc* ]]; then
     ZSHRC_HOST='iac-laptop'
     CLUSTER='local'
 elif [[ "${HOSTNAME}" == DESKTOP* || "${HOST}" == SurfacePro* ]]; then
@@ -162,31 +171,42 @@ export GIT_EDITOR="vim"
 #
 # Euler
 if [[ "${ZSHRC_HOST}" == "euler" ]]; then
-    export PATH=/cluster/home/mjaehn/bin:$PATH
+    export PATH="/cluster/home/mjaehn/bin:$PATH"
 # Balfrin
 elif [[ "${ZSHRC_HOST}" == "balfrin" ]]; then
-    export MODULEPATH=/mch-environment/v6/modules:${MODULEPATH}
-    source /usr/share/Modules/3.2.10/init/zsh
+    export MODULEPATH="/mch-environment/v6/modules:${MODULEPATH}"
+    [[ -f /usr/share/Modules/3.2.10/init/zsh ]] && source /usr/share/Modules/3.2.10/init/zsh
 fi
 
 # Conda settings
 if [[ "${CLUSTER}" == "alps" ]]; then
-    __conda_setup="$('/users/mjaehn/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
+    if __conda_setup="$('/users/mjaehn/miniforge3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"; then
         eval "$__conda_setup"
+    elif [ -f "/users/mjaehn/miniforge3/etc/profile.d/conda.sh" ]; then
+        . "/users/mjaehn/miniforge3/etc/profile.d/conda.sh"
     else
-        if [ -f "/users/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/users/mjaehn/miniconda3/etc/profile.d/conda.sh"
+        export PATH="/users/mjaehn/miniforge3/bin:$PATH"
+    fi
+    unset __conda_setup
+    export PIP_CACHE_DIR="$SCRATCH/pip_cache"
+    export TMPDIR="$SCRATCH/pip_temp"
+    mkdir -p "$PIP_CACHE_DIR" "$TMPDIR"
+elif [[ "${ZSHRC_HOST}" == "iac-laptop" ]]; then
+    if [ -d "/home/mjaehn/miniforge" ]; then
+        if __conda_setup="$('/home/mjaehn/miniforge/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
+            eval "$__conda_setup"
+        elif [ -f "/home/mjaehn/miniforge/etc/profile.d/conda.sh" ]; then
+            . "/home/mjaehn/miniforge/etc/profile.d/conda.sh"
         else
-            export PATH="/users/mjaehn/miniconda3/bin:$PATH"
+            export PATH="/home/mjaehn/miniforge/bin:$PATH"
         fi
     fi
     unset __conda_setup
 elif [[ "${ZSHRC_HOST}" == "iac-laptop" || "${ZSHRC_HOST}" == "home-pc" || "${ZSHRC_HOST}" == "co2" ]]; then
-    export PATH="$HOME/.local/bin:$PATH"
+    [[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
+    [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
     if [ -d "/home/mjaehn/miniconda3" ]; then
-        __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-        if [ $? -eq 0 ]; then
+        if __conda_setup="$('/home/mjaehn/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
             eval "$__conda_setup"
         elif [ -f "/home/mjaehn/miniconda3/etc/profile.d/conda.sh" ]; then
             . "/home/mjaehn/miniconda3/etc/profile.d/conda.sh"
@@ -194,8 +214,7 @@ elif [[ "${ZSHRC_HOST}" == "iac-laptop" || "${ZSHRC_HOST}" == "home-pc" || "${ZS
             export PATH="/home/mjaehn/miniconda3/bin:$PATH"
         fi
     elif [ -d "/home/mjaehn/miniforge3" ]; then
-        __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-        if [ $? -eq 0 ]; then
+        if __conda_setup="$('/home/mjaehn/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"; then
             eval "$__conda_setup"
         elif [ -f "/home/mjaehn/miniforge3/etc/profile.d/conda.sh" ]; then
             . "/home/mjaehn/miniforge3/etc/profile.d/conda.sh"
@@ -206,18 +225,20 @@ elif [[ "${ZSHRC_HOST}" == "iac-laptop" || "${ZSHRC_HOST}" == "home-pc" || "${ZS
     unset __conda_setup
     # Use default environment instead of base
     conda activate default
+    [[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
 fi
 
 # Source aliases file
-source $HOME/.oh-my-zsh/custom/aliases.zsh
+[[ -f "$HOME/.oh-my-zsh/custom/aliases.zsh" ]] && source "$HOME/.oh-my-zsh/custom/aliases.zsh"
 
 # Disable error if a pattern does not match any files (same as bash)
 setopt nonomatch
 
 # Export SHELL environment variable
-export SHELL=$(which zsh)
+export SHELL="$(which zsh)"
 
 # Initialize module system for zsh
 if [[ "${ZSHRC_HOST}" == "santis" ]]; then
-    source /usr/share/lmod/lmod/init/zsh
+    [[ -f /usr/share/lmod/lmod/init/zsh ]] && source /usr/share/lmod/lmod/init/zsh
 fi
+
