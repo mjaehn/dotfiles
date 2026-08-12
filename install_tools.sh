@@ -38,7 +38,8 @@ if (( HAS_ROOT )); then
     echo "Installing base packages..."
     sudo apt install -y \
         build-essential ca-certificates cdo curl gnupg imagemagick lsb-release \
-        ncview netcdf-bin software-properties-common wget zsh
+        ncview netcdf-bin software-properties-common wget x11-apps x11-utils \
+        xauth zsh
 
     # wslu provides wslview, only meaningful under WSL
     if grep -qi microsoft /proc/version 2>/dev/null; then

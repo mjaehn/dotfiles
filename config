@@ -32,10 +32,14 @@ Host icontest_santis
   IdentityFile ~/.ssh/icontest-key
   IdentitiesOnly yes
   ProxyJump ela
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 # --- ETH IAC -------------------------------------------------------------
 #
-# fog and fog2 are the gateways; everything else jumps through them.
+# fog and fog2 are the gateways; everything else jumps through them. They need
+# no ForwardX11 of their own: ProxyJump/ProxyCommand tunnel the TCP connection,
+# so X11 is negotiated end-to-end with the final host.
 
 Host fog*
   HostName %h.ethz.ch
@@ -47,12 +51,16 @@ Host atmos* co2* ch4* iacdipl* stratus*
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_iac
   ProxyCommand ssh -q -W %h:%p fog
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 Host l_co2* l_iacdipl-7*
   HostName %h.ethz.ch
   User l_c2sm
   IdentityFile ~/.ssh/id_ed25519_l_c2sm
   ProxyCommand ssh -q -W %h:%p fog2
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 Host ti_fog
   HostName fog.ethz.ch
@@ -72,6 +80,8 @@ Host ti_atmos
   IdentityFile ~/.ssh/id_ed25519_iac_ti
   IdentitiesOnly yes
   ProxyJump ti_fog2
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 Host ti_co2
   HostName co2.ethz.ch
@@ -79,6 +89,8 @@ Host ti_co2
   IdentityFile ~/.ssh/id_ed25519_iac_ti
   IdentitiesOnly yes
   ProxyJump ti_fog2
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 Host ti_l_iacdipl-7
   HostName iacdipl-7.ethz.ch
@@ -86,6 +98,8 @@ Host ti_l_iacdipl-7
   IdentityFile ~/.ssh/id_ed25519_l_c2sm
   IdentitiesOnly yes
   ProxyJump ti_fog
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 # --- ETH Euler -----------------------------------------------------------
 
@@ -94,11 +108,15 @@ Host euler
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_euler
   ProxyCommand ssh -q -W %h:%p fog
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 Host ti_euler
   HostName euler.ethz.ch
   User ti16102
   IdentityFile ~/.ssh/id_ed25519_euler_ti
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 # --- DKRZ ----------------------------------------------------------------
 
@@ -107,6 +125,8 @@ Host levante
   User b381473
   IdentityFile ~/.ssh/id_ed25519_levante
   IdentitiesOnly yes
+  ForwardX11 yes
+  ForwardX11Trusted yes
 
 # --- Git forges ----------------------------------------------------------
 
