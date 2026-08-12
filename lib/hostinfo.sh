@@ -88,8 +88,13 @@ case "$DOTFILES_HOST" in
     iac-laptop)
         # Deliberately a full replacement, not a prepend
         PATH="$HOME/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-        DISPLAY=:0
-        export PATH DISPLAY
+        export PATH
+        # Local console only: under ssh -X this would clobber the forwarded
+        # DISPLAY and silently break X11 forwarding.
+        if [ -z "${SSH_CONNECTION:-}" ]; then
+            DISPLAY=:0
+            export DISPLAY
+        fi
         ;;
 esac
 
