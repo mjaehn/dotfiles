@@ -60,6 +60,17 @@ repo and source `lib/` from there.
   or set `SLURM_JOB_ID=1` when testing bash interactively.
 - **conda only runs in interactive shells** (`case "$-" in *i*)`), because
   activating it writes to stdout and corrupts scp/sftp transfers.
+- **Never run `conda init` from the install scripts.** `lib/conda.sh` already
+  bootstraps conda in both shells, and `conda init` writes *through* the
+  symlinks `install.sh` creates, appending its managed block into the repo's own
+  `bashrc` and `zshrc`.
+- **`install_tools.sh` is gated to `local` and `iac`.** It sources
+  `lib/hostinfo.sh` and exits on anything else; Alps, Euler and Levante are
+  provisioned with modules or uenv. Because it runs under `set -u`, every
+  variable `lib/hostinfo.sh` dereferences must be guarded (`${SCRATCH:-}`).
+- **The `default` conda env is built from `conda_packages`**, a conda spec file
+  (one spec per line, `#` comments) installed from conda-forge. Python is pinned
+  there so every machine gets the same interpreter regardless of install date.
 
 ## Testing
 

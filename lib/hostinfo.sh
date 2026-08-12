@@ -69,7 +69,7 @@ case "$DOTFILES_HOST" in
         ;;
     euler)
         PATH="/cluster/home/mjaehn/bin:$PATH"
-        APPTAINER_CACHEDIR="$SCRATCH/.apptainer"
+        APPTAINER_CACHEDIR="${SCRATCH:-}/.apptainer"
         APPTAINER_TMPDIR="${TMPDIR:-/tmp}"
         UV_CONFIG_FILE="$HOME/.config/uv/uv.toml"
         export PATH APPTAINER_CACHEDIR APPTAINER_TMPDIR UV_CONFIG_FILE

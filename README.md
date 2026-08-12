@@ -10,7 +10,7 @@ differences resolved at shell startup instead of by keeping separate branches.
 git clone --recursive git@github.com:mjaehn/dotfiles.git ~/git/dotfiles
 cd ~/git/dotfiles
 
-./install_tools.sh                    # fresh Debian/Ubuntu/WSL machine only
+./install_tools.sh                    # local + IAC machines only, refuses elsewhere
 ./install_oh_my_zsh_plugins_theme.sh  # oh-my-zsh + plugins + powerlevel10k
 ./install.sh                          # symlink everything into $HOME
 exec zsh
@@ -22,6 +22,14 @@ On a cluster without a system zsh (balfrin), run `./install_zsh_user.sh` first
 to compile one into `~/local`.
 
 `install.sh` is safe to re-run; it only refreshes symlinks.
+
+`install_tools.sh` installs Miniforge into `~/miniforge3` and builds the
+`default` conda environment (the one the shells auto-activate) from
+`conda_packages`. To pull in new packages afterwards, add them there and run:
+
+```sh
+mamba install -n default -c conda-forge --file conda_packages
+```
 
 ## Machines
 

@@ -7,7 +7,23 @@
 
 set -euo pipefail
 
+REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
 have() { command -v "$1" >/dev/null 2>&1; }
+
+# Only the local machines and the IAC servers are provisioned from here. Alps,
+# Euler and Levante use modules or uenv, and would fail on the sudo apt calls
+# below anyway -- this just says so up front instead of half way through.
+# shellcheck source=lib/hostinfo.sh
+. "$REPO/lib/hostinfo.sh"
+case "$DOTFILES_CLUSTER" in
+    local|iac) ;;
+    *)
+        echo "install_tools.sh only runs on local and IAC machines" >&2
+        echo "(detected host '${DOTFILES_HOST:-unknown}', cluster '${DOTFILES_CLUSTER:-unknown}')" >&2
+        exit 1
+        ;;
+esac
 
 echo "Updating system..."
 sudo apt update && sudo apt upgrade -y
@@ -65,15 +81,20 @@ else
     echo "Miniforge already installed at $CONDA_PREFIX_DIR."
 fi
 
+# No `conda init` here on purpose: lib/conda.sh already bootstraps conda in both
+# shells, and conda init writes through the symlinks install.sh creates, which
+# would append its managed block straight into the repo's bashrc and zshrc.
 eval "$("$CONDA_PREFIX_DIR/bin/conda" shell.bash hook)"
-conda init bash zsh
 
 # The shells activate the "default" environment, not base
 if ! conda env list | awk '{print $1}' | grep -qx default; then
-    echo "Creating the 'default' conda environment..."
-    conda create -y -n default python
+    echo "Creating the 'default' conda environment from conda_packages..."
+    # Full path: the shell hook only puts condabin on PATH, not bin/mamba
+    "$CONDA_PREFIX_DIR/bin/mamba" create -y -n default -c conda-forge \
+        --file "$REPO/conda_packages"
 else
     echo "Conda environment 'default' already exists."
+    echo "  update it with: mamba install -n default -c conda-forge --file $REPO/conda_packages"
 fi
 
 echo
