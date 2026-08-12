@@ -55,7 +55,9 @@ Hostnames are lowercased before matching, so `SurfacePro11`, `IACPC-42` and
 inside a uenv the hostname is generic.
 
 conda is only bootstrapped where it is actually used: `co2`, `atmos`, and the
-three `local` machines. The clusters use modules or uenv instead.
+three `local` machines. The clusters use modules or uenv instead. All of them
+use `$HOME/miniforge3`; since `co2` and `atmos` share a filesystem, running
+`install_tools.sh` on either one provisions both.
 
 ## Layout
 
