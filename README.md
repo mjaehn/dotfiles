@@ -10,7 +10,7 @@ differences resolved at shell startup instead of by keeping separate branches.
 git clone --recursive git@github.com:mjaehn/dotfiles.git ~/git/dotfiles
 cd ~/git/dotfiles
 
-./install_tools.sh                    # local + IAC machines only, refuses elsewhere
+./install_tools.sh                    # local + IAC only; skips apt where there is no root
 ./install_oh_my_zsh_plugins_theme.sh  # oh-my-zsh + plugins + powerlevel10k
 ./install.sh                          # symlink everything into $HOME
 exec zsh

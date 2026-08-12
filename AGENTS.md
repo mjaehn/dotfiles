@@ -68,6 +68,15 @@ repo and source `lib/` from there.
   `lib/hostinfo.sh` and exits on anything else; Alps, Euler and Levante are
   provisioned with modules or uenv. Because it runs under `set -u`, every
   variable `lib/hostinfo.sh` dereferences must be guarded (`${SCRATCH:-}`).
+- **`HAS_ROOT` splits that script in two.** `local` is 1, `iac` is 0. Every
+  `sudo` call must stay inside the `if (( HAS_ROOT ))` block: co2 and atmos are
+  centrally managed and we have no root there, so they run only the
+  `$HOME`-local steps (uv, Miniforge, the conda env). `chsh` sits outside the
+  block because it changes your own entry, but it is `|| echo`'d since it still
+  fails on the LDAP-managed IAC accounts.
+- **Never write `sudo apt update && sudo apt upgrade` as one AND-OR list.**
+  `set -e` ignores a failure in any position of such a list but the last, so a
+  broken `apt update` would fall straight through into `apt install`.
 - **The `default` conda env is built from `conda_packages`**, a conda spec file
   (one spec per line, `#` comments) installed from conda-forge. Python is pinned
   there so every machine gets the same interpreter regardless of install date.

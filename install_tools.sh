@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 #
-# Provision a fresh Debian/Ubuntu machine (including WSL) with the tools these
-# dotfiles expect. Safe to re-run: every step is guarded.
+# Provision a machine with the tools these dotfiles expect. Safe to re-run:
+# every step is guarded.
+#
+#   local (Debian/Ubuntu/WSL) -- everything, including the apt steps
+#   iac   (co2, atmos)        -- only the $HOME-local steps; these are centrally
+#                                managed machines where we have no root
 #
 # Run install.sh afterwards to symlink the configuration itself.
 
@@ -11,13 +15,12 @@ REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
-# Only the local machines and the IAC servers are provisioned from here. Alps,
-# Euler and Levante use modules or uenv, and would fail on the sudo apt calls
-# below anyway -- this just says so up front instead of half way through.
+# Alps, Euler and Levante are provisioned with modules or uenv, never from here.
 # shellcheck source=lib/hostinfo.sh
 . "$REPO/lib/hostinfo.sh"
 case "$DOTFILES_CLUSTER" in
-    local|iac) ;;
+    local) HAS_ROOT=1 ;;
+    iac)   HAS_ROOT=0 ;;
     *)
         echo "install_tools.sh only runs on local and IAC machines" >&2
         echo "(detected host '${DOTFILES_HOST:-unknown}', cluster '${DOTFILES_CLUSTER:-unknown}')" >&2
@@ -25,46 +28,57 @@ case "$DOTFILES_CLUSTER" in
         ;;
 esac
 
-echo "Updating system..."
-sudo apt update && sudo apt upgrade -y
+if (( HAS_ROOT )); then
+    echo "Updating system..."
+    # Two statements, not `a && b`: set -e ignores a failure in the non-final
+    # position of an AND-OR list, so a broken apt update would fall through.
+    sudo apt update
+    sudo apt upgrade -y
 
-echo "Installing base packages..."
-sudo apt install -y \
-    build-essential ca-certificates cdo curl gnupg imagemagick lsb-release \
-    ncview netcdf-bin software-properties-common wget zsh
+    echo "Installing base packages..."
+    sudo apt install -y \
+        build-essential ca-certificates cdo curl gnupg imagemagick lsb-release \
+        ncview netcdf-bin software-properties-common wget zsh
 
-# wslu provides wslview, only meaningful under WSL
-if grep -qi microsoft /proc/version 2>/dev/null; then
-    echo "Installing wslu (WSL detected)..."
-    sudo apt install -y wslu
+    # wslu provides wslview, only meaningful under WSL
+    if grep -qi microsoft /proc/version 2>/dev/null; then
+        echo "Installing wslu (WSL detected)..."
+        sudo apt install -y wslu
+    fi
+
+    if ! have node; then
+        echo "Installing Node.js..."
+        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+        sudo apt install -y nodejs
+    fi
+
+    echo "Installing latest Git..."
+    sudo add-apt-repository ppa:git-core/ppa -y
+    sudo apt update
+    sudo apt install -y git
+
+    if ! have git-lfs; then
+        echo "Installing Git LFS..."
+        curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+        sudo apt install -y git-lfs
+        git lfs install
+    fi
+else
+    echo "No root on $DOTFILES_HOST, skipping the apt steps."
+    echo "  zsh, git and git-lfs come from the system there; cdo, nco and ncview"
+    echo "  come from the conda environment created below."
+fi
+
+# Not a sudo step -- chsh changes your own entry -- but it still fails on the
+# LDAP-managed IAC accounts, and set -e would take the whole script down with it.
+if [[ "$SHELL" != *zsh ]] && have zsh; then
+    echo "Setting zsh as the default shell..."
+    chsh -s "$(command -v zsh)" || echo "  chsh failed, ask the admins to change your login shell."
 fi
 
 if ! have uv; then
     echo "Installing uv..."
     curl -LsSf https://astral.sh/uv/install.sh | sh
-fi
-
-if ! have node; then
-    echo "Installing Node.js..."
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-    sudo apt install -y nodejs
-fi
-
-echo "Installing latest Git..."
-sudo add-apt-repository ppa:git-core/ppa -y
-sudo apt update
-sudo apt install -y git
-
-if ! have git-lfs; then
-    echo "Installing Git LFS..."
-    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
-    sudo apt install -y git-lfs
-    git lfs install
-fi
-
-if [[ "$SHELL" != *zsh ]]; then
-    echo "Setting zsh as the default shell..."
-    chsh -s "$(command -v zsh)"
 fi
 
 # Match the prefix lib/conda.sh looks for, and the architecture we run on
