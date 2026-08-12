@@ -21,7 +21,9 @@ python-cdo
 pynco
 netcdf4
 cfgrib
-cf_units
+# Hyphen, not underscore: cf_units is the abandoned pre-rename name, stuck on
+# py37 builds, and silently drags the whole solve back to python 3.7.
+cf-units
 
 # Array and dataframe stack
 numpy
