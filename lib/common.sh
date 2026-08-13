@@ -90,6 +90,7 @@ alias ml='module load'
 alias aall='scancel -u "$USER"'
 alias sq="squeue -u \"\$USER\" -o \"${squeue_format}\""
 alias sqw="watch -x -n 60 squeue -u \"\$USER\" -o \"${squeue_format}\""
+alias lsq="squeue -o "%.10i %.9P %.20j %.8u %.8T %.10M %.6D %R" --sort=-D | head -10"
 
 # --- netCDF and models ---------------------------------------------------
 
