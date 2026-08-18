@@ -119,6 +119,7 @@ alias cscskey='cscs-key'
 
 case "$DOTFILES_HOST" in
     santis)
+        alias iops='cd "/iopsstor/scratch/cscs/$USER"'
         alias st='cd /capstor/store/cscs/c2sm/c2sme'
         alias clm='cd /capstor/store/cscs/userlab/cwp06/mjaehn/ICON-CLM'
         alias cws='cd /capstor/store/cscs/userlab/cws01'
