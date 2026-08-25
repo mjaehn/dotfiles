@@ -54,8 +54,16 @@ Host atmos* co2* ch4* iacdipl* stratus*
   ForwardX11 yes
   ForwardX11Trusted yes
 
-Host l_co2* l_iacdipl-7*
-  HostName %h.ethz.ch
+Host l_co2
+  HostName co2.ethz.ch
+  User l_c2sm
+  IdentityFile ~/.ssh/id_ed25519_l_c2sm
+  ProxyCommand ssh -q -W %h:%p fog2
+  ForwardX11 yes
+  ForwardX11Trusted yes
+
+Host l_iacdipl-7
+  HostName iacdipl-7.ethz.ch
   User l_c2sm
   IdentityFile ~/.ssh/id_ed25519_l_c2sm
   ProxyCommand ssh -q -W %h:%p fog2
