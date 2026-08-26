@@ -62,3 +62,9 @@ if [[ "$DOTFILES_CLUSTER" == "alps" ]]; then
         source /usr/share/Modules/3.2.10/init/zsh
     fi
 fi
+
+# Must be the last thing in this file that touches PATH: fnm (started
+# earlier, in lib/hostinfo.sh) re-asserts itself an extra time during
+# startup -- observed via `zsh -x` trace, cause not tracked down -- which
+# otherwise wins the PATH race and shadows this.
+nvm use default --silent
