@@ -14,7 +14,8 @@ export GIT_EDITOR='vim'
 
 export LS_COLORS='di=1;94:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31'
 
-squeue_format='%.7i %.22j %.6u %.6a %.2t %.10M %.9l %.5D %24R'
+squeue_format='%.7i %.20j %.8u %.7a %.2t %.10M %.12S %.5D %.23R'
+squeue_length=$(awk -v fmt="$squeue_format" 'BEGIN{n=split(fmt,a," "); s=n-1; for(i=1;i<=n;i++){match(a[i],/[0-9]+/); s+=substr(a[i],RSTART,RLENGTH)} print s}')
 
 # --- navigation ----------------------------------------------------------
 
@@ -88,8 +89,9 @@ alias gsuir='git submodule update --init --recursive'
 
 alias ml='module load'
 alias aall='scancel -u "$USER"'
-alias sq="squeue -u \"\$USER\" -o \"${squeue_format}\""
-alias sqw="watch -x -n 60 squeue -u \"\$USER\" -o \"${squeue_format}\""
+alias sq='squeue -u "$USER" -o "${squeue_format}" | cut -c1-"${squeue_length}"'
+alias sqw='watch -x -n 60 squeue -u "$USER" -o "${squeue_format}"'
+alias lsq='squeue -o "${squeue_format}" --sort=-D | cut -c1-"${squeue_length}" | head -10'
 
 # --- netCDF and models ---------------------------------------------------
 
@@ -117,6 +119,7 @@ alias cscskey='cscs-key'
 
 case "$DOTFILES_HOST" in
     santis)
+        alias iops='cd "/iopsstor/scratch/cscs/$USER"'
         alias st='cd /capstor/store/cscs/c2sm/c2sme'
         alias clm='cd /capstor/store/cscs/userlab/cwp06/mjaehn/ICON-CLM'
         alias cws='cd /capstor/store/cscs/userlab/cws01'
