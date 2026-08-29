@@ -14,7 +14,7 @@ sudo apt update && sudo apt upgrade -y
 
 echo "Installing base packages..."
 sudo apt install -y \
-    build-essential ca-certificates cdo curl gnupg imagemagick lsb-release \
+    build-essential ca-certificates cdo curl git-delta gnupg imagemagick lsb-release \
     ncview netcdf-bin software-properties-common wget zsh
 
 # wslu provides wslview, only meaningful under WSL

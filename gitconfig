@@ -1,0 +1,26 @@
+[init]
+    defaultBranch = main
+[filter "lfs"]
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+[push]
+    autoSetupRemote = true
+[core]
+    pager = delta || less              # delta is not installed on the clusters
+[interactive]
+    diffFilter = delta --color-only || cat
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    dark = true      # or light = true, or omit for auto-detection
+    line-numbers = true
+    hyperlinks = true
+    hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+[merge]
+    conflictStyle = zdiff3
+
+# Identity and any per-machine overrides. Not tracked; a missing file is
+# ignored, so a new machine has no identity until it is written.
+[include]
+    path = ~/.gitconfig.local
