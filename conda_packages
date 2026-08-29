@@ -1,0 +1,55 @@
+# Conda spec file for the "default" environment, read by install_tools.sh:
+#
+#   mamba create -n default -c conda-forge --file conda_packages
+#
+# One spec per line, "#" starts a comment. Channel is passed on the command
+# line, not here, so every package resolves from conda-forge.
+#
+# Python is pinned: an unpinned spec gives a different interpreter on every
+# machine depending on when it was provisioned. Bump this deliberately, and
+# check the whole list still solves before you do -- the scientific stack
+# (esmpy, cartopy, cfgrib) lags each new CPython release by a few months.
+python=3.13
+
+# NetCDF / GRIB command line tools
+cdo
+nco
+eccodes
+
+# ... and their Python bindings
+python-cdo
+pynco
+netcdf4
+cfgrib
+# Hyphen, not underscore: cf_units is the abandoned pre-rename name, stuck on
+# py37 builds, and silently drags the whole solve back to python 3.7.
+cf-units
+
+# Array and dataframe stack
+numpy
+scipy
+pandas
+xarray
+dask
+h5py
+numba
+scikit-learn
+
+# Regridding
+xesmf
+esmpy
+
+# Plotting and geospatial
+matplotlib
+cartopy
+shapely
+geopandas
+regionmask
+cmcrameri
+
+# Development tooling
+ipython
+jupyterlab
+ruff
+pytest
+pre-commit

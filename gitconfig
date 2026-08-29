@@ -7,6 +7,7 @@
     clean = git-lfs clean -- %f
 [push]
     autoSetupRemote = true
+	rebase = false
 [core]
     pager = delta || less              # delta is not installed on the clusters
 [interactive]
@@ -24,3 +25,5 @@
 # ignored, so a new machine has no identity until it is written.
 [include]
     path = ~/.gitconfig.local
+[pull]
+	rebase = false

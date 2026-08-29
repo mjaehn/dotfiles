@@ -69,7 +69,7 @@ case "$DOTFILES_HOST" in
         ;;
     euler)
         PATH="/cluster/home/mjaehn/bin:$PATH"
-        APPTAINER_CACHEDIR="$SCRATCH/.apptainer"
+        APPTAINER_CACHEDIR="${SCRATCH:-}/.apptainer"
         APPTAINER_TMPDIR="${TMPDIR:-/tmp}"
         UV_CONFIG_FILE="$HOME/.config/uv/uv.toml"
         export PATH APPTAINER_CACHEDIR APPTAINER_TMPDIR UV_CONFIG_FILE
@@ -88,8 +88,13 @@ case "$DOTFILES_HOST" in
     iac-laptop)
         # Deliberately a full replacement, not a prepend
         PATH="$HOME/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-        DISPLAY=:0
-        export PATH DISPLAY
+        export PATH
+        # Local console only: under ssh -X this would clobber the forwarded
+        # DISPLAY and silently break X11 forwarding.
+        if [ -z "${SSH_CONNECTION:-}" ]; then
+            DISPLAY=:0
+            export DISPLAY
+        fi
         ;;
 esac
 

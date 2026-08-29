@@ -54,11 +54,10 @@ case "$-" in
     *) return 0 ;;
 esac
 
+# atmos used to point at the system /usr/local/Miniconda3. It shares $HOME with
+# co2, so it now uses the same install: one env, provisioned once from either.
 case "$DOTFILES_HOST" in
-    atmos)
-        _dotfiles_conda_init /usr/local/Miniconda3
-        ;;
-    co2|surface|home-pc|iac-laptop)
+    co2|atmos|surface|home-pc|iac-laptop)
         # Order matters: prefer miniforge3, which is what install_tools.sh sets up
         _dotfiles_conda_init "$HOME/miniforge3" "$HOME/miniforge" "$HOME/miniconda3" \
             && _dotfiles_conda_activate default
