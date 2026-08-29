@@ -67,4 +67,4 @@ fi
 # earlier, in lib/hostinfo.sh) re-asserts itself an extra time during
 # startup -- observed via `zsh -x` trace, cause not tracked down -- which
 # otherwise wins the PATH race and shadows this.
-nvm use default --silent
+command -v nvm >/dev/null && nvm use default --silent
