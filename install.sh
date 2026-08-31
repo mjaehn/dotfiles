@@ -36,7 +36,13 @@ link bashrc "$HOME/.bashrc"
 link zshrc "$HOME/.zshrc"
 link p10k.zsh "$HOME/.p10k.zsh"
 link vimrc "$HOME/.vimrc"
+link gitconfig "$HOME/.gitconfig"
 link config "$HOME/.ssh/config"
+
+if [[ ! -e "$HOME/.gitconfig.local" ]]; then
+    echo "  note: ~/.gitconfig.local not found; git has no user.email/user.name here"
+    echo "        write it by hand, gitconfig includes it and is not tracked"
+fi
 
 if [[ -d "$HOME/.oh-my-zsh" ]]; then
     link aliases.zsh "$HOME/.oh-my-zsh/custom/aliases.zsh"

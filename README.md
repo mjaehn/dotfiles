@@ -94,6 +94,7 @@ must be regenerable. Check the quota that motivates this with `quota`.
 | `aliases.zsh` | `~/.oh-my-zsh/custom/aliases.zsh` | the few zsh-only additions |
 | `profile` | `~/.profile` | minimal login-shell setup |
 | `vimrc` | `~/.vimrc` | vim configuration |
+| `gitconfig` | `~/.gitconfig` | git config: delta pager, LFS filters, push defaults |
 | `config` | `~/.ssh/config` | ssh hosts, grouped by site |
 | `p10k.zsh` | `~/.p10k.zsh` | powerlevel10k prompt, generated |
 | `vim-extensions/` | `~/.vim/vim-extensions/` | vim plugins, git submodules |
@@ -105,6 +106,25 @@ this repo and source `lib/` from there.
 Anything shared between bash and zsh belongs in `lib/`, not in one of the rc
 files. That includes the machine-specific aliases, so both shells behave the
 same everywhere.
+
+### Git
+
+`gitconfig` holds everything that is the same everywhere. The identity is not in
+it: the last line includes `~/.gitconfig.local`, which is per machine and not
+tracked, so the work and personal machines can commit under different addresses.
+Write it by hand on a new machine, git silently ignores a missing include:
+
+```sh
+cat > ~/.gitconfig.local <<'EOF'
+[user]
+    email = you@example.com
+    name = Your Name
+EOF
+```
+
+The pager is `delta || less`, because delta is not installed on the clusters and
+an unconditional `pager = delta` breaks `git log` there. `install_tools.sh`
+installs delta on the Debian/Ubuntu/WSL machines.
 
 ### Shells
 

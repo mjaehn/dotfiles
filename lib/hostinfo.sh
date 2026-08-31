@@ -57,11 +57,10 @@ unset _dotfiles_hn _dotfiles_cn
 # Per-host environment
 case "$DOTFILES_HOST" in
     santis)
-        PATH="$HOME/.local/$(uname -m)/bin:$PATH"
         # VS Code tunnels are per-system, keep their state out of the shared $HOME
         VSCODE_AGENT_FOLDER="$HOME/.vscode-server/${CLUSTER_NAME:-santis}-tunnel/.vscode-server"
         VSCODE_CLI_DATA_DIR="$VSCODE_AGENT_FOLDER/cli"
-        export PATH VSCODE_AGENT_FOLDER VSCODE_CLI_DATA_DIR
+        export VSCODE_AGENT_FOLDER VSCODE_CLI_DATA_DIR
         ;;
     balfrin)
         MODULEPATH="/mch-environment/v6/modules:${MODULEPATH}"

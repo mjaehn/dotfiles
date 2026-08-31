@@ -69,10 +69,18 @@ repo and source `lib/` from there.
   bootstraps conda in both shells, and `conda init` writes *through* the
   symlinks `install.sh` creates, appending its managed block into the repo's own
   `bashrc` and `zshrc`.
-- **`install_tools.sh` is gated to `local` and `iac`.** It sources
-  `lib/hostinfo.sh` and exits on anything else; Alps, Euler and Levante are
-  provisioned with modules or uenv. Because it runs under `set -u`, every
-  variable `lib/hostinfo.sh` dereferences must be guarded (`${SCRATCH:-}`).
+- **`install_tools.sh` runs its sudo/conda provisioning only on `local` and
+  `iac`.** Alps, Euler and Levante are provisioned with modules or uenv, so the
+  script exits before that part on any other cluster. The one exception is
+  `install_delta`, which runs on every host, root or not: it fetches a
+  standalone binary from GitHub releases since there is no module or apt
+  package for delta on those clusters. Because the script runs under `set -u`,
+  every variable `lib/hostinfo.sh` dereferences must be guarded (`${SCRATCH:-}`).
+- **`$HOME/.local/$(uname -m)/bin` holds machine-local binaries installed
+  outside a package manager** (currently just delta). `lib/hostinfo.sh` puts it
+  on `PATH` for every host. It is keyed by architecture, not just `$HOME`-local,
+  because `$HOME` can be shared across nodes of differing architecture, as it
+  already was for santis before this convention existed.
 - **`HAS_ROOT` splits that script in two.** `local` is 1, `iac` is 0. Every
   `sudo` call must stay inside the `if (( HAS_ROOT ))` block: co2 and atmos are
   centrally managed and we have no root there, so they run only the

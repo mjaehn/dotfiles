@@ -149,6 +149,7 @@ esac
 
 if [ "$DOTFILES_CLUSTER" = 'iac' ]; then
     alias ftps='cd /net/iacftp/ftp/pub_read/mjaehn'
+    alias web='cd /net/iacweb/web_disk/iaceth/staff/mjaehn'
 fi
 
 if [ "$DOTFILES_CLUSTER" = 'local' ]; then
