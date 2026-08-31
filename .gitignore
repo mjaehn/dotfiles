@@ -10,3 +10,6 @@ tags
 
 # Local overrides, not tracked
 *.local
+
+# Git Cheatsheet
+*.pdf
