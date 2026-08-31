@@ -57,11 +57,10 @@ unset _dotfiles_hn _dotfiles_cn
 # Per-host environment
 case "$DOTFILES_HOST" in
     santis)
-        PATH="$HOME/.local/$(uname -m)/bin:$PATH"
         # VS Code tunnels are per-system, keep their state out of the shared $HOME
         VSCODE_AGENT_FOLDER="$HOME/.vscode-server/${CLUSTER_NAME:-santis}-tunnel/.vscode-server"
         VSCODE_CLI_DATA_DIR="$VSCODE_AGENT_FOLDER/cli"
-        export PATH VSCODE_AGENT_FOLDER VSCODE_CLI_DATA_DIR
+        export VSCODE_AGENT_FOLDER VSCODE_CLI_DATA_DIR
         ;;
     balfrin)
         MODULEPATH="/mch-environment/v6/modules:${MODULEPATH}"
@@ -97,6 +96,14 @@ case "$DOTFILES_HOST" in
         fi
         ;;
 esac
+
+# Machine-local binaries installed by install_tools.sh (e.g. delta), keyed by
+# uname -m in case $HOME is shared across differing node architectures, as it
+# already was for santis before this was generalized to every host.
+if [ -d "$HOME/.local/$(uname -m)/bin" ]; then
+    PATH="$HOME/.local/$(uname -m)/bin:$PATH"
+    export PATH
+fi
 
 # $HOME is small and shared on Alps, so keep pip's caches on scratch.
 # These used to live inside the (now removed) Alps conda block; they are a pip
