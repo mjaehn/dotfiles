@@ -59,6 +59,29 @@ three `local` machines. The clusters use modules or uenv instead. All of them
 use `$HOME/miniforge3`; since `co2` and `atmos` share a filesystem, running
 `install_tools.sh` on either one provisions both.
 
+### Caches on Alps
+
+On Alps, `$HOME` is small and `$SCRATCH` (capstor) has a 1 million inode quota
+that cache-heavy tools exhaust by themselves: a uv cache is ~80k files, a GT4Py
+build cache ~25k. `lib/hostinfo.sh` therefore points every cache at the
+flash-backed iopsstor scratch, which has no inode limit and is the right
+filesystem for many small files:
+
+```
+/iopsstor/scratch/cscs/$USER/cache   # $DOTFILES_CACHE_ROOT, = $XDG_CACHE_HOME
+├── pip  uv  matplotlib  numba  cupy  gt4py
+└── tmp                                        # $TMPDIR
+```
+
+`XDG_CACHE_HOME` covers everything that follows the spec (`gh`, `fontconfig`,
+`pyright`, the Claude CLI); `PIP_CACHE_DIR`, `UV_CACHE_DIR`, `MPLCONFIGDIR`,
+`NUMBA_CACHE_DIR`, `CUPY_CACHE_DIR`, `GT4PY_BUILD_CACHE_DIR` and `TMPDIR` are
+set individually because those tools ignore it. Export `DOTFILES_CACHE_ROOT`
+before the rc file runs to put the whole tree somewhere else.
+
+Scratch is subject to the CSCS cleanup policy, so everything under that root
+must be regenerable. Check the quota that motivates this with `quota`.
+
 ## Layout
 
 | Path | Linked to | Purpose |
