@@ -48,7 +48,7 @@ install_delta() {
         "https://github.com/dandavison/delta/releases/download/$version/delta-$version-$target.tar.gz"
     tar -xzf "$tmp_dir/delta.tar.gz" -C "$tmp_dir"
 
-    bin_dir="$HOME/.local/$arch/bin"
+    bin_dir="$HOME/.local/bin"
     mkdir -p "$bin_dir"
     install -m 755 "$tmp_dir/delta-$version-$target/delta" "$bin_dir/delta"
     rm -rf "$tmp_dir"
