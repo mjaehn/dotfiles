@@ -22,14 +22,24 @@ have() { command -v "$1" >/dev/null 2>&1; }
 # a standalone binary fetched from GitHub releases. Runs on every host, unlike
 # everything below it: it needs neither sudo nor the conda env.
 install_delta() {
+    local arch target version tmp_dir bin_dir stale
+    arch="$(uname -m)"
+
+    # Earlier revisions installed to $HOME/.local/$arch/bin, which no host ever
+    # put on PATH. Remove any such leftover so the copy below is the only one.
+    stale="$HOME/.local/$arch/bin/delta"
+    if [[ -e "$stale" ]]; then
+        echo "Removing stale delta at $stale..."
+        rm -f "$stale"
+        rmdir -p "$(dirname "$stale")" 2>/dev/null || true
+    fi
+
     if have delta; then
         echo "delta already installed."
         return
     fi
 
     echo "Installing delta..."
-    local arch target version tmp_dir bin_dir
-    arch="$(uname -m)"
     case "$arch" in
         # musl is a static build, so it works across the range of glibc
         # versions found on HPC login nodes; no musl target exists for aarch64.
