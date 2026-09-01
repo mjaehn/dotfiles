@@ -14,7 +14,7 @@ export GIT_EDITOR='vim'
 
 export LS_COLORS='di=1;94:fi=0:ln=100;93:pi=5:so=5:bd=5:cd=5:or=101:mi=0:ex=1;31'
 
-squeue_format='%.7i %.20j %.8u %.7a %.2t %.10M %.12S %.5D %.23R'
+squeue_format='%.8i %.20j %.8u %.7a %.2t %.10M %.12S %.5D %.23R'
 squeue_length=$(awk -v fmt="$squeue_format" 'BEGIN{n=split(fmt,a," "); s=n-1; for(i=1;i<=n;i++){match(a[i],/[0-9]+/); s+=substr(a[i],RSTART,RLENGTH)} print s}')
 
 # --- navigation ----------------------------------------------------------
