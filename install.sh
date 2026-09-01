@@ -36,6 +36,7 @@ link bashrc "$HOME/.bashrc"
 link zshrc "$HOME/.zshrc"
 link p10k.zsh "$HOME/.p10k.zsh"
 link vimrc "$HOME/.vimrc"
+link tmux.conf "$HOME/.tmux.conf"
 link gitconfig "$HOME/.gitconfig"
 link config "$HOME/.ssh/config"
 

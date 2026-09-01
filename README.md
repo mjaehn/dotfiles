@@ -94,6 +94,7 @@ must be regenerable. Check the quota that motivates this with `quota`.
 | `aliases.zsh` | `~/.oh-my-zsh/custom/aliases.zsh` | the few zsh-only additions |
 | `profile` | `~/.profile` | minimal login-shell setup |
 | `vimrc` | `~/.vimrc` | vim configuration |
+| `tmux.conf` | `~/.tmux.conf` | tmux configuration |
 | `gitconfig` | `~/.gitconfig` | git config: delta pager, LFS filters, push defaults |
 | `config` | `~/.ssh/config` | ssh hosts, grouped by site |
 | `p10k.zsh` | `~/.p10k.zsh` | powerlevel10k prompt, generated |
@@ -162,7 +163,7 @@ Quick cheat sheet for the plugins in `vim-extensions/` (managed via Vundle, see
 | [vim-commentary](https://github.com/tpope/vim-commentary) | Toggle comments | `gcc` current line; `gc` + motion (e.g. `gcap`); `gc` in visual mode |
 | [tagbar](https://github.com/majutsushi/tagbar) | ctags sidebar | `tl<space>` toggle (custom); inside: `<CR>`/`o` jump to tag, `p` preview |
 | [ale](https://github.com/dense-analysis/ale) | Async lint/build checks | `:ALENext`/`:ALEPrevious` cycle errors; `:ALEFix` run fixers; sign column shows severity |
-| [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) | Seamless vim/tmux pane movement | `<C-h/j/k/l>` move between vim splits and tmux panes; needs matching bindings in `tmux.conf`, not present in this repo |
+| [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) | Seamless vim/tmux pane movement | `<C-h/j/k/l>` move between vim splits and tmux panes; needs matching bindings in [tmux.conf](tmux.conf), not currently set there |
 
 ## Adding a machine
 
