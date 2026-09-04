@@ -155,3 +155,9 @@ Host gitlab.dkrz.de
   User b381473
   IdentityFile ~/.ssh/id_ed25519_dkrz_gitlab
   PreferredAuthentications publickey
+
+# --- Homeserver ----------------------------------------------------------
+
+Host homeserver
+    HostName 192.168.1.138
+    User mjaehn

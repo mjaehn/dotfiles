@@ -10,6 +10,7 @@
 	rebase = false
 [core]
     pager = delta || less              # delta is not installed on the clusters
+	autocrlf = input
 [interactive]
     diffFilter = delta --color-only || cat
 [delta]
