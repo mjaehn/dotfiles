@@ -36,12 +36,25 @@ link bashrc "$HOME/.bashrc"
 link zshrc "$HOME/.zshrc"
 link p10k.zsh "$HOME/.p10k.zsh"
 link vimrc "$HOME/.vimrc"
+link tmux.conf "$HOME/.tmux.conf"
 link gitconfig "$HOME/.gitconfig"
 link config "$HOME/.ssh/config"
 
 if [[ ! -e "$HOME/.gitconfig.local" ]]; then
-    echo "  note: ~/.gitconfig.local not found; git has no user.email/user.name here"
-    echo "        write it by hand, gitconfig includes it and is not tracked"
+    if [[ -t 0 ]]; then
+        echo "  ~/.gitconfig.local not found; it holds your git identity and is not tracked"
+        read -r -p "  git user.name: " git_name
+        read -r -p "  git user.email: " git_email
+        cat >"$HOME/.gitconfig.local" <<EOF
+[user]
+    name = $git_name
+    email = $git_email
+EOF
+        echo "  wrote ~/.gitconfig.local"
+    else
+        echo "  note: ~/.gitconfig.local not found; git has no user.email/user.name here"
+        echo "        write it by hand, gitconfig includes it and is not tracked"
+    fi
 fi
 
 if [[ -d "$HOME/.oh-my-zsh" ]]; then

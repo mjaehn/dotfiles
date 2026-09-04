@@ -57,11 +57,10 @@ unset _dotfiles_hn _dotfiles_cn
 # Per-host environment
 case "$DOTFILES_HOST" in
     santis)
-        PATH="$HOME/.local/$(uname -m)/bin:$PATH"
         # VS Code tunnels are per-system, keep their state out of the shared $HOME
         VSCODE_AGENT_FOLDER="$HOME/.vscode-server/${CLUSTER_NAME:-santis}-tunnel/.vscode-server"
         VSCODE_CLI_DATA_DIR="$VSCODE_AGENT_FOLDER/cli"
-        export PATH VSCODE_AGENT_FOLDER VSCODE_CLI_DATA_DIR
+        export VSCODE_AGENT_FOLDER VSCODE_CLI_DATA_DIR
         ;;
     balfrin)
         MODULEPATH="/mch-environment/v6/modules:${MODULEPATH}"
@@ -98,14 +97,41 @@ case "$DOTFILES_HOST" in
         ;;
 esac
 
-# $HOME is small and shared on Alps, so keep pip's caches on scratch.
-# These used to live inside the (now removed) Alps conda block; they are a pip
-# setting, not a conda one.
-if [ "$DOTFILES_CLUSTER" = 'alps' ] && [ -n "${SCRATCH:-}" ]; then
-    PIP_CACHE_DIR="$SCRATCH/pip_cache"
-    TMPDIR="$SCRATCH/pip_temp"
-    export PIP_CACHE_DIR TMPDIR
-    mkdir -p "$PIP_CACHE_DIR" "$TMPDIR" 2>/dev/null
+# Caches on Alps go to the iopsstor scratch, never to $HOME or capstor.
+#
+# $HOME is small and shared, and $SCRATCH (capstor) has a 1M inode quota that
+# cache-heavy tools blow through on their own -- uv alone keeps ~80k files, a
+# gt4py build cache ~25k. iopsstor is flash-backed with no inode limit, which
+# is exactly what a pile of small files wants. Anything cache-like belongs
+# here; set DOTFILES_CACHE_ROOT before sourcing to override the location.
+#
+# Caveat: scratch is subject to the CSCS cleanup policy, so treat every path
+# below as regenerable. Nothing that must survive may live under it.
+if [ "$DOTFILES_CLUSTER" = 'alps' ]; then
+    if [ -z "${DOTFILES_CACHE_ROOT:-}" ]; then
+        if [ -d "/iopsstor/scratch/cscs/${USER:-}" ]; then
+            DOTFILES_CACHE_ROOT="/iopsstor/scratch/cscs/${USER:-}/cache"
+        elif [ -n "${SCRATCH:-}" ]; then
+            DOTFILES_CACHE_ROOT="$SCRATCH/cache"
+        fi
+    fi
+    if [ -n "${DOTFILES_CACHE_ROOT:-}" ]; then
+        # XDG_CACHE_HOME covers everything that follows the spec (gh, fontconfig,
+        # pyright, the Claude CLI). The rest need their own variable.
+        XDG_CACHE_HOME="$DOTFILES_CACHE_ROOT"
+        PIP_CACHE_DIR="$DOTFILES_CACHE_ROOT/pip"
+        UV_CACHE_DIR="$DOTFILES_CACHE_ROOT/uv"
+        MPLCONFIGDIR="$DOTFILES_CACHE_ROOT/matplotlib"
+        NUMBA_CACHE_DIR="$DOTFILES_CACHE_ROOT/numba"
+        CUPY_CACHE_DIR="$DOTFILES_CACHE_ROOT/cupy"
+        GT4PY_BUILD_CACHE_DIR="$DOTFILES_CACHE_ROOT/gt4py"
+        TMPDIR="$DOTFILES_CACHE_ROOT/tmp"
+        export DOTFILES_CACHE_ROOT XDG_CACHE_HOME PIP_CACHE_DIR UV_CACHE_DIR \
+               MPLCONFIGDIR NUMBA_CACHE_DIR CUPY_CACHE_DIR GT4PY_BUILD_CACHE_DIR \
+               TMPDIR
+        # Only the two the tools do not create themselves.
+        mkdir -p "$DOTFILES_CACHE_ROOT" "$TMPDIR" 2>/dev/null
+    fi
 fi
 
 if [ "$DOTFILES_CLUSTER" = 'local' ] || [ "$DOTFILES_CLUSTER" = 'iac' ]; then

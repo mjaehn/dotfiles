@@ -15,16 +15,66 @@ REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
-# Alps, Euler and Levante are provisioned with modules or uenv, never from here.
 # shellcheck source=lib/hostinfo.sh
 . "$REPO/lib/hostinfo.sh"
+
+# Delta has no package on Alps/Euler/Levante and we have no root there, so it is
+# a standalone binary fetched from GitHub releases. Runs on every host, unlike
+# everything below it: it needs neither sudo nor the conda env.
+install_delta() {
+    local arch target version tmp_dir bin_dir stale
+    arch="$(uname -m)"
+
+    # Earlier revisions installed to $HOME/.local/$arch/bin, which no host ever
+    # put on PATH. Remove any such leftover so the copy below is the only one.
+    stale="$HOME/.local/$arch/bin/delta"
+    if [[ -e "$stale" ]]; then
+        echo "Removing stale delta at $stale..."
+        rm -f "$stale"
+        rmdir -p "$(dirname "$stale")" 2>/dev/null || true
+    fi
+
+    if have delta; then
+        echo "delta already installed."
+        return
+    fi
+
+    echo "Installing delta..."
+    case "$arch" in
+        # musl is a static build, so it works across the range of glibc
+        # versions found on HPC login nodes; no musl target exists for aarch64.
+        x86_64)  target="x86_64-unknown-linux-musl" ;;
+        aarch64) target="aarch64-unknown-linux-gnu" ;;
+        *)
+            echo "  No prebuilt delta binary for architecture '$arch', skipping." >&2
+            return
+            ;;
+    esac
+
+    version="$(curl -fsSLI -o /dev/null -w '%{url_effective}' \
+        https://github.com/dandavison/delta/releases/latest | sed 's#.*/tag/##')"
+    tmp_dir="$(mktemp -d)"
+    curl -fsSL -o "$tmp_dir/delta.tar.gz" \
+        "https://github.com/dandavison/delta/releases/download/$version/delta-$version-$target.tar.gz"
+    tar -xzf "$tmp_dir/delta.tar.gz" -C "$tmp_dir"
+
+    bin_dir="$HOME/.local/bin"
+    mkdir -p "$bin_dir"
+    install -m 755 "$tmp_dir/delta-$version-$target/delta" "$bin_dir/delta"
+    rm -rf "$tmp_dir"
+    echo "  Installed delta $version to $bin_dir/delta"
+}
+
+install_delta
+
+# Alps, Euler and Levante are provisioned with modules or uenv, never from here;
+# everything below this point is sudo/conda provisioning for local and IAC only.
 case "$DOTFILES_CLUSTER" in
     local) HAS_ROOT=1 ;;
     iac)   HAS_ROOT=0 ;;
     *)
-        echo "install_tools.sh only runs on local and IAC machines" >&2
-        echo "(detected host '${DOTFILES_HOST:-unknown}', cluster '${DOTFILES_CLUSTER:-unknown}')" >&2
-        exit 1
+        echo "Nothing else to provision on $DOTFILES_CLUSTER; it's managed via modules/uenv."
+        exit 0
         ;;
 esac
 
