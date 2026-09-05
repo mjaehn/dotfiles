@@ -159,5 +159,5 @@ Host gitlab.dkrz.de
 # --- Homeserver ----------------------------------------------------------
 
 Host homeserver
-    HostName 192.168.1.138
+    HostName 192.168.1.139
     User mjaehn
