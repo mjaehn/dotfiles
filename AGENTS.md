@@ -76,11 +76,14 @@ repo and source `lib/` from there.
   standalone binary from GitHub releases since there is no module or apt
   package for delta on those clusters. Because the script runs under `set -u`,
   every variable `lib/hostinfo.sh` dereferences must be guarded (`${SCRATCH:-}`).
-- **`$HOME/.local/$(uname -m)/bin` holds machine-local binaries installed
-  outside a package manager** (currently just delta). `lib/hostinfo.sh` puts it
-  on `PATH` for every host. It is keyed by architecture, not just `$HOME`-local,
-  because `$HOME` can be shared across nodes of differing architecture, as it
-  already was for santis before this convention existed.
+- **`$HOME/.local/bin` holds user-local binaries installed outside a package
+  manager** (delta, the Claude CLI, ...). `lib/hostinfo.sh` puts it on `PATH`
+  for every host, unconditionally. An earlier revision keyed this by
+  architecture (`$HOME/.local/$(uname -m)/bin`), since `$HOME` can be shared
+  across nodes of differing architecture, but no host ever put that path on
+  `PATH`, so it was abandoned; anything installed there now must ship
+  arch-specific builds only where that plausibly runs (delta's musl build
+  targets exactly the HPC login-node case).
 - **`HAS_ROOT` splits that script in two.** `local` is 1, `iac` is 0. Every
   `sudo` call must stay inside the `if (( HAS_ROOT ))` block: co2 and atmos are
   centrally managed and we have no root there, so they run only the
