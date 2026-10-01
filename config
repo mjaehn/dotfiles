@@ -69,6 +69,9 @@ Host l_iacdipl-7
   ProxyCommand ssh -q -W %h:%p fog2
   ForwardX11 yes
   ForwardX11Trusted yes
+  ControlMaster auto
+  ControlPath ~/.ssh/cm-%r@%h:%p
+  ControlPersist 10m
 
 Host ti_fog
   HostName fog.ethz.ch
