@@ -128,7 +128,7 @@ Host ti_euler
 
 # --- DKRZ ----------------------------------------------------------------
 
-Host levante
+Host levante levante.dkrz.de
   HostName levante.dkrz.de
   User b381473
   IdentityFile ~/.ssh/id_ed25519_levante
@@ -150,8 +150,8 @@ Host git.iac.ethz.ch
   IdentityFile ~/.ssh/id_ed25519_iac
   PreferredAuthentications publickey
 
-Host gitlab.dkrz.de
-  HostName gitlab.dkrz.de
-  User b381473
+Host *gitlab.dkrz.de
+  HostName git.gitlab.dkrz.de
+  User git
   IdentityFile ~/.ssh/id_ed25519_dkrz_gitlab
   PreferredAuthentications publickey
