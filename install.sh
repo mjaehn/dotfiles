@@ -64,6 +64,16 @@ else
     echo "       run ./install_oh_my_zsh_plugins_theme.sh first, then re-run this script"
 fi
 
+echo "Setting up tmux plugin manager..."
+tpm_dir="$HOME/.tmux/plugins/tpm"
+if [[ -d "$tpm_dir/.git" ]]; then
+    git -C "$tpm_dir" pull --quiet --ff-only || echo "  tpm: update skipped"
+    echo "  ~/.tmux/plugins/tpm"
+else
+    git clone --quiet https://github.com/tmux-plugins/tpm "$tpm_dir"
+    echo "  ~/.tmux/plugins/tpm (cloned)"
+fi
+
 # lib/ is not linked: bashrc and zshrc resolve their own symlink to find it.
 
 cat <<'EOF'
@@ -72,6 +82,7 @@ Done. To finish:
 
   exec zsh          reload the shell
   :PluginInstall    install the vim plugins (from inside vim)
+  <prefix> + I      install the tmux plugins (from inside tmux)
 
 keybindings.json is for VS Code and is not linked automatically. Copy it to
 your VS Code user directory by hand (on WSL that lives on the Windows side).

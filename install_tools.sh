@@ -67,12 +67,73 @@ install_delta() {
 
 install_delta
 
+# Some HPC login-node images ship a Git old enough to reject config added by
+# newer releases (merge.conflictstyle=zdiff3, added in 2.35, is the one that
+# bit us). There is no prebuilt Git binary and, on these clusters, no root to
+# install a newer package either, so a recent Git is pulled from conda-forge
+# into its own prefix via a throwaway micromamba - the same "no module/apt
+# package, so fetch it ourselves" situation install_delta is already in.
+# local machines get their upgrade through apt instead (below), so this is
+# only called where that is not an option.
+MIN_GIT_VERSION="2.35"
+
+version_ge() { # $1 >= $2, both dotted version strings
+    [[ "$1" == "$2" ]] && return 0
+    [[ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -n1)" == "$1" ]]
+}
+
+install_recent_git() {
+    local current git_dir tmp_dir arch platform
+
+    if have git; then
+        current="$(git --version | awk '{print $3}')"
+        if version_ge "$current" "$MIN_GIT_VERSION"; then
+            echo "git $current already recent enough (>= $MIN_GIT_VERSION)."
+            return
+        fi
+        echo "System git $current is older than $MIN_GIT_VERSION; installing a newer one to \$HOME/.local..."
+    else
+        echo "No git found; installing one to \$HOME/.local..."
+    fi
+
+    git_dir="$HOME/.local/opt/git"
+    if [[ ! -x "$git_dir/bin/git" ]] || ! version_ge "$("$git_dir/bin/git" --version | awk '{print $3}')" "$MIN_GIT_VERSION"; then
+        arch="$(uname -m)"
+        case "$arch" in
+            x86_64)  platform="linux-64" ;;
+            aarch64) platform="linux-aarch64" ;;
+            *)
+                echo "  No micromamba build for architecture '$arch', skipping." >&2
+                return
+                ;;
+        esac
+
+        tmp_dir="$(mktemp -d)"
+        echo "  Fetching micromamba to bootstrap an isolated git environment..."
+        curl -fsSL "https://micro.mamba.pm/api/micromamba/$platform/latest" | tar -xj -C "$tmp_dir" bin/micromamba
+        echo "  Installing git from conda-forge to $git_dir..."
+        rm -rf "$git_dir"
+        mkdir -p "$(dirname "$git_dir")"
+        "$tmp_dir/bin/micromamba" create -y -r "$tmp_dir/root" -p "$git_dir" -c conda-forge git >/dev/null
+        rm -rf "$tmp_dir"
+    fi
+
+    # $HOME/.local/bin is already on PATH for every host (lib/hostinfo.sh), and
+    # git resolves its libexec/git-core helpers relative to the real prefix
+    # behind a symlink, so a plain symlink here is enough - no PATH surgery,
+    # no shell restart required for it to take effect in new shells.
+    mkdir -p "$HOME/.local/bin"
+    ln -sf "$git_dir/bin/git" "$HOME/.local/bin/git"
+    echo "  $("$HOME/.local/bin/git" --version), symlinked into \$HOME/.local/bin/git"
+}
+
 # Alps, Euler and Levante are provisioned with modules or uenv, never from here;
 # everything below this point is sudo/conda provisioning for local and IAC only.
 case "$DOTFILES_CLUSTER" in
     local) HAS_ROOT=1 ;;
     iac)   HAS_ROOT=0 ;;
     *)
+        install_recent_git
         echo "Nothing else to provision on $DOTFILES_CLUSTER; it's managed via modules/uenv."
         exit 0
         ;;
@@ -88,18 +149,7 @@ if (( HAS_ROOT )); then
     echo "Installing base packages..."
     sudo apt install -y \
         build-essential ca-certificates cdo curl git-delta gnupg imagemagick lsb-release \
-        ncview netcdf-bin software-properties-common wget zsh
-
-    echo "Installing base packages..."
-    sudo apt install -y \
-        build-essential ca-certificates cdo curl gnupg imagemagick lsb-release \
-        ncview netcdf-bin software-properties-common wget zsh
-
-    echo "Installing base packages..."
-    sudo apt install -y \
-        build-essential ca-certificates cdo curl gnupg imagemagick lsb-release \
-        ncview netcdf-bin software-properties-common wget x11-apps x11-utils \
-        xauth zsh
+        ncview netcdf-bin software-properties-common wget x11-apps x11-utils xauth zsh
 
     # wslu provides wslview, only meaningful under WSL
     if grep -qi microsoft /proc/version 2>/dev/null; then
@@ -126,8 +176,9 @@ if (( HAS_ROOT )); then
     fi
 else
     echo "No root on $DOTFILES_HOST, skipping the apt steps."
-    echo "  zsh, git and git-lfs come from the system there; cdo, nco and ncview"
-    echo "  come from the conda environment created below."
+    echo "  zsh and git-lfs come from the system there; cdo, nco and ncview come"
+    echo "  from the conda environment created below."
+    install_recent_git
 fi
 
 # Not a sudo step -- chsh changes your own entry -- but it still fails on the

@@ -71,16 +71,25 @@ repo and source `lib/` from there.
   `bashrc` and `zshrc`.
 - **`install_tools.sh` runs its sudo/conda provisioning only on `local` and
   `iac`.** Alps, Euler and Levante are provisioned with modules or uenv, so the
-  script exits before that part on any other cluster. The one exception is
-  `install_delta`, which runs on every host, root or not: it fetches a
+  script exits before that part on any other cluster. The exceptions are
+  `install_delta`, which runs on every host, root or not (it fetches a
   standalone binary from GitHub releases since there is no module or apt
-  package for delta on those clusters. Because the script runs under `set -u`,
-  every variable `lib/hostinfo.sh` dereferences must be guarded (`${SCRATCH:-}`).
-- **`$HOME/.local/$(uname -m)/bin` holds machine-local binaries installed
-  outside a package manager** (currently just delta). `lib/hostinfo.sh` puts it
-  on `PATH` for every host. It is keyed by architecture, not just `$HOME`-local,
-  because `$HOME` can be shared across nodes of differing architecture, as it
-  already was for santis before this convention existed.
+  package for delta on those clusters), and `install_recent_git`, called on
+  every host without root (Alps/Euler/Levante and `iac`; `local` upgrades Git
+  through the apt PPA instead): the system Git there can be too old for config
+  values a newer Git wrote (`merge.conflictstyle=zdiff3`, from 2.35+), so it
+  pulls a recent build from conda-forge into `$HOME/.local/opt/git` via a
+  throwaway micromamba and symlinks it into `$HOME/.local/bin/git`. Because the
+  script runs under `set -u`, every variable `lib/hostinfo.sh` dereferences
+  must be guarded (`${SCRATCH:-}`).
+- **`$HOME/.local/bin` holds user-local binaries installed outside a package
+  manager** (delta, the Claude CLI, ...). `lib/hostinfo.sh` puts it on `PATH`
+  for every host, unconditionally. An earlier revision keyed this by
+  architecture (`$HOME/.local/$(uname -m)/bin`), since `$HOME` can be shared
+  across nodes of differing architecture, but no host ever put that path on
+  `PATH`, so it was abandoned; anything installed there now must ship
+  arch-specific builds only where that plausibly runs (delta's musl build
+  targets exactly the HPC login-node case).
 - **`HAS_ROOT` splits that script in two.** `local` is 1, `iac` is 0. Every
   `sudo` call must stay inside the `if (( HAS_ROOT ))` block: co2 and atmos are
   centrally managed and we have no root there, so they run only the

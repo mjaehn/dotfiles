@@ -17,6 +17,9 @@ Host santis* clariden* eiger*
   ProxyJump ela
   ForwardX11 yes
   ForwardX11Trusted yes
+  ControlMaster auto
+  ControlPath ~/.ssh/cm-%r@%h:%p
+  ControlPersist 10m
 
 Host balfrin*
   HostName %h.cscs.ch
@@ -158,3 +161,9 @@ Host *gitlab.dkrz.de
   User git
   IdentityFile ~/.ssh/id_ed25519_dkrz_gitlab
   PreferredAuthentications publickey
+
+# --- Homeserver ----------------------------------------------------------
+
+Host homeserver
+    HostName 192.168.1.139
+    User mjaehn
