@@ -5,6 +5,8 @@
 
 # Skip everything for SCP, SFTP and VS Code Remote SSH
 if [[ -z "$SSH_TTY" ]] && [[ "$-" != *i* ]]; then
+    # These sessions still need user-local binaries, e.g. the newer Git, ahead of the system ones
+    [[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
     return
 fi
 
