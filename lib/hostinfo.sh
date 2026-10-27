@@ -87,6 +87,7 @@ case "$DOTFILES_HOST" in
     iac-laptop)
         # Deliberately a full replacement, not a prepend
         PATH="$HOME/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        [ -d "/mnt/c/Users/mjaehn/AppData/Local/Programs/Microsoft VS Code/bin" ] && PATH="$PATH:/mnt/c/Users/mjaehn/AppData/Local/Programs/Microsoft VS Code/bin"
         export PATH
         # wslview from older wslu misdetects interop on newer WSL, so name the browser directly
         [ -x "/mnt/c/Program Files/Mozilla Firefox/firefox.exe" ] && export BROWSER="/mnt/c/Program Files/Mozilla Firefox/firefox.exe"
