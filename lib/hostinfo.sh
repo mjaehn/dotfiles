@@ -88,6 +88,8 @@ case "$DOTFILES_HOST" in
         # Deliberately a full replacement, not a prepend
         PATH="$HOME/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
         export PATH
+        # wslview from older wslu misdetects interop on newer WSL, so name the browser directly
+        [ -x "/mnt/c/Program Files/Mozilla Firefox/firefox.exe" ] && export BROWSER="/mnt/c/Program Files/Mozilla Firefox/firefox.exe"
         # Local console only: under ssh -X this would clobber the forwarded
         # DISPLAY and silently break X11 forwarding.
         if [ -z "${SSH_CONNECTION:-}" ]; then
