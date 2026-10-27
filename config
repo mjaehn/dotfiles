@@ -21,6 +21,12 @@ Host santis* clariden* eiger*
   ControlPath ~/.ssh/cm-%r@%h:%p
   ControlPersist 10m
 
+# Alps node names (login or compute), e.g. for port forwarding to the exact node
+Host nid*
+  User mjaehn
+  IdentityFile ~/.ssh/cscs-key
+  ProxyJump santis
+
 Host balfrin*
   HostName %h.cscs.ch
   User mjaehn
