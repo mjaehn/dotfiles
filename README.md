@@ -69,18 +69,25 @@ filesystem for many small files:
 
 ```
 /iopsstor/scratch/cscs/$USER/cache   # $DOTFILES_CACHE_ROOT, = $XDG_CACHE_HOME
-├── pip  uv  matplotlib  numba  cupy  gt4py
+├── pip  uv  hatch  matplotlib  numba  cupy  gt4py
 └── tmp                                        # $TMPDIR
 ```
 
 `XDG_CACHE_HOME` covers everything that follows the spec (`gh`, `fontconfig`,
-`pyright`, the Claude CLI); `PIP_CACHE_DIR`, `UV_CACHE_DIR`, `MPLCONFIGDIR`,
+`pyright`, the Claude CLI); `PIP_CACHE_DIR`, `UV_CACHE_DIR`, `HATCH_DATA_DIR`, `MPLCONFIGDIR`,
 `NUMBA_CACHE_DIR`, `CUPY_CACHE_DIR`, `GT4PY_BUILD_CACHE_DIR` and `TMPDIR` are
 set individually because those tools ignore it. Export `DOTFILES_CACHE_ROOT`
 before the rc file runs to put the whole tree somewhere else.
 
 Scratch is subject to the CSCS cleanup policy, so everything under that root
 must be regenerable. Check the quota that motivates this with `quota`.
+
+uv tool environments and uv-managed Pythons are not caches, but they are too
+inode-heavy for `$HOME`. They are kept on the project store instead
+(`UV_TOOL_DIR`, `UV_PYTHON_INSTALL_DIR` under
+`/capstor/store/cscs/userlab/cwd01/$USER/uv`). Their entry points remain in
+`~/.local/bin`. `UV_LINK_MODE=copy` is set because the cache is on a different
+filesystem and hardlinks cannot work.
 
 ## Layout
 

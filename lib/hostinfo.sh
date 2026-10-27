@@ -121,17 +121,30 @@ if [ "$DOTFILES_CLUSTER" = 'alps' ]; then
         XDG_CACHE_HOME="$DOTFILES_CACHE_ROOT"
         PIP_CACHE_DIR="$DOTFILES_CACHE_ROOT/pip"
         UV_CACHE_DIR="$DOTFILES_CACHE_ROOT/uv"
+        HATCH_DATA_DIR="$DOTFILES_CACHE_ROOT/hatch"
         MPLCONFIGDIR="$DOTFILES_CACHE_ROOT/matplotlib"
         NUMBA_CACHE_DIR="$DOTFILES_CACHE_ROOT/numba"
         CUPY_CACHE_DIR="$DOTFILES_CACHE_ROOT/cupy"
         GT4PY_BUILD_CACHE_DIR="$DOTFILES_CACHE_ROOT/gt4py"
         TMPDIR="$DOTFILES_CACHE_ROOT/tmp"
-        export DOTFILES_CACHE_ROOT XDG_CACHE_HOME PIP_CACHE_DIR UV_CACHE_DIR \
+        export DOTFILES_CACHE_ROOT XDG_CACHE_HOME PIP_CACHE_DIR UV_CACHE_DIR HATCH_DATA_DIR \
                MPLCONFIGDIR NUMBA_CACHE_DIR CUPY_CACHE_DIR GT4PY_BUILD_CACHE_DIR \
                TMPDIR
         # Only the two the tools do not create themselves.
         mkdir -p "$DOTFILES_CACHE_ROOT" "$TMPDIR" 2>/dev/null
     fi
+
+    # uv tool venvs and managed Pythons must persist, so they go to the cwd01
+    # project store instead of the small $HOME; only the entry points stay in ~/.local/bin.
+    _dotfiles_uv_data="/capstor/store/cscs/userlab/cwd01/${USER:-}/uv"
+    if [ -d "${_dotfiles_uv_data%/uv}" ]; then
+        UV_TOOL_DIR="$_dotfiles_uv_data/tools"
+        UV_PYTHON_INSTALL_DIR="$_dotfiles_uv_data/python"
+        # The cache lives on iopsstor, so hardlinks across filesystems always fail.
+        UV_LINK_MODE=copy
+        export UV_TOOL_DIR UV_PYTHON_INSTALL_DIR UV_LINK_MODE
+    fi
+    unset _dotfiles_uv_data
 fi
 
 # User-local binaries installed outside a package manager (delta, the Claude
