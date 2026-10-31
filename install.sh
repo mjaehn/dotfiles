@@ -36,6 +36,7 @@ link bashrc "$HOME/.bashrc"
 link zshrc "$HOME/.zshrc"
 link p10k.zsh "$HOME/.p10k.zsh"
 link vimrc "$HOME/.vimrc"
+link nvim "$HOME/.config/nvim"
 link tmux.conf "$HOME/.tmux.conf"
 link tmux-theme.conf "$HOME/.tmux/theme.conf"
 link gitconfig "$HOME/.gitconfig"
@@ -94,6 +95,7 @@ Done. To finish:
 
   exec zsh          reload the shell
   :PluginInstall    install the vim plugins (from inside vim)
+  nvim              first start installs the Neovim plugins by itself
   <prefix> + I      install the tmux plugins (from inside tmux)
 
 keybindings.json is for VS Code and is not linked automatically. Copy it to

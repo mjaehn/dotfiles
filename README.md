@@ -1,6 +1,6 @@
 # dotfiles
 
-Shell, vim and ssh configuration shared across the HPC systems and personal
+Shell, vim, Neovim, tmux and ssh configuration shared across the HPC systems and personal
 machines I work on. One repo, symlinked into `$HOME`, with the per-machine
 differences resolved at shell startup instead of by keeping separate branches.
 
@@ -10,13 +10,14 @@ differences resolved at shell startup instead of by keeping separate branches.
 git clone --recursive git@github.com:mjaehn/dotfiles.git ~/git/dotfiles
 cd ~/git/dotfiles
 
-./install_tools.sh                    # local + IAC only; skips apt where there is no root
+./install_tools.sh                    # Neovim + CLI tools everywhere; apt/conda on local + IAC only
 ./install_oh_my_zsh_plugins_theme.sh  # oh-my-zsh + plugins + powerlevel10k
 ./install.sh                          # symlink everything into $HOME
 exec zsh
 ```
 
-Then run `:PluginInstall` inside vim once to build the vim plugins.
+Then run `:PluginInstall` inside vim once to build the vim plugins. Neovim
+installs its plugins by itself on the first start of `nvim`.
 
 On a cluster without a system zsh (balfrin), run `./install_zsh_user.sh` first
 to compile one into `~/local`.
@@ -101,6 +102,7 @@ filesystem and hardlinks cannot work.
 | `aliases.zsh` | `~/.oh-my-zsh/custom/aliases.zsh` | the few zsh-only additions |
 | `profile` | `~/.profile` | minimal login-shell setup |
 | `vimrc` | `~/.vimrc` | vim configuration |
+| `nvim/` | `~/.config/nvim` | Neovim configuration (LazyVim) |
 | `tmux.conf` | `~/.tmux.conf` | tmux configuration and plugins |
 | `tmux-theme.conf` | `~/.tmux/theme.conf` | Catppuccin status bar, tmux 3.2+ only |
 | `gitconfig` | `~/.gitconfig` | git config: delta pager, LFS filters, push defaults |
@@ -133,7 +135,7 @@ EOF
 
 The pager is `delta || less`, because delta is not installed on the clusters and
 an unconditional `pager = delta` breaks `git log` there. `install_tools.sh`
-installs delta on the Debian/Ubuntu/WSL machines.
+installs delta into `~/.local/bin` on every host where it runs.
 
 ### Shells
 
@@ -160,11 +162,72 @@ older than 3.2 (Levante) the theme is skipped and the default bar stays.
 
 | Key | Action |
 | --- | --- |
-| `<C-h/j/k/l>` | move between tmux panes and vim splits (vim-tmux-navigator) |
+| `<C-h/j/k/l>` | move between tmux panes and vim/Neovim splits (vim-tmux-navigator) |
 | `<prefix> <C-l>` | clear the screen, since `<C-l>` alone moves right |
 | `v`, `<C-v>`, `y` | in copy mode: select, rectangle select, copy to the system clipboard |
 | `<prefix> I` / `<prefix> U` | install / update the TPM plugins |
 | `<prefix> R` | reload `~/.tmux.conf` (tmux-sensible) |
+
+### Neovim
+
+`nvim/` is the [LazyVim](https://www.lazyvim.org) starter plus one plugin spec,
+`lua/plugins/tmux-navigator.lua`, so `<C-h/j/k/l>` crosses between Neovim splits
+and tmux panes. `install_tools.sh` installs Neovim into `~/.local/opt/nvim` and
+`rg`, `fd`, `fzf`, `lazygit` and the `tree-sitter` CLI into `~/.local/bin` on
+every host, since no module or apt package is recent enough. Where the official
+build does not run (too old a glibc), it falls back to the builds from
+`neovim/neovim-releases`.
+
+| File | Contents |
+| --- | --- |
+| `init.lua` | entry point, loads `lua/config/lazy.lua` |
+| `lua/config/lazy.lua` | bootstraps lazy.nvim and LazyVim, as in the starter |
+| `lua/config/{options,keymaps,autocmds}.lua` | personal overrides of the LazyVim defaults, empty for now |
+| `lua/plugins/*.lua` | additional plugins and plugin overrides, one spec file each |
+| `lazyvim.json` | extras enabled with `:LazyExtras`, written by Neovim |
+| `lazy-lock.json` | pinned plugin commits, written by Neovim |
+
+Enabled extras: `lang.json`. Add language support with `:LazyExtras` (move to
+an entry, press `x`, restart) rather than configuring language servers by hand;
+Mason then installs the servers into `~/.local/share/nvim/mason`.
+
+`lazy-lock.json` and `lazyvim.json` are written through the symlink into this
+repo and are tracked, so every machine runs the same plugin set. Commit them
+after `:Lazy update` or `:LazyExtras`; on another machine, `:Lazy restore`
+matches the lock file.
+
+The first start of `nvim` clones the plugins and compiles the treesitter
+parsers, so it needs internet access and a C compiler. `:checkhealth lazyvim`
+lists anything missing. The icons need the same Nerd Font as the prompt and the
+tmux status bar. Some language servers that
+Mason installs need Node.js, which the clusters do not provide by default.
+
+Plugins, parsers and Mason servers live in `~/.local/share/nvim` (about 16k
+files and 250 MB with the defaults), Neovim itself in `~/.local/opt/nvim`
+(about 2k files, 40 MB). The Neovim cache follows `XDG_CACHE_HOME`, so on Alps
+it already lands on iopsstor. Everything there is regenerable: removing
+`~/.local/share/nvim` and starting `nvim` reinstalls it.
+
+The classic vim setup (`vimrc`, `vim-extensions/`) stays unchanged; `vim`,
+`vi` and `GIT_EDITOR` still start vim.
+
+Leader is `<Space>`; press it and wait for the which-key menu.
+
+| Key | Action |
+| --- | --- |
+| `<Space><Space>` / `<Space>fr` | find file / recent files |
+| `<Space>/` | grep the project |
+| `<Space>sr` | search and replace across the project |
+| `<Space>e` | file explorer |
+| `<S-h>` / `<S-l>`, `<Space>,` | previous / next buffer, buffer list |
+| `<Space>bd` | close buffer |
+| `gd` / `gr` / `K` | definition / references / hover docs |
+| `<Space>cr` / `<Space>ca` / `<Space>cf` | rename / code action / format |
+| `<Space>xx` | diagnostics list |
+| `gcc` | toggle comment |
+| `<C-/>` | toggle terminal |
+| `<Space>gg` | lazygit |
+| `<Space>sk` | search all keymaps |
 
 ### VS Code
 
