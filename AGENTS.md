@@ -99,6 +99,11 @@ repo and source `lib/` from there.
 - **Never write `sudo apt update && sudo apt upgrade` as one AND-OR list.**
   `set -e` ignores a failure in any position of such a list but the last, so a
   broken `apt update` would fall straight through into `apt install`.
+- **The tmux theme lives in `tmux-theme.conf`, sourced only on tmux 3.2+.**
+  Catppuccin uses 3.2 features; Levante's RHEL 8 tmux (2.7) would error on
+  every start. It is cloned by `install.sh`, not TPM, because it must load
+  before `status-right` is built with `-F`: TPM plugins (cpu, battery,
+  weather) only substitute placeholders already present in that string.
 - **The `default` conda env is built from `conda_packages`**, a conda spec file
   (one spec per line, `#` comments) installed from conda-forge. Python is pinned
   there so every machine gets the same interpreter regardless of install date.

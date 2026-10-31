@@ -101,7 +101,8 @@ filesystem and hardlinks cannot work.
 | `aliases.zsh` | `~/.oh-my-zsh/custom/aliases.zsh` | the few zsh-only additions |
 | `profile` | `~/.profile` | minimal login-shell setup |
 | `vimrc` | `~/.vimrc` | vim configuration |
-| `tmux.conf` | `~/.tmux.conf` | tmux configuration |
+| `tmux.conf` | `~/.tmux.conf` | tmux configuration and plugins |
+| `tmux-theme.conf` | `~/.tmux/theme.conf` | Catppuccin status bar, tmux 3.2+ only |
 | `gitconfig` | `~/.gitconfig` | git config: delta pager, LFS filters, push defaults |
 | `config` | `~/.ssh/config` | ssh hosts, grouped by site |
 | `p10k.zsh` | `~/.p10k.zsh` | powerlevel10k prompt, generated |
@@ -144,6 +145,27 @@ Git aliases use the oh-my-zsh names (`gst`, `gco`, `gl`, `gp`, ...). zsh gets
 them from the plugin; `lib/common.sh` defines the same ones for bash so the two
 shells match. The pretty graph log is `gll`.
 
+### tmux
+
+The status bar uses the [Catppuccin](https://github.com/catppuccin/tmux) theme
+(mocha) with session, weather, CPU, RAM, load, host, battery (laptops only) and
+date widgets. The icons need a Nerd Font (v3, e.g. JetBrainsMono Nerd Font) set in
+the local terminal; it renders them for remote hosts too.
+Weather comes from [wttr.in](https://wttr.in) for Zurich, refreshed every 15
+minutes; change `@tmux-weather-location` in `tmux.conf` for another place.
+
+`install.sh` clones Catppuccin to `~/.tmux/catppuccin`, outside TPM: the theme has
+to load before the status line is built, which TPM cannot guarantee. On tmux
+older than 3.2 (Levante) the theme is skipped and the default bar stays.
+
+| Key | Action |
+| --- | --- |
+| `<C-h/j/k/l>` | move between tmux panes and vim splits (vim-tmux-navigator) |
+| `<prefix> <C-l>` | clear the screen, since `<C-l>` alone moves right |
+| `v`, `<C-v>`, `y` | in copy mode: select, rectangle select, copy to the system clipboard |
+| `<prefix> I` / `<prefix> U` | install / update the TPM plugins |
+| `<prefix> R` | reload `~/.tmux.conf` (tmux-sensible) |
+
 ### VS Code
 
 `keybindings.json` restores the usual `ctrl+a/c/x/v/z/y/f/h` and tab-indent
@@ -170,7 +192,7 @@ Quick cheat sheet for the plugins in `vim-extensions/` (managed via Vundle, see
 | [vim-commentary](https://github.com/tpope/vim-commentary) | Toggle comments | `gcc` current line; `gc` + motion (e.g. `gcap`); `gc` in visual mode |
 | [tagbar](https://github.com/majutsushi/tagbar) | ctags sidebar | `tl<space>` toggle (custom); inside: `<CR>`/`o` jump to tag, `p` preview |
 | [ale](https://github.com/dense-analysis/ale) | Async lint/build checks | `:ALENext`/`:ALEPrevious` cycle errors; `:ALEFix` run fixers; sign column shows severity |
-| [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) | Seamless vim/tmux pane movement | `<C-h/j/k/l>` move between vim splits and tmux panes; needs matching bindings in [tmux.conf](tmux.conf), not currently set there |
+| [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) | Seamless vim/tmux pane movement | `<C-h/j/k/l>` move between vim splits and tmux panes; the tmux side is set up in [tmux.conf](tmux.conf) |
 
 ## Adding a machine
 
