@@ -36,7 +36,9 @@ link bashrc "$HOME/.bashrc"
 link zshrc "$HOME/.zshrc"
 link p10k.zsh "$HOME/.p10k.zsh"
 link vimrc "$HOME/.vimrc"
+link nvim "$HOME/.config/nvim"
 link tmux.conf "$HOME/.tmux.conf"
+link tmux-theme.conf "$HOME/.tmux/theme.conf"
 link gitconfig "$HOME/.gitconfig"
 link config "$HOME/.ssh/config"
 
@@ -74,6 +76,17 @@ else
     echo "  ~/.tmux/plugins/tpm (cloned)"
 fi
 
+# Catppuccin is installed outside TPM: it must load before the status line is
+# set, and TPM's clean_plugins would delete it from ~/.tmux/plugins.
+catppuccin_version="v2.3.2"
+catppuccin_dir="$HOME/.tmux/catppuccin"
+if [[ "$(git -C "$catppuccin_dir" describe --tags 2>/dev/null)" != "$catppuccin_version" ]]; then
+    rm -rf -- "$catppuccin_dir"
+    git -c advice.detachedHead=false clone --quiet --depth 1 -b "$catppuccin_version" \
+        https://github.com/catppuccin/tmux "$catppuccin_dir"
+fi
+echo "  ~/.tmux/catppuccin ($catppuccin_version)"
+
 # lib/ is not linked: bashrc and zshrc resolve their own symlink to find it.
 
 cat <<'EOF'
@@ -82,6 +95,7 @@ Done. To finish:
 
   exec zsh          reload the shell
   :PluginInstall    install the vim plugins (from inside vim)
+  nvim              first start installs the Neovim plugins by itself
   <prefix> + I      install the tmux plugins (from inside tmux)
 
 keybindings.json is for VS Code and is not linked automatically. Copy it to

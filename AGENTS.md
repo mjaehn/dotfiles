@@ -1,8 +1,9 @@
 # AGENTS.md
 
-Personal dotfiles for bash, zsh, vim and ssh, shared across CSCS Alps clusters,
-ETH systems, DKRZ Levante and three personal machines. Files are symlinked into
-`$HOME` by `install.sh`. See [README.md](README.md) for the user-facing docs.
+Personal dotfiles for bash, zsh, vim, Neovim and ssh, shared across CSCS Alps
+clusters, ETH systems, DKRZ Levante and three personal machines. Files are
+symlinked into `$HOME` by `install.sh`. See [README.md](README.md) for the
+user-facing docs.
 
 ## Architecture
 
@@ -82,6 +83,18 @@ repo and source `lib/` from there.
   throwaway micromamba and symlinks it into `$HOME/.local/bin/git`. Because the
   script runs under `set -u`, every variable `lib/hostinfo.sh` dereferences
   must be guarded (`${SCRATCH:-}`).
+- **`install_neovim` and `install_editor_tools` also run on every host.**
+  LazyVim needs Neovim >= 0.11.2 and the `tree-sitter` CLI, which no module or
+  apt package provides, so the official Neovim build goes to
+  `$HOME/.local/opt/nvim` (falling back to `neovim/neovim-releases` when the
+  official build does not run on an older glibc), and rg, fd, fzf, lazygit
+  and tree-sitter go to `$HOME/.local/bin` via `install_release_binary`. Each is
+  skipped when already on `PATH`.
+- **`nvim/` is linked to `~/.config/nvim`.** It is the LazyVim starter; keep
+  local changes in `lua/plugins/` and `lua/config/`. `lazy-lock.json` and
+  `lazyvim.json` are written by Neovim through the symlink and are tracked on
+  purpose. When `lazyvim.json` gains or loses an extra, update the "Enabled
+  extras" line in the README's Neovim section.
 - **`$HOME/.local/bin` holds user-local binaries installed outside a package
   manager** (delta, the Claude CLI, ...). `lib/hostinfo.sh` puts it on `PATH`
   for every host, unconditionally. An earlier revision keyed this by
@@ -99,6 +112,11 @@ repo and source `lib/` from there.
 - **Never write `sudo apt update && sudo apt upgrade` as one AND-OR list.**
   `set -e` ignores a failure in any position of such a list but the last, so a
   broken `apt update` would fall straight through into `apt install`.
+- **The tmux theme lives in `tmux-theme.conf`, sourced only on tmux 3.2+.**
+  Catppuccin uses 3.2 features; Levante's RHEL 8 tmux (2.7) would error on
+  every start. It is cloned by `install.sh`, not TPM, because it must load
+  before `status-right` is built with `-F`: TPM plugins (cpu, battery,
+  weather) only substitute placeholders already present in that string.
 - **The `default` conda env is built from `conda_packages`**, a conda spec file
   (one spec per line, `#` comments) installed from conda-forge. Python is pinned
   there so every machine gets the same interpreter regardless of install date.
@@ -113,6 +131,9 @@ bash -n bashrc install.sh install_tools.sh lib/*.sh
 zsh -n zshrc aliases.zsh
 dash -n lib/hostinfo.sh lib/conda.sh     # these two must stay POSIX
 jq empty keybindings.json
+
+# Neovim, after changing nvim/ or the install steps
+nvim '+checkhealth lazyvim'
 
 # host detection, on this machine and simulated
 zsh -c 'source lib/hostinfo.sh; echo $DOTFILES_HOST $DOTFILES_CLUSTER'

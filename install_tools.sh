@@ -3,6 +3,8 @@
 # Provision a machine with the tools these dotfiles expect. Safe to re-run:
 # every step is guarded.
 #
+#   every host                -- delta, Neovim and the CLI tools LazyVim uses,
+#                                into $HOME/.local; a recent Git where needed
 #   local (Debian/Ubuntu/WSL) -- everything, including the apt steps
 #   iac   (co2, atmos)        -- only the $HOME-local steps; these are centrally
 #                                managed machines where we have no root
@@ -67,6 +69,111 @@ install_delta() {
 
 install_delta
 
+latest_tag() { # $1 = GitHub owner/repo; resolves the redirect, avoiding the API rate limit
+    curl -fsSLI -o /dev/null -w '%{url_effective}' "https://github.com/$1/releases/latest" | sed 's#.*/tag/##'
+}
+
+# Install the executable named $1 from the release archive at URL $2 into $HOME/.local/bin.
+install_release_binary() {
+    local name="$1" url="$2" tmp_dir
+    tmp_dir="$(mktemp -d)"
+    curl -fsSL -o "$tmp_dir/archive" "$url"
+    case "$url" in
+        *.tar.gz) tar -xzf "$tmp_dir/archive" -C "$tmp_dir" ;;
+        *.gz)     gunzip -c "$tmp_dir/archive" >"$tmp_dir/$name" ;;
+    esac
+    mkdir -p "$HOME/.local/bin"
+    install -m 755 "$(find "$tmp_dir" -type f -name "$name" | head -n1)" "$HOME/.local/bin/$name"
+    rm -rf "$tmp_dir"
+    echo "  Installed $name to \$HOME/.local/bin/$name"
+}
+
+# LazyVim needs Neovim >= 0.11.2, newer than any module or apt package on our
+# hosts, so the official build goes to $HOME/.local/opt/nvim on every host.
+MIN_NVIM_VERSION="0.11.2"
+
+install_neovim() {
+    local arch current nvim_dir tmp_dir repo
+    if have nvim; then
+        current="$(nvim --version | head -n1 | sed 's/^NVIM v//')"
+        if version_ge "$current" "$MIN_NVIM_VERSION"; then
+            echo "nvim $current already recent enough (>= $MIN_NVIM_VERSION)."
+            return
+        fi
+    fi
+
+    case "$(uname -m)" in
+        x86_64)  arch="x86_64" ;;
+        aarch64) arch="arm64" ;;
+        *)
+            echo "  No prebuilt Neovim for architecture '$(uname -m)', skipping." >&2
+            return
+            ;;
+    esac
+
+    nvim_dir="$HOME/.local/opt/nvim"
+    # The official build needs a recent glibc; neovim-releases targets older ones (Levante).
+    for repo in neovim/neovim neovim/neovim-releases; do
+        echo "Installing Neovim from $repo..."
+        tmp_dir="$(mktemp -d)"
+        curl -fsSL "https://github.com/$repo/releases/download/$(latest_tag "$repo")/nvim-linux-$arch.tar.gz" |
+            tar -xz -C "$tmp_dir"
+        rm -rf "$nvim_dir"
+        mkdir -p "$(dirname "$nvim_dir")"
+        mv "$tmp_dir/nvim-linux-$arch" "$nvim_dir"
+        rm -rf "$tmp_dir"
+        if "$nvim_dir/bin/nvim" --version >/dev/null 2>&1; then
+            mkdir -p "$HOME/.local/bin"
+            ln -sf "$nvim_dir/bin/nvim" "$HOME/.local/bin/nvim"
+            echo "  $("$nvim_dir/bin/nvim" --version | head -n1), symlinked into \$HOME/.local/bin/nvim"
+            return
+        fi
+        echo "  This build does not run here." >&2
+    done
+    echo "  No Neovim build runs on this host, skipping." >&2
+}
+
+# Command-line tools LazyVim relies on: rg and fd for search, lazygit for git,
+# fzf for its health check, and tree-sitter to build the syntax parsers.
+install_editor_tools() {
+    local tag musl fzf_arch lazygit_arch ts_arch
+    # Each project spells the architecture differently in its asset names.
+    case "$(uname -m)" in
+        x86_64)  musl="x86_64-unknown-linux-musl";  fzf_arch="amd64"; lazygit_arch="x86_64"; ts_arch="x64" ;;
+        aarch64) musl="aarch64-unknown-linux-musl"; fzf_arch="arm64"; lazygit_arch="arm64";  ts_arch="arm64" ;;
+        *)
+            echo "  No prebuilt editor tools for architecture '$(uname -m)', skipping." >&2
+            return
+            ;;
+    esac
+
+    if ! have rg; then
+        echo "Installing ripgrep..."
+        tag="$(latest_tag BurntSushi/ripgrep)"
+        install_release_binary rg "https://github.com/BurntSushi/ripgrep/releases/download/$tag/ripgrep-$tag-$musl.tar.gz"
+    fi
+    if ! have fd; then
+        echo "Installing fd..."
+        tag="$(latest_tag sharkdp/fd)"
+        install_release_binary fd "https://github.com/sharkdp/fd/releases/download/$tag/fd-$tag-$musl.tar.gz"
+    fi
+    if ! have fzf; then
+        echo "Installing fzf..."
+        tag="$(latest_tag junegunn/fzf)"
+        install_release_binary fzf "https://github.com/junegunn/fzf/releases/download/$tag/fzf-${tag#v}-linux_$fzf_arch.tar.gz"
+    fi
+    if ! have lazygit; then
+        echo "Installing lazygit..."
+        tag="$(latest_tag jesseduffield/lazygit)"
+        install_release_binary lazygit "https://github.com/jesseduffield/lazygit/releases/download/$tag/lazygit_${tag#v}_linux_$lazygit_arch.tar.gz"
+    fi
+    if ! have tree-sitter; then
+        echo "Installing tree-sitter CLI..."
+        tag="$(latest_tag tree-sitter/tree-sitter)"
+        install_release_binary tree-sitter "https://github.com/tree-sitter/tree-sitter/releases/download/$tag/tree-sitter-linux-$ts_arch.gz"
+    fi
+}
+
 # Some HPC login-node images ship a Git old enough to reject config added by
 # newer releases (merge.conflictstyle=zdiff3, added in 2.35, is the one that
 # bit us). There is no prebuilt Git binary and, on these clusters, no root to
@@ -126,6 +233,9 @@ install_recent_git() {
     ln -sf "$git_dir/bin/git" "$HOME/.local/bin/git"
     echo "  $("$HOME/.local/bin/git" --version), symlinked into \$HOME/.local/bin/git"
 }
+
+install_neovim
+install_editor_tools
 
 # Alps, Euler and Levante are provisioned with modules or uenv, never from here;
 # everything below this point is sudo/conda provisioning for local and IAC only.
