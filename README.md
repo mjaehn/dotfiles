@@ -149,7 +149,8 @@ shells match. The pretty graph log is `gll`.
 
 ### tmux
 
-The status bar uses the [Catppuccin](https://github.com/catppuccin/tmux) theme
+The status bar sits at the top, away from the shell prompt, and uses the
+[Catppuccin](https://github.com/catppuccin/tmux) theme
 (mocha) with session, weather, CPU, RAM, load, host, battery (laptops only) and
 date widgets. The icons need a Nerd Font (v3, e.g. JetBrainsMono Nerd Font) set in
 the local terminal; it renders them for remote hosts too.
