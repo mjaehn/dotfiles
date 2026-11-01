@@ -158,6 +158,16 @@ case ":$PATH:" in
     *) [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH" && export PATH ;;
 esac
 
+# tmux sets TERM=tmux-256color, which ssh forwards to hosts whose ncurses lacks
+# it (santis), breaking colors and line drawing. Compile the entry from the
+# conda-forge tmux into ~/.terminfo once; otherwise fall back to a common entry.
+if command -v infocmp >/dev/null 2>&1 && ! infocmp "${TERM:-dumb}" >/dev/null 2>&1; then
+    _dotfiles_ic="$HOME/.local/opt/tmux/bin/infocmp"
+    [ -x "$_dotfiles_ic" ] && "$_dotfiles_ic" -x "$TERM" 2>/dev/null | tic -x - >/dev/null 2>&1
+    infocmp "$TERM" >/dev/null 2>&1 || { TERM=xterm-256color; export TERM; }
+    unset _dotfiles_ic
+fi
+
 if [ "$DOTFILES_CLUSTER" = 'local' ] || [ "$DOTFILES_CLUSTER" = 'iac' ]; then
     # cargo, needed by cscs-key
     [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
