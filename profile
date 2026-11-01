@@ -9,8 +9,9 @@ if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
 fi
 
-# uv installs its shim here; the guard keeps login shells working on machines
-# where uv is not installed.
-if [ -f "$HOME/.local/bin/env" ]; then
-    . "$HOME/.local/bin/env"
-fi
+# uv and other user-local tools live here. uv's own ~/.local/bin/env is not
+# sourced: it spells the path as ~/.local/share/../bin, which defeats duplicate checks.
+case ":$PATH:" in
+    *":$HOME/.local/bin:"*) ;;
+    *) [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH" && export PATH ;;
+esac

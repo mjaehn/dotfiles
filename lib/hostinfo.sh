@@ -152,10 +152,11 @@ fi
 
 # User-local binaries installed outside a package manager (delta, the Claude
 # CLI, ...) land here regardless of host, so put it on PATH everywhere too.
-if [ -d "$HOME/.local/bin" ]; then
-    PATH="$HOME/.local/bin:$PATH"
-    export PATH
-fi
+# Guarded so nested shells (tmux panes, bash handing off to zsh) do not stack duplicates.
+case ":$PATH:" in
+    *":$HOME/.local/bin:"*) ;;
+    *) [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH" && export PATH ;;
+esac
 
 if [ "$DOTFILES_CLUSTER" = 'local' ] || [ "$DOTFILES_CLUSTER" = 'iac' ]; then
     # cargo, needed by cscs-key
@@ -166,11 +167,6 @@ if [ "$DOTFILES_CLUSTER" = 'local' ] || [ "$DOTFILES_CLUSTER" = 'iac' ]; then
         export PATH
         eval "$(fnm env 2>/dev/null)"
     fi
-fi
-
-# uv installs its shim here
-if [ -f "$HOME/.local/bin/env" ]; then
-    . "$HOME/.local/bin/env"
 fi
 
 export DOTFILES_HOST DOTFILES_CLUSTER
