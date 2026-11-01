@@ -210,7 +210,8 @@ The first start of `nvim` clones the plugins and compiles the treesitter
 parsers, so it needs internet access and a C compiler. `:checkhealth lazyvim`
 lists anything missing. The icons need the same Nerd Font as the prompt and the
 tmux status bar. Some language servers that
-Mason installs need Node.js, which the clusters do not provide by default.
+Mason installs (jsonls among them) need Node.js, which the clusters do not
+provide; `install_tools.sh` puts conda-forge's build into `~/.local/opt/node`.
 
 Plugins, parsers and Mason servers live in `~/.local/share/nvim` (about 16k
 files and 250 MB with the defaults), Neovim itself in `~/.local/opt/nvim`

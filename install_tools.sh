@@ -4,7 +4,7 @@
 # every step is guarded.
 #
 #   every host                -- delta, Neovim, the CLI tools LazyVim uses,
-#                                fastfetch and the latest tmux, into
+#                                fastfetch, Node.js and the latest tmux, into
 #                                $HOME/.local; a recent Git where needed
 #   local (Debian/Ubuntu/WSL) -- everything, including the apt steps
 #   iac   (co2, atmos)        -- only the $HOME-local steps; these are centrally
@@ -285,10 +285,26 @@ install_fastfetch() {
     install_release_binary fastfetch "https://github.com/fastfetch-cli/fastfetch/releases/download/$tag/fastfetch-linux-$arch-polyfilled.tar.gz"
 }
 
+# Mason installs several language servers (jsonls among them) through npm, and
+# the clusters ship no Node.js, so conda-forge's build goes to $HOME/.local/opt/node.
+install_node() {
+    local tool
+    have node && have npm && return
+    echo "Installing Node.js..."
+    conda_forge_install nodejs "$HOME/.local/opt/node"
+    [[ -x "$HOME/.local/opt/node/bin/node" ]] || return 0
+    mkdir -p "$HOME/.local/bin"
+    for tool in node npm npx; do
+        ln -sf "$HOME/.local/opt/node/bin/$tool" "$HOME/.local/bin/$tool"
+    done
+    echo "  Node.js $("$HOME/.local/bin/node" --version), symlinked into \$HOME/.local/bin"
+}
+
 install_neovim
 install_editor_tools
 install_tmux
 install_fastfetch
+install_node
 
 # Alps, Euler and Levante are provisioned with modules or uenv, never from here;
 # everything below this point is sudo/conda provisioning for local and IAC only.
@@ -318,12 +334,6 @@ if (( HAS_ROOT )); then
     if grep -qi microsoft /proc/version 2>/dev/null; then
         echo "Installing wslu (WSL detected)..."
         sudo apt install -y wslu
-    fi
-
-    if ! have node; then
-        echo "Installing Node.js..."
-        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-        sudo apt install -y nodejs
     fi
 
     echo "Installing latest Git..."
