@@ -3,8 +3,9 @@
 # Provision a machine with the tools these dotfiles expect. Safe to re-run:
 # every step is guarded.
 #
-#   every host                -- delta, Neovim and the CLI tools LazyVim uses,
-#                                into $HOME/.local; a recent Git where needed
+#   every host                -- delta, Neovim, the CLI tools LazyVim uses and
+#                                the latest tmux, into $HOME/.local; a recent
+#                                Git where needed
 #   local (Debian/Ubuntu/WSL) -- everything, including the apt steps
 #   iac   (co2, atmos)        -- only the $HOME-local steps; these are centrally
 #                                managed machines where we have no root
@@ -189,8 +190,32 @@ version_ge() { # $1 >= $2, both dotted version strings
     [[ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -n1)" == "$1" ]]
 }
 
+# Install conda-forge package $1 into its own prefix $2 via a throwaway micromamba.
+# Never call it in an AND-OR list: that disables set -e inside it, so a failed
+# download would go unnoticed. Callers check for the binary instead.
+conda_forge_install() {
+    local pkg="$1" prefix="$2" platform tmp_dir
+    case "$(uname -m)" in
+        x86_64)  platform="linux-64" ;;
+        aarch64) platform="linux-aarch64" ;;
+        *)
+            echo "  No micromamba build for architecture '$(uname -m)', skipping $pkg." >&2
+            return
+            ;;
+    esac
+
+    tmp_dir="$(mktemp -d)"
+    echo "  Fetching micromamba to bootstrap an isolated $pkg environment..."
+    curl -fsSL "https://micro.mamba.pm/api/micromamba/$platform/latest" | tar -xj -C "$tmp_dir" bin/micromamba
+    echo "  Installing $pkg from conda-forge to $prefix..."
+    rm -rf "$prefix"
+    mkdir -p "$(dirname "$prefix")"
+    "$tmp_dir/bin/micromamba" create -y -r "$tmp_dir/root" -p "$prefix" -c conda-forge "$pkg" >/dev/null
+    rm -rf "$tmp_dir"
+}
+
 install_recent_git() {
-    local current git_dir tmp_dir arch platform
+    local current git_dir
 
     if have git; then
         current="$(git --version | awk '{print $3}')"
@@ -205,25 +230,9 @@ install_recent_git() {
 
     git_dir="$HOME/.local/opt/git"
     if [[ ! -x "$git_dir/bin/git" ]] || ! version_ge "$("$git_dir/bin/git" --version | awk '{print $3}')" "$MIN_GIT_VERSION"; then
-        arch="$(uname -m)"
-        case "$arch" in
-            x86_64)  platform="linux-64" ;;
-            aarch64) platform="linux-aarch64" ;;
-            *)
-                echo "  No micromamba build for architecture '$arch', skipping." >&2
-                return
-                ;;
-        esac
-
-        tmp_dir="$(mktemp -d)"
-        echo "  Fetching micromamba to bootstrap an isolated git environment..."
-        curl -fsSL "https://micro.mamba.pm/api/micromamba/$platform/latest" | tar -xj -C "$tmp_dir" bin/micromamba
-        echo "  Installing git from conda-forge to $git_dir..."
-        rm -rf "$git_dir"
-        mkdir -p "$(dirname "$git_dir")"
-        "$tmp_dir/bin/micromamba" create -y -r "$tmp_dir/root" -p "$git_dir" -c conda-forge git >/dev/null
-        rm -rf "$tmp_dir"
+        conda_forge_install git "$git_dir"
     fi
+    [[ -x "$git_dir/bin/git" ]] || return 0
 
     # $HOME/.local/bin is already on PATH for every host (lib/hostinfo.sh), and
     # git resolves its libexec/git-core helpers relative to the real prefix
@@ -234,8 +243,32 @@ install_recent_git() {
     echo "  $("$HOME/.local/bin/git" --version), symlinked into \$HOME/.local/bin/git"
 }
 
+# System tmux is old on the clusters (Levante: 2.7, too old for the theme) and
+# lags behind on apt, so the latest release comes from conda-forge on every host.
+install_tmux() {
+    local current latest
+    latest="$(latest_tag tmux/tmux)"
+    if have tmux; then
+        current="$(tmux -V | awk '{print $2}')"
+        if version_ge "$current" "$latest"; then
+            echo "tmux $current already up to date."
+            return
+        fi
+        echo "tmux $current is older than $latest; installing the latest to \$HOME/.local..."
+    else
+        echo "No tmux found; installing one to \$HOME/.local..."
+    fi
+
+    conda_forge_install tmux "$HOME/.local/opt/tmux"
+    [[ -x "$HOME/.local/opt/tmux/bin/tmux" ]] || return 0
+    mkdir -p "$HOME/.local/bin"
+    ln -sf "$HOME/.local/opt/tmux/bin/tmux" "$HOME/.local/bin/tmux"
+    echo "  $("$HOME/.local/bin/tmux" -V), symlinked into \$HOME/.local/bin/tmux"
+}
+
 install_neovim
 install_editor_tools
+install_tmux
 
 # Alps, Euler and Levante are provisioned with modules or uenv, never from here;
 # everything below this point is sudo/conda provisioning for local and IAC only.

@@ -159,7 +159,12 @@ minutes; change `@tmux-weather-location` in `tmux.conf` for another place.
 
 `install.sh` clones Catppuccin to `~/.tmux/catppuccin`, outside TPM: the theme has
 to load before the status line is built, which TPM cannot guarantee. On tmux
-older than 3.2 (Levante) the theme is skipped and the default bar stays.
+older than 3.2 the theme is skipped and the default bar stays.
+
+`install_tools.sh` installs the latest tmux release from conda-forge into
+`~/.local/opt/tmux` on every host where the system tmux is older (Levante ships
+2.7), and symlinks it into `~/.local/bin`. Restart a running tmux server
+(`tmux kill-server`) after an upgrade, since an old server rejects the new client.
 
 | Key | Action |
 | --- | --- |
