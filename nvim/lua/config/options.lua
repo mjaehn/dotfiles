@@ -14,3 +14,17 @@ vim.g.clipboard = {
   paste = { ["+"] = paste, ["*"] = paste },
 }
 vim.opt.clipboard = "unnamedplus" -- LazyVim leaves this empty over SSH
+
+-- Show absolute and relative line numbers side by side, keeping the snacks signs and folds.
+vim.opt.number = false
+vim.opt.relativenumber = true
+function _G.dual_statuscolumn()
+  local win = vim.g.statusline_winid
+  local col = package.loaded.snacks and require("snacks.statuscolumn").get() or ""
+  if vim.v.virtnum ~= 0 or not vim.wo[win].relativenumber then
+    return col
+  end
+  local width = #tostring(vim.api.nvim_buf_line_count(vim.api.nvim_win_get_buf(win)))
+  return ("%" .. width .. "d "):format(vim.v.lnum) .. col
+end
+vim.opt.statuscolumn = "%!v:lua.dual_statuscolumn()"
