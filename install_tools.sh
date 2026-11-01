@@ -117,11 +117,12 @@ install_neovim() {
     # The official build needs a recent glibc; neovim-releases targets older ones (Levante).
     for repo in neovim/neovim neovim/neovim-releases; do
         echo "Installing Neovim from $repo..."
-        tmp_dir="$(mktemp -d)"
+        # Extract beside the target so mv is a rename; a cross-filesystem mv fails on NFS homes.
+        mkdir -p "$(dirname "$nvim_dir")"
+        tmp_dir="$(mktemp -d "$nvim_dir.XXXXXX")"
         curl -fsSL "https://github.com/$repo/releases/download/$(latest_tag "$repo")/nvim-linux-$arch.tar.gz" |
             tar -xz -C "$tmp_dir"
         rm -rf "$nvim_dir"
-        mkdir -p "$(dirname "$nvim_dir")"
         mv "$tmp_dir/nvim-linux-$arch" "$nvim_dir"
         rm -rf "$tmp_dir"
         if "$nvim_dir/bin/nvim" --version >/dev/null 2>&1; then
