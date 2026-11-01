@@ -1,0 +1,11 @@
+{
+  "actions": [
+    {
+      "command": { "action": "sendInput", "input": "\u001b\r" },
+      "id": "User.ShiftEnterNewline"
+    }
+  ],
+  "keybindings": [
+    { "id": "User.ShiftEnterNewline", "keys": "shift+enter" }
+  ]
+}

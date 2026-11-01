@@ -87,6 +87,23 @@ if [[ "$(git -C "$catppuccin_dir" describe --tags 2>/dev/null)" != "$catppuccin_
 fi
 echo "  ~/.tmux/catppuccin ($catppuccin_version)"
 
+# Windows Terminal sends Shift+Enter as a plain Enter; merge in a binding that sends Alt+Enter.
+if grep -qi microsoft /proc/version 2>/dev/null; then
+    echo "Setting up Windows Terminal..."
+    for wt in /mnt/c/Users/*/AppData/Local/Packages/Microsoft.WindowsTerminal_*/LocalState/settings.json; do
+        [[ -f "$wt" ]] || continue
+        python3 - "$REPO/windows-terminal.json" "$wt" <<'PY' || echo "  skip ${wt}: not plain JSON, merge windows-terminal.json by hand"
+import json, sys
+src, dest = (json.load(open(p, encoding="utf-8")) for p in sys.argv[1:])
+for key, items in src.items():
+    ids = {i["id"] for i in items}
+    dest[key] = [i for i in dest.get(key, []) if i.get("id") not in ids] + items
+json.dump(dest, open(sys.argv[2], "w", encoding="utf-8"), indent=4, ensure_ascii=False)
+print("  " + sys.argv[2])
+PY
+    done
+fi
+
 # lib/ is not linked: bashrc and zshrc resolve their own symlink to find it.
 
 cat <<'EOF'

@@ -121,6 +121,10 @@ repo and source `lib/` from there.
   every start. It is cloned by `install.sh`, not TPM, because it must load
   before `status-right` is built with `-F`: TPM plugins (cpu, battery,
   weather) only substitute placeholders already present in that string.
+- **Shift+Enter becomes Alt+Enter (Esc, Enter) for a new line in Claude Code.**
+  tmux rebinds it when the terminal reports Shift+Enter as its own key; Windows
+  Terminal never does, so `install.sh` merges `windows-terminal.json` into its
+  `settings.json` on WSL. Ctrl+J stays with vim-tmux-navigator, except in vim/fzf.
 - **The `default` conda env is built from `conda_packages`**, a conda spec file
   (one spec per line, `#` comments) installed from conda-forge. Python is pinned
   there so every machine gets the same interpreter regardless of install date.
@@ -134,7 +138,7 @@ There is no test suite. Verify changes with:
 bash -n bashrc install.sh install_tools.sh lib/*.sh
 zsh -n zshrc aliases.zsh
 dash -n lib/hostinfo.sh lib/conda.sh     # these two must stay POSIX
-jq empty keybindings.json
+jq empty keybindings.json windows-terminal.json
 
 # Neovim, after changing nvim/ or the install steps
 nvim '+checkhealth lazyvim'
