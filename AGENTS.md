@@ -129,6 +129,11 @@ repo and source `lib/` from there.
 - **The `default` conda env is built from `conda_packages`**, a conda spec file
   (one spec per line, `#` comments) installed from conda-forge. Python is pinned
   there so every machine gets the same interpreter regardless of install date.
+- **`condarc` allows conda-forge only.** `defaults` points to repo.anaconda.com,
+  a commercial channel that mamba warns about on every call and whose terms
+  can apply to institutional use. Never add it back, and pass `-c conda-forge`
+  in install commands. `conda config --set` writes through the `~/.condarc`
+  symlink into the repo and drops the comments, so edit the file directly.
 
 ## Testing
 

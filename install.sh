@@ -40,6 +40,7 @@ link nvim "$HOME/.config/nvim"
 link tmux.conf "$HOME/.tmux.conf"
 link tmux-theme.conf "$HOME/.tmux/theme.conf"
 link gitconfig "$HOME/.gitconfig"
+link condarc "$HOME/.condarc"
 link config "$HOME/.ssh/config"
 
 if [[ ! -e "$HOME/.gitconfig.local" ]]; then

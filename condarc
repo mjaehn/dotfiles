@@ -1,0 +1,7 @@
+# conda-forge only: `defaults` resolves to repo.anaconda.com, a commercial
+# channel subject to the Anaconda Terms of Service.
+channels:
+  - conda-forge
+always_yes: true
+changeps1: false
+env_prompt: ({name})

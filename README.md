@@ -109,6 +109,7 @@ filesystem and hardlinks cannot work.
 | `tmux.conf` | `~/.tmux.conf` | tmux configuration and plugins |
 | `tmux-theme.conf` | `~/.tmux/theme.conf` | Catppuccin status bar, tmux 3.2+ only |
 | `gitconfig` | `~/.gitconfig` | git config: delta pager, LFS filters, push defaults |
+| `condarc` | `~/.condarc` | conda settings, conda-forge as the only channel |
 | `config` | `~/.ssh/config` | ssh hosts, grouped by site |
 | `p10k.zsh` | `~/.p10k.zsh` | powerlevel10k prompt, generated |
 | `vim-extensions/` | `~/.vim/vim-extensions/` | vim plugins, git submodules |
