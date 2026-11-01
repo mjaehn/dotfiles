@@ -24,6 +24,9 @@ to compile one into `~/local`.
 
 `install.sh` is safe to re-run; it only refreshes symlinks.
 
+`install_tools.sh` installs `fastfetch` into `~/.local/bin` on every host where
+it is not already on `PATH`.
+
 `install_tools.sh` installs Miniforge into `~/miniforge3` and builds the
 `default` conda environment (the one the shells auto-activate) from
 `conda_packages`. To pull in new packages afterwards, add them there and run:

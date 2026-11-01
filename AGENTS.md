@@ -83,9 +83,10 @@ repo and source `lib/` from there.
   throwaway micromamba and symlinks it into `$HOME/.local/bin/git`. Because the
   script runs under `set -u`, every variable `lib/hostinfo.sh` dereferences
   must be guarded (`${SCRATCH:-}`).
-- **`install_neovim`, `install_editor_tools` and `install_tmux` also run on
-  every host.** `install_tmux` replaces any tmux older than the latest upstream
-  release with conda-forge's build in `$HOME/.local/opt/tmux`, through the same
+- **`install_neovim`, `install_editor_tools`, `install_tmux` and
+  `install_fastfetch` also run on every host.** `install_fastfetch` takes the
+  "polyfilled" release build, which supports older glibc versions.
+  `install_tmux` replaces any tmux older than the latest upstream release with conda-forge's build in `$HOME/.local/opt/tmux`, through the same
   throwaway-micromamba helper (`conda_forge_install`) that `install_recent_git`
   uses.
   LazyVim needs Neovim >= 0.11.2 and the `tree-sitter` CLI, which no module or

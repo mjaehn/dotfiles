@@ -3,9 +3,9 @@
 # Provision a machine with the tools these dotfiles expect. Safe to re-run:
 # every step is guarded.
 #
-#   every host                -- delta, Neovim, the CLI tools LazyVim uses and
-#                                the latest tmux, into $HOME/.local; a recent
-#                                Git where needed
+#   every host                -- delta, Neovim, the CLI tools LazyVim uses,
+#                                fastfetch and the latest tmux, into
+#                                $HOME/.local; a recent Git where needed
 #   local (Debian/Ubuntu/WSL) -- everything, including the apt steps
 #   iac   (co2, atmos)        -- only the $HOME-local steps; these are centrally
 #                                managed machines where we have no root
@@ -84,7 +84,8 @@ install_release_binary() {
         *.gz)     gunzip -c "$tmp_dir/archive" >"$tmp_dir/$name" ;;
     esac
     mkdir -p "$HOME/.local/bin"
-    install -m 755 "$(find "$tmp_dir" -type f -name "$name" | head -n1)" "$HOME/.local/bin/$name"
+    # Skip share/, where some archives ship a shell-completion file with the same name.
+    install -m 755 "$(find "$tmp_dir" -type f -name "$name" ! -path '*/share/*' | head -n1)" "$HOME/.local/bin/$name"
     rm -rf "$tmp_dir"
     echo "  Installed $name to \$HOME/.local/bin/$name"
 }
@@ -266,9 +267,27 @@ install_tmux() {
     echo "  $("$HOME/.local/bin/tmux" -V), symlinked into \$HOME/.local/bin/tmux"
 }
 
+# The polyfilled build targets older glibc versions, as found on HPC login nodes.
+install_fastfetch() {
+    local arch tag
+    have fastfetch && return
+    case "$(uname -m)" in
+        x86_64)  arch="amd64" ;;
+        aarch64) arch="aarch64" ;;
+        *)
+            echo "  No prebuilt fastfetch for architecture '$(uname -m)', skipping." >&2
+            return
+            ;;
+    esac
+    echo "Installing fastfetch..."
+    tag="$(latest_tag fastfetch-cli/fastfetch)"
+    install_release_binary fastfetch "https://github.com/fastfetch-cli/fastfetch/releases/download/$tag/fastfetch-linux-$arch-polyfilled.tar.gz"
+}
+
 install_neovim
 install_editor_tools
 install_tmux
+install_fastfetch
 
 # Alps, Euler and Levante are provisioned with modules or uenv, never from here;
 # everything below this point is sudo/conda provisioning for local and IAC only.
