@@ -139,11 +139,11 @@ install_neovim() {
 # Command-line tools LazyVim relies on: rg and fd for search, lazygit for git,
 # fzf for its health check, and tree-sitter to build the syntax parsers.
 install_editor_tools() {
-    local tag musl fzf_arch lazygit_arch ts_arch
+    local tag musl fzf_arch lazygit_arch
     # Each project spells the architecture differently in its asset names.
     case "$(uname -m)" in
-        x86_64)  musl="x86_64-unknown-linux-musl";  fzf_arch="amd64"; lazygit_arch="x86_64"; ts_arch="x64" ;;
-        aarch64) musl="aarch64-unknown-linux-musl"; fzf_arch="arm64"; lazygit_arch="arm64";  ts_arch="arm64" ;;
+        x86_64)  musl="x86_64-unknown-linux-musl";  fzf_arch="amd64"; lazygit_arch="x86_64" ;;
+        aarch64) musl="aarch64-unknown-linux-musl"; fzf_arch="arm64"; lazygit_arch="arm64" ;;
         *)
             echo "  No prebuilt editor tools for architecture '$(uname -m)', skipping." >&2
             return
@@ -170,10 +170,15 @@ install_editor_tools() {
         tag="$(latest_tag jesseduffield/lazygit)"
         install_release_binary lazygit "https://github.com/jesseduffield/lazygit/releases/download/$tag/lazygit_${tag#v}_linux_$lazygit_arch.tar.gz"
     fi
-    if ! have tree-sitter; then
+    # The upstream release binary requires glibc >= 2.39; conda-forge builds against an older baseline.
+    # Running it, rather than only locating it, also replaces a binary that does not run on this host.
+    if ! tree-sitter --version >/dev/null 2>&1; then
         echo "Installing tree-sitter CLI..."
-        tag="$(latest_tag tree-sitter/tree-sitter)"
-        install_release_binary tree-sitter "https://github.com/tree-sitter/tree-sitter/releases/download/$tag/tree-sitter-linux-$ts_arch.gz"
+        conda_forge_install tree-sitter-cli "$HOME/.local/opt/tree-sitter"
+        if [[ -x "$HOME/.local/opt/tree-sitter/bin/tree-sitter" ]]; then
+            mkdir -p "$HOME/.local/bin"
+            ln -sf "$HOME/.local/opt/tree-sitter/bin/tree-sitter" "$HOME/.local/bin/tree-sitter"
+        fi
     fi
 }
 

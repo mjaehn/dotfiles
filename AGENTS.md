@@ -93,9 +93,12 @@ repo and source `lib/` from there.
   LazyVim needs Neovim >= 0.11.2 and the `tree-sitter` CLI, which no module or
   apt package provides, so the official Neovim build goes to
   `$HOME/.local/opt/nvim` (falling back to `neovim/neovim-releases` when the
-  official build does not run on an older glibc), and rg, fd, fzf, lazygit
-  and tree-sitter go to `$HOME/.local/bin` via `install_release_binary`. Each is
-  skipped when already on `PATH`.
+  official build does not run on an older glibc), and rg, fd, fzf and lazygit
+  go to `$HOME/.local/bin` via `install_release_binary`. Each is skipped when
+  already on `PATH`. tree-sitter comes from conda-forge into
+  `$HOME/.local/opt/tree-sitter` (symlinked into `$HOME/.local/bin`), because the
+  upstream release binary needs glibc >= 2.39 and Alps has 2.38. It is skipped
+  only when `tree-sitter --version` actually runs.
 - **`nvim/` is linked to `~/.config/nvim`.** It is the LazyVim starter; keep
   local changes in `lua/plugins/` and `lua/config/`. `lazy-lock.json` and
   `lazyvim.json` are written by Neovim through the symlink and are tracked on
