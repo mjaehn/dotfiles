@@ -68,3 +68,6 @@ fi
 # startup -- observed via `zsh -x` trace, cause not tracked down -- which
 # otherwise wins the PATH race and shadows this.
 command -v nvm >/dev/null && nvm use default --silent
+
+# glab: bypass the locked GNOME keyring over SSH, which otherwise blocks every command
+[[ -n $SSH_CONNECTION ]] && alias glab='DBUS_SESSION_BUS_ADDRESS=unix:path=/nonexistent glab'
