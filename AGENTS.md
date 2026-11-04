@@ -99,6 +99,11 @@ repo and source `lib/` from there.
   `$HOME/.local/opt/tree-sitter` (symlinked into `$HOME/.local/bin`), because the
   upstream release binary needs glibc >= 2.39 and Alps has 2.38. It is skipped
   only when `tree-sitter --version` actually runs.
+- **`install_nerd_font` runs only on machines with a local terminal**: cluster
+  `local` or empty (a host `lib/hostinfo.sh` does not recognise), with fontconfig
+  present, and not under WSL, where Windows Terminal only sees Windows fonts. It
+  has to be called before the cluster `case` in `install_tools.sh`, because that
+  `case` exits on an empty cluster.
 - **`nvim/` is linked to `~/.config/nvim`.** It is the LazyVim starter; keep
   local changes in `lua/plugins/` and `lua/config/`. `lazy-lock.json` and
   `lazyvim.json` are written by Neovim through the symlink and are tracked on

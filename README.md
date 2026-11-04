@@ -27,6 +27,12 @@ to compile one into `~/local`.
 `install_tools.sh` installs `fastfetch` into `~/.local/bin` on every host where
 it is not already on `PATH`.
 
+`install_tools.sh` installs JetBrainsMono Nerd Font into `~/.local/share/fonts`
+on the machines you sit at (the `local` hosts and any host `lib/hostinfo.sh` does
+not recognise, if it has fontconfig). The clusters do not need it, because your
+local terminal draws the symbols. Two things stay manual: select the font in your
+terminal's settings, and under WSL install it on the Windows side.
+
 `install_tools.sh` installs Miniforge into `~/miniforge3` and builds the
 `default` conda environment (the one the shells auto-activate) from
 `conda_packages`. To pull in new packages afterwards, add them there and run:

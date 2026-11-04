@@ -9,6 +9,8 @@
 #   local (Debian/Ubuntu/WSL) -- everything, including the apt steps
 #   iac   (co2, atmos)        -- only the $HOME-local steps; these are centrally
 #                                managed machines where we have no root
+#   machines you sit at       -- also the Nerd Font: local and unrecognised hosts
+#                                that have fontconfig, except WSL
 #
 # Run install.sh afterwards to symlink the configuration itself.
 
@@ -305,11 +307,52 @@ install_node() {
     echo "  Node.js $("$HOME/.local/bin/node" --version), symlinked into \$HOME/.local/bin"
 }
 
+# The prompt, the tmux status bar and Neovim draw their icons with a Nerd Font v3.
+# The terminal renders them, even for remote sessions, so the font belongs on the
+# machine you sit at. Hosts missing from lib/hostinfo.sh have an empty cluster and
+# count as such a machine; requiring fontconfig keeps it off headless servers.
+install_nerd_font() {
+    local family="JetBrainsMono Nerd Font" font_dir tmp_dir
+    case "$DOTFILES_CLUSTER" in
+        local|'') ;;
+        *) return 0 ;;
+    esac
+
+    # Windows Terminal only sees fonts installed on the Windows side.
+    if grep -qi microsoft /proc/version 2>/dev/null; then
+        echo "WSL detected: install $family on Windows, not in this distribution."
+        return 0
+    fi
+
+    if ! have fc-cache || ! have xz; then
+        echo "fontconfig or xz is missing, skipping $family."
+        return 0
+    fi
+
+    if [[ -n "$(fc-list "$family" family)" ]]; then
+        echo "$family already installed."
+        return 0
+    fi
+
+    echo "Installing $family..."
+    font_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/JetBrainsMonoNerdFont"
+    tmp_dir="$(mktemp -d)"
+    curl -fsSL -o "$tmp_dir/font.tar.xz" \
+        https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz
+    mkdir -p "$font_dir"
+    tar -xJf "$tmp_dir/font.tar.xz" -C "$font_dir"
+    rm -rf "$tmp_dir"
+    fc-cache -f "$font_dir"
+    echo "  Installed to $font_dir"
+    echo "  Now select '$family' in your terminal's settings; no script can do that for every terminal."
+}
+
 install_neovim
 install_editor_tools
 install_tmux
 install_fastfetch
 install_node
+install_nerd_font
 
 # Alps, Euler and Levante are provisioned with modules or uenv, never from here;
 # everything below this point is sudo/conda provisioning for local and IAC only.
