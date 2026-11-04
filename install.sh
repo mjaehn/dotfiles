@@ -88,6 +88,14 @@ if [[ "$(git -C "$catppuccin_dir" describe --tags 2>/dev/null)" != "$catppuccin_
 fi
 echo "  ~/.tmux/catppuccin ($catppuccin_version)"
 
+# Without these the status bar's weather, CPU and RAM modules render empty.
+if command -v tmux >/dev/null 2>&1; then
+    "$tpm_dir/bin/install_plugins" | sed 's/^/  /' \
+        || echo "  tmux plugins: install failed, run <prefix> + I inside tmux"
+else
+    echo "  skip tmux plugins: tmux not found, re-run this script once it is installed"
+fi
+
 # Windows Terminal sends Shift+Enter as a plain Enter; merge in a binding that sends Alt+Enter.
 if grep -qi microsoft /proc/version 2>/dev/null; then
     echo "Setting up Windows Terminal..."
@@ -114,7 +122,6 @@ Done. To finish:
   exec zsh          reload the shell
   :PluginInstall    install the vim plugins (from inside vim)
   nvim              first start installs the Neovim plugins by itself
-  <prefix> + I      install the tmux plugins (from inside tmux)
 
 keybindings.json is for VS Code and is not linked automatically. Copy it to
 your VS Code user directory by hand (on WSL that lives on the Windows side).
