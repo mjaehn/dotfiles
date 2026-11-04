@@ -373,9 +373,10 @@ if (( HAS_ROOT )); then
     sudo apt update
     sudo apt upgrade -y
 
+    # cdo comes from the conda env: Ubuntu 24.04 has no arm64 build of it
     echo "Installing base packages..."
     sudo apt install -y \
-        build-essential ca-certificates cdo curl git-delta gnupg imagemagick lsb-release \
+        build-essential ca-certificates curl git-delta gnupg imagemagick lsb-release \
         ncview netcdf-bin software-properties-common wget x11-apps x11-utils xauth zsh
 
     # wslu provides wslview, only meaningful under WSL
