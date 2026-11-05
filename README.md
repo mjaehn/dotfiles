@@ -180,6 +180,8 @@ older than 3.2 the theme is skipped and the default bar stays.
 | --- | --- |
 | `<C-h/j/k/l>` | move between tmux panes and vim/Neovim splits (vim-tmux-navigator) |
 | `<prefix> <C-l>` | clear the screen, since `<C-l>` alone moves right |
+| `<C-v>` | paste the system clipboard (Wayland); Vim, and Claude Code when the clipboard holds an image, still receive the key |
+| `<prefix> <C-v>` | send a literal `<C-v>`, e.g. for the shell's quoted insert |
 | `v`, `<C-v>`, `y` | in copy mode: select, rectangle select, copy to the system clipboard |
 | `<prefix> I` / `<prefix> U` | install / update the TPM plugins |
 | `<prefix> R` | reload `~/.tmux.conf` (tmux-sensible) |
