@@ -135,11 +135,13 @@ repo and source `lib/` from there.
   tmux rebinds it when the terminal reports Shift+Enter as its own key; Windows
   Terminal never does, so `install.sh` merges `windows-terminal.json` into its
   `settings.json` on WSL. Ctrl+J stays with vim-tmux-navigator, except in vim/fzf.
-- **Ctrl+V is a tmux root binding, not a Konsole shortcut**, so it can stay out
-  of the way per pane: `tmux-paste.sh` forwards the key to Vim, to Claude Code
-  when the clipboard has no text (image paste), and wherever `wl-paste` finds no
-  clipboard. A root binding also beats `copy-mode-vi`, so `tmux.conf` has to keep
-  rectangle select itself. Outside tmux, Ctrl+V is still the shell's quoted insert.
+- **Ctrl+V is the terminal's Paste shortcut, not a tmux binding.** Over SSH the
+  clipboard stays on the local machine, and Konsole ignores OSC 52 clipboard
+  queries, so only the terminal can paste. `install.sh` sets it for Ptyxis and
+  GNOME Terminal via `gsettings`; Konsole is set by hand (README, tmux section);
+  Windows Terminal pastes with Ctrl+V by default. It hides Ctrl+V from every
+  program, so tmux copy mode uses C-q for rectangle select, like Vim's block
+  select.
 - **The `default` conda env is built from `conda_packages`**, a conda spec file
   (one spec per line, `#` comments) installed from conda-forge. Python is pinned
   there so every machine gets the same interpreter regardless of install date.

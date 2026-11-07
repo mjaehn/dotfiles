@@ -39,7 +39,6 @@ link vimrc "$HOME/.vimrc"
 link nvim "$HOME/.config/nvim"
 link tmux.conf "$HOME/.tmux.conf"
 link tmux-theme.conf "$HOME/.tmux/theme.conf"
-link tmux-paste.sh "$HOME/.tmux/paste.sh"
 link gitconfig "$HOME/.gitconfig"
 link condarc "$HOME/.condarc"
 link config "$HOME/.ssh/config"
@@ -111,6 +110,17 @@ for key, items in src.items():
 json.dump(dest, open(sys.argv[2], "w", encoding="utf-8"), indent=4, ensure_ascii=False)
 print("  " + sys.argv[2])
 PY
+    done
+fi
+
+# Ctrl+V pastes in the Ubuntu terminal, as in Konsole: Ptyxis (25.10+) or GNOME Terminal.
+if command -v gsettings >/dev/null 2>&1; then
+    for key in "org.gnome.Ptyxis.Shortcuts paste-clipboard" \
+        "org.gnome.Terminal.Legacy.Keybindings:/org/gnome/terminal/legacy/keybindings/ paste"; do
+        # shellcheck disable=SC2086
+        gsettings writable $key &>/dev/null || continue
+        # shellcheck disable=SC2086
+        if gsettings set $key "'<Ctrl>v'"; then echo "  $key = <Ctrl>v"; fi
     done
 fi
 

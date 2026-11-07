@@ -176,13 +176,18 @@ older than 3.2 the theme is skipped and the default bar stays.
 2.7), and symlinks it into `~/.local/bin`. Restart a running tmux server
 (`tmux kill-server`) after an upgrade, since an old server rejects the new client.
 
+Ctrl+V pastes through the terminal, not tmux, so it also works over SSH, where
+the remote host cannot read the local clipboard. `install.sh` sets it for the
+Ubuntu terminal (Ptyxis or GNOME Terminal), and Windows Terminal does it by
+default. In Konsole, set it once per machine under Settings > Configure Keyboard
+Shortcuts > Paste. The terminal then keeps Ctrl+V from every program: use
+`<C-q>` for block select in Vim and for rectangle select in tmux copy mode.
+
 | Key | Action |
 | --- | --- |
 | `<C-h/j/k/l>` | move between tmux panes and vim/Neovim splits (vim-tmux-navigator) |
 | `<prefix> <C-l>` | clear the screen, since `<C-l>` alone moves right |
-| `<C-v>` | paste the system clipboard (Wayland); Vim, and Claude Code when the clipboard holds an image, still receive the key |
-| `<prefix> <C-v>` | send a literal `<C-v>`, e.g. for the shell's quoted insert |
-| `v`, `<C-v>`, `y` | in copy mode: select, rectangle select, copy to the system clipboard |
+| `v`, `<C-q>`, `y` | in copy mode: select, rectangle select, copy to the system clipboard |
 | `<prefix> I` / `<prefix> U` | install / update the TPM plugins |
 | `<prefix> R` | reload `~/.tmux.conf` (tmux-sensible) |
 
