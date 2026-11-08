@@ -84,9 +84,10 @@ filesystem for many small files:
 ```
 
 `XDG_CACHE_HOME` covers everything that follows the spec (`gh`, `fontconfig`,
-`pyright`, the Claude CLI); `PIP_CACHE_DIR`, `UV_CACHE_DIR`, `HATCH_DATA_DIR`, `MPLCONFIGDIR`,
-`NUMBA_CACHE_DIR`, `CUPY_CACHE_DIR`, `GT4PY_BUILD_CACHE_DIR` and `TMPDIR` are
-set individually because those tools ignore it. Export `DOTFILES_CACHE_ROOT`
+`pyright`, the Claude CLI); `PIP_CACHE_DIR`, `UV_CACHE_DIR`, `HATCH_DATA_DIR`,
+`HATCH_CACHE_DIR`, `MPLCONFIGDIR`, `NUMBA_CACHE_DIR`, `CUPY_CACHE_DIR`,
+`GT4PY_BUILD_CACHE_DIR` and `TMPDIR` are set individually because those tools
+ignore it. Export `DOTFILES_CACHE_ROOT`
 before the rc file runs to put the whole tree somewhere else.
 
 Scratch is subject to the CSCS cleanup policy, so everything under that root
