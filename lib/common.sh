@@ -31,10 +31,10 @@ alias f='find . -name'
 alias fp='find "$PWD" -name'
 alias g='grep -i'
 alias h='history | grep'
-alias l='ls -al'
+alias l='ls -alh'
 alias la='ls -A'
-alias ll='ls -al'
-alias ls='ls --color'
+alias ll='ls -alh'
+alias ls='ls --color=tty'
 alias t='tail -f'
 
 # --- editing -------------------------------------------------------------
@@ -97,7 +97,7 @@ alias lsq='squeue -o "${squeue_format}" --sort=-D | cut -c1-"${squeue_length}" |
 
 alias nd='ncdump -h'
 alias nv='ncview'
-alias lsL='ls -ltr LOG*'
+alias lsL='ls -ltrh LOG*'
 alias tL='tail -f LOG*'
 
 # --- misc ----------------------------------------------------------------
