@@ -1,0 +1,8 @@
+# markdownlint rules for this repo; read by markdownlint-cli2 and Neovim's nvim-lint.
+default: true
+
+# Keep prose at 80 columns, but do not break commands or table rows.
+MD013:
+  line_length: 80
+  code_blocks: false
+  tables: false
