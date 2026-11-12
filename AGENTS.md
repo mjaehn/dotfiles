@@ -142,6 +142,9 @@ repo and source `lib/` from there.
   Windows Terminal pastes with Ctrl+V by default. It hides Ctrl+V from every
   program, so tmux copy mode uses C-q for rectangle select, like Vim's block
   select.
+- **The three-pane window layout is a `<prefix> c` binding, not an
+  `after-new-window` hook.** tmux-resurrect restores windows with `new-window`,
+  so a hook would add two extra panes to every restored window.
 - **The `default` conda env is built from `conda_packages`**, a conda spec file
   (one spec per line, `#` comments) installed from conda-forge. Python is pinned
   there so every machine gets the same interpreter regardless of install date.

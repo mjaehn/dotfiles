@@ -187,6 +187,7 @@ Shortcuts > Paste. The terminal then keeps Ctrl+V from every program: use
 | Key | Action |
 | --- | --- |
 | `<C-h/j/k/l>` | move between tmux panes and vim/Neovim splits (vim-tmux-navigator) |
+| `<prefix> c` | new window: wide Neovim pane left, two panes right |
 | `<prefix> <C-l>` | clear the screen, since `<C-l>` alone moves right |
 | `v`, `<C-q>`, `y` | in copy mode: select, rectangle select, copy to the system clipboard |
 | `<prefix> I` / `<prefix> U` | install / update the TPM plugins |
