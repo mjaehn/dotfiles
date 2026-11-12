@@ -18,7 +18,6 @@
     dark = true      # or light = true, or omit for auto-detection
     line-numbers = true
     hyperlinks = true
-    hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [merge]
     conflictStyle = zdiff3
 

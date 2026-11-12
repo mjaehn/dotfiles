@@ -21,9 +21,6 @@ Machine differences are resolved at shell startup, not by branching the repo.
 | `lib/conda.sh` | conda bootstrap | strict POSIX, dash-clean |
 | `lib/common.sh` | env, aliases, functions, machine-specific aliases | bash + zsh |
 
-`lib/common.sh` is not dash-clean on purpose: the `cscs-key` function name
-contains a hyphen so it can shadow the `cscs-key` binary.
-
 `lib/` is deliberately **not** symlinked. `bashrc` and `zshrc` resolve their own
 symlink (`readlink -f "${BASH_SOURCE[0]}"` / `${${(%):-%x}:A:h}`) to find the
 repo and source `lib/` from there.
@@ -163,7 +160,7 @@ There is no test suite. Verify changes with:
 bash -n bashrc install.sh install_tools.sh lib/*.sh
 zsh -n zshrc aliases.zsh
 dash -n lib/hostinfo.sh lib/conda.sh     # these two must stay POSIX
-jq empty keybindings.json windows-terminal.json
+jq empty windows-terminal.json
 
 # Neovim, after changing nvim/ or the install steps
 nvim '+checkhealth lazyvim'

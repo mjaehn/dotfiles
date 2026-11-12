@@ -56,12 +56,6 @@ unset _dotfiles_hn _dotfiles_cn
 
 # Per-host environment
 case "$DOTFILES_HOST" in
-    santis)
-        # VS Code tunnels are per-system, keep their state out of the shared $HOME
-        VSCODE_AGENT_FOLDER="$HOME/.vscode-server/${CLUSTER_NAME:-santis}-tunnel/.vscode-server"
-        VSCODE_CLI_DATA_DIR="$VSCODE_AGENT_FOLDER/cli"
-        export VSCODE_AGENT_FOLDER VSCODE_CLI_DATA_DIR
-        ;;
     balfrin)
         MODULEPATH="/mch-environment/v6/modules:${MODULEPATH}"
         export MODULEPATH
@@ -82,20 +76,6 @@ case "$DOTFILES_HOST" in
             module load git 2>/dev/null
         else
             DOTFILES_ABORT_RC=1  # non-interactive (Jenkins) sessions stop here
-        fi
-        ;;
-    iac-laptop)
-        # Deliberately a full replacement, not a prepend
-        PATH="$HOME/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-        [ -d "/mnt/c/Users/mjaehn/AppData/Local/Programs/Microsoft VS Code/bin" ] && PATH="$PATH:/mnt/c/Users/mjaehn/AppData/Local/Programs/Microsoft VS Code/bin"
-        export PATH
-        # wslview from older wslu misdetects interop on newer WSL, so name the browser directly
-        [ -x "/mnt/c/Program Files/Mozilla Firefox/firefox.exe" ] && export BROWSER="/mnt/c/Program Files/Mozilla Firefox/firefox.exe"
-        # Local console only: under ssh -X this would clobber the forwarded
-        # DISPLAY and silently break X11 forwarding.
-        if [ -z "${SSH_CONNECTION:-}" ]; then
-            DISPLAY=:0
-            export DISPLAY
         fi
         ;;
 esac

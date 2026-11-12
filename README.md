@@ -121,7 +121,6 @@ filesystem and hardlinks cannot work.
 | `config` | `~/.ssh/config` | ssh hosts, grouped by site |
 | `p10k.zsh` | `~/.p10k.zsh` | powerlevel10k prompt, generated |
 | `vim-extensions/` | `~/.vim/vim-extensions/` | vim plugins, git submodules |
-| `keybindings.json` | not linked | VS Code keybindings, see below |
 
 `lib/` is not symlinked. `bashrc` and `zshrc` resolve their own symlink back to
 this repo and source `lib/` from there.
@@ -255,13 +254,6 @@ Leader is `<Space>`; press it and wait for the which-key menu.
 | `<C-/>` | toggle terminal |
 | `<Space>gg` | lazygit |
 | `<Space>sk` | search all keymaps |
-
-### VS Code
-
-`keybindings.json` restores the usual `ctrl+a/c/x/v/z/y/f/h` and tab-indent
-behaviour when the Vim extension is active. It is not symlinked, because VS Code
-stores its settings outside `$HOME` on WSL. Copy it into your VS Code user
-directory by hand.
 
 ## Vim plugins
 

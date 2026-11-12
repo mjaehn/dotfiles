@@ -133,7 +133,4 @@ Done. To finish:
   exec zsh          reload the shell
   :PluginInstall    install the vim plugins (from inside vim)
   nvim              first start installs the Neovim plugins by itself
-
-keybindings.json is for VS Code and is not linked automatically. Copy it to
-your VS Code user directory by hand (on WSL that lives on the Windows side).
 EOF

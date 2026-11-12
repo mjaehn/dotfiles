@@ -3,7 +3,7 @@
 # Shared logic lives in lib/; this file holds only what is bash-specific:
 # the prompt and the hand-off to zsh.
 
-# Skip everything for SCP, SFTP and VS Code Remote SSH
+# Skip everything for non-interactive sessions such as SCP and SFTP
 if [[ -z "$SSH_TTY" ]] && [[ "$-" != *i* ]]; then
     # These sessions still need user-local binaries, e.g. the newer Git, ahead of the system ones
     [[ -d "$HOME/.local/bin" && ":$PATH:" != *":$HOME/.local/bin:"* ]] && export PATH="$HOME/.local/bin:$PATH"

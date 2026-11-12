@@ -2,11 +2,8 @@
 #
 # Environment, aliases and functions shared by bashrc and zshrc.
 #
-# Portable across bash and zsh. Otherwise POSIX, with one exception: the
-# cscs-key function name contains a hyphen, which bash and zsh accept but
-# strict POSIX shells (dash) reject. It must keep that name to shadow the
-# cscs-key binary, so this file is not dash-clean. lib/hostinfo.sh and
-# lib/conda.sh are.
+# Portable across bash and zsh. Unlike lib/hostinfo.sh and lib/conda.sh, it
+# need not be dash-clean.
 
 # --- environment ---------------------------------------------------------
 
@@ -105,11 +102,6 @@ alias tL='tail -f LOG*'
 alias lsC='ctags -R'
 alias account='sacctmgr show assoc user="$USER" format=account%20'
 
-# Renew the CSCS key/certificate, then mirror it into the Windows home so that
-# VS Code Remote-SSH (which runs as a Windows process) sees the fresh certificate.
-cscs-key() {
-    command cscs-key "$@" && "$HOME/git/cscs-keys/sync-windows.sh"
-}
 alias cscskey='cscs-key'
 
 # --- machine-specific ----------------------------------------------------
