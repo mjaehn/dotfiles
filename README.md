@@ -1,8 +1,9 @@
 # dotfiles
 
-Shell, vim, Neovim, tmux and ssh configuration shared across the HPC systems and personal
-machines I work on. One repo, symlinked into `$HOME`, with the per-machine
-differences resolved at shell startup instead of by keeping separate branches.
+Shell, vim, Neovim, tmux and ssh configuration shared across the HPC systems
+and personal machines I work on. One repo, symlinked into `$HOME`, with the
+per-machine differences resolved at shell startup instead of by keeping
+separate branches.
 
 ## Install
 
@@ -77,7 +78,7 @@ build cache ~25k. `lib/hostinfo.sh` therefore points every cache at the
 flash-backed iopsstor scratch, which has no inode limit and is the right
 filesystem for many small files:
 
-```
+```text
 /iopsstor/scratch/cscs/$USER/cache   # $DOTFILES_CACHE_ROOT, = $XDG_CACHE_HOME
 ├── pip  uv  hatch  matplotlib  numba  cupy  gt4py
 └── tmp                                        # $TMPDIR
@@ -163,8 +164,8 @@ shells match. The pretty graph log is `gll`.
 The status bar sits at the top, away from the shell prompt, and uses the
 [Catppuccin](https://github.com/catppuccin/tmux) theme
 (mocha) with session, weather, CPU, RAM, load, host, battery (laptops only) and
-date widgets. The icons need a Nerd Font (v3, e.g. JetBrainsMono Nerd Font) set in
-the local terminal; it renders them for remote hosts too.
+date widgets. The icons need a Nerd Font (v3, e.g. JetBrainsMono Nerd Font) set
+in the local terminal; it renders them for remote hosts too.
 Weather comes from [wttr.in](https://wttr.in) for Zurich, refreshed every 15
 minutes; change `@tmux-weather-location` in `tmux.conf` for another place.
 
@@ -293,6 +294,7 @@ Quick cheat sheet for the plugins in `vim-extensions/` (managed via Vundle, see
 3. Add it to the conda case in `lib/conda.sh` only if that machine uses conda.
 4. Add a row to the table above.
 5. Check it:
+
    ```sh
    zsh -c 'source lib/hostinfo.sh; echo $DOTFILES_HOST $DOTFILES_CLUSTER'
    ```
