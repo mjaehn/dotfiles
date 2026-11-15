@@ -180,3 +180,4 @@ Host tvpc
   HostName tvpc.local
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_homeserver
+  IdentitiesOnly yes
