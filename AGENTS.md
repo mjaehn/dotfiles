@@ -132,6 +132,10 @@ repo and source `lib/` from there.
   tmux rebinds it when the terminal reports Shift+Enter as its own key; Windows
   Terminal never does, so `install.sh` merges `windows-terminal.json` into its
   `settings.json` on WSL. Ctrl+J stays with vim-tmux-navigator, except in vim/fzf.
+  The rebind applies only to panes whose current command is `claude`; every
+  other pane gets Shift+Enter itself, because the Pi coding agent reads Alt+Enter
+  as "queue a follow-up". On tmux 3.5+, `extended-keys-format csi-u` is set, as
+  Pi recommends; older versions keep the xterm format.
 - **Ctrl+V is the terminal's Paste shortcut, not a tmux binding.** Over SSH the
   clipboard stays on the local machine, and Konsole ignores OSC 52 clipboard
   queries, so only the terminal can paste. `install.sh` sets it for Ptyxis and
