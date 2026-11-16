@@ -184,6 +184,11 @@ default. In Konsole, set it once per machine under Settings > Configure Keyboard
 Shortcuts > Paste. The terminal then keeps Ctrl+V from every program: use
 `<C-q>` for block select in Vim and for rectangle select in tmux copy mode.
 
+Kubuntu's Konsole profile adds 3 pixels of line spacing, which leaves the
+ends of the status bar modules shorter than the colored blocks next to them.
+Set the spacing to 0 once per machine under Settings > Edit Current Profile >
+Appearance > Miscellaneous > Line spacing.
+
 | Key | Action |
 | --- | --- |
 | `<C-h/j/k/l>` | move between tmux panes and vim/Neovim splits (vim-tmux-navigator) |
