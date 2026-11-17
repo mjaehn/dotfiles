@@ -103,6 +103,7 @@ alias lsC='ctags -R'
 alias account='sacctmgr show assoc user="$USER" format=account%20'
 
 alias cscskey='cscs-key'
+alias ethkinit='kinit mjaehn@D.ETHZ.CH'   # Kerberos ticket for ETH printing
 
 # --- machine-specific ----------------------------------------------------
 #
