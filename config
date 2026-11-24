@@ -162,6 +162,12 @@ Host git.iac.ethz.ch
   IdentityFile ~/.ssh/id_ed25519_iac
   PreferredAuthentications publickey
 
+Host gitlab.ethz.ch
+  HostName gitlab.ethz.ch
+  User git
+  IdentityFile ~/.ssh/id_ed25519_gitlab_ethz
+  PreferredAuthentications publickey
+
 Host *gitlab.dkrz.de
   HostName git.gitlab.dkrz.de
   User git
