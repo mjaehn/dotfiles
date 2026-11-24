@@ -143,6 +143,9 @@ repo and source `lib/` from there.
   Windows Terminal pastes with Ctrl+V by default. It hides Ctrl+V from every
   program, so tmux copy mode uses C-q for rectangle select, like Vim's block
   select.
+- **KDE power settings are written, not linked.** `install.sh` runs
+  `kwriteconfig6` on `powerdevilrc` (no sleep on AC, lid turns off the screen)
+  so ssh sessions survive; KDE rewrites that file and would break a symlink.
 - **The three-pane window layout is a `<prefix> c` binding, not an
   `after-new-window` hook.** tmux-resurrect restores windows with `new-window`,
   so a hook would add two extra panes to every restored window.

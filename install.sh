@@ -124,6 +124,15 @@ if command -v gsettings >/dev/null 2>&1; then
     done
 fi
 
+# KDE: never sleep on AC power, so ssh sessions survive idle periods and a closed lid.
+if command -v kwriteconfig6 >/dev/null 2>&1; then
+    echo "Setting up KDE power management..."
+    kwriteconfig6 --file powerdevilrc --group AC --group SuspendAndShutdown --key AutoSuspendAction 0
+    kwriteconfig6 --file powerdevilrc --group AC --group SuspendAndShutdown --key LidAction 64
+    qdbus6 org.kde.Solid.PowerManagement /org/kde/Solid/PowerManagement refreshStatus &>/dev/null || true
+    echo "  powerdevilrc: on AC, no idle sleep; lid closed turns off the screen"
+fi
+
 # lib/ is not linked: bashrc and zshrc resolve their own symlink to find it.
 
 cat <<'EOF'

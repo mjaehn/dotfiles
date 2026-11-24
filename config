@@ -181,3 +181,10 @@ Host tvpc
   User mjaehn
   IdentityFile ~/.ssh/id_ed25519_homeserver
   IdentitiesOnly yes
+
+# --- Defaults ------------------------------------------------------------
+
+# Probe idle connections so firewalls and jump hosts do not drop them.
+Host *
+  ServerAliveInterval 60
+  ServerAliveCountMax 5

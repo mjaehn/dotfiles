@@ -122,6 +122,10 @@ filesystem and hardlinks cannot work.
 | `p10k.zsh` | `~/.p10k.zsh` | powerlevel10k prompt, generated |
 | `vim-extensions/` | `~/.vim/vim-extensions/` | vim plugins, git submodules |
 
+On KDE, `install.sh` also sets the power management so the laptop never sleeps
+on AC power and closing the lid only turns off the screen; this keeps ssh
+sessions alive. `config` sends ssh keepalives to every host for the same reason.
+
 `lib/` is not symlinked. `bashrc` and `zshrc` resolve their own symlink back to
 this repo and source `lib/` from there.
 
