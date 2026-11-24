@@ -57,12 +57,12 @@ and `DOTFILES_CLUSTER` (the site). Everything else keys off those two variables.
 | `levante` | `dkrz` | `levante*` | DKRZ; non-interactive sessions stop early |
 | `co2` | `iac` | `co2` | ETH IAC server |
 | `atmos` | `iac` | `atmos` | ETH IAC server |
-| `iac-laptop` | `local` | `iacpc*` | work laptop |
+| `iac-laptop` | `local` | `iaclin*` | work laptop |
 | `home-pc` | `local` | `desktop*` | personal desktop |
 | `surface` | `local` | `surfacepro*` | personal laptop, WSL2 on aarch64 |
 
-Hostnames are lowercased before matching, so `SurfacePro11`, `IACPC-42` and
-`DESKTOP-ABC` all match. On Alps, `$CLUSTER_NAME` is used as a fallback because
+Hostnames are lowercased before matching, so `SurfacePro11` and
+`DESKTOP-ABC` both match. On Alps, `$CLUSTER_NAME` is used as a fallback because
 inside a uenv the hostname is generic.
 
 conda is only bootstrapped where it is actually used: `co2`, `atmos`, and the

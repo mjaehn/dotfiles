@@ -22,8 +22,8 @@ DOTFILES_CLUSTER=''
 DOTFILES_USE_ZSH=1
 DOTFILES_ABORT_RC=0
 
-# Lowercase both sources so a single set of patterns covers IACPC/iacpc,
-# DESKTOP/desktop and SurfacePro/surfacepro.
+# Lowercase both sources so a single set of patterns covers DESKTOP/desktop
+# and SurfacePro/surfacepro.
 _dotfiles_hn="$(hostname 2>/dev/null || printf '%s' "${HOSTNAME:-${HOST:-unknown}}")"
 _dotfiles_hn="$(printf '%s' "$_dotfiles_hn" | tr '[:upper:]' '[:lower:]')"
 _dotfiles_cn="$(printf '%s' "${CLUSTER_NAME:-}" | tr '[:upper:]' '[:lower:]')"
@@ -37,7 +37,7 @@ case "$_dotfiles_hn" in
     levante*)    DOTFILES_HOST='levante';    DOTFILES_CLUSTER='dkrz'  ;;
     co2)         DOTFILES_HOST='co2';        DOTFILES_CLUSTER='iac'   ;;
     atmos)       DOTFILES_HOST='atmos';      DOTFILES_CLUSTER='iac'   ;;
-    iacpc*)      DOTFILES_HOST='iac-laptop'; DOTFILES_CLUSTER='local' ;;
+    iaclin*)     DOTFILES_HOST='iac-laptop'; DOTFILES_CLUSTER='local' ;;
     desktop*)    DOTFILES_HOST='home-pc';    DOTFILES_CLUSTER='local' ;;
     surfacepro*) DOTFILES_HOST='surface';    DOTFILES_CLUSTER='local' ;;
     *)
